@@ -1,0 +1,35 @@
+metadata:
+  name: java-openliberty
+projects:
+  - name: user-app
+    source:
+      location: 'https://github.com/ajm01/odo-run-sampleproj.git'
+      type: git
+      branch: master
+components:
+  - id: redhat/java/latest
+    memoryLimit: 1512Mi
+    type: chePlugin
+  - mountSources: true
+    endpoints:
+      - name: 9080/tcp
+        port: 9080
+    memoryLimit: 1512Mi
+    type: dockerimage
+    alias: appsodyrun
+    image: 'ajymau/java-openliberty-dev:latest'
+    env:
+      - value: TEST2
+        name: MODE2
+      - value: myval2
+        name: myprop2
+apiVersion: 1.0.0
+commands:
+  - name: devRun
+    actions:
+      - workdir: /projects/user-app
+        type: exec
+        command: mvn -DhotTests=true -DappsDirectory=apps -Dmaven.repo.local=/mvn/repository liberty:dev
+        component: appsodyrun
+    attributes:
+        restart: "false"
