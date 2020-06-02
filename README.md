@@ -90,22 +90,25 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
     Provide a name for the project when prompted
     identify the Open Shift namespace to be used
     
-    This will initialize an Open Liberty project and downloads the default template.
+    This will initialize an Open Liberty project and download the default template.
 
 1. Once your project has been initialized, you can run your application using the following command:
 
     ```bash
-    odo push 
+    odo watch 
     ```
     
-    Upon first time invocation, this initializes an Open Shift managed kubernetes pod, launches a Docker container in that pod and  syncs your source code to that container. Finally, this will  starts your application, exposing it on port 9080 of the container.
+    Upon first time invocation, this initializes an Open Shift managed kubernetes pod, launches a Docker container in that pod and  syncs your source code to that container. Finally, this will start your application, exposing it on port 9080 of the container. 
+    
+    This command is making use of an odo watcher that will will recieve notification when any source ile within the project is updated and saved. 
 
-1. To access your application from the host, you must creat an Open Shift URL connection to the container by using the following command:
+1. To access your application from the host, you must create an Open Shift URL connection to the container by using the following command:
     ```bash
     odo url create --port 9080
     odo push
     ```
-    The url will take the form of <project name>-9080-<namespace>
+    The url will take the form of `<project name>-9080-<namespace>`
+    
     You can continue to edit the application in your preferred IDE (Eclipse, VSCode or others) and your changes will be reflected in the running container within a few seconds.
 
 1. You should be able to access the following endpoints, as they are exposed by your template application by default:
@@ -119,7 +122,7 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
 ## Odo local development operations: (run/debug/test )
 
 ### RUN
-If you launch via `odo push` then the liberty-maven-plugin will launch dev mode in "hot test" mode, where unit tests and integration tests get automatically re-executed after each detected change.  
+If you launch via `odo push` then the liberty-maven-plugin will launch dev mode in "hot test" mode, where unit tests and integration tests get automatically re-executed after each detected change. You must have visibility to the logs on the Open Shift container to see these test results.  
 
 ### DEBUG
 Not currently supported
