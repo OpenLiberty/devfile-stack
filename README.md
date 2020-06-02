@@ -17,25 +17,21 @@
 
 # Summary
 
-An application stack for Open Liberty
+A devfile-based application stack for Open Liberty
 
 ## Contributing
 
-Our [CONTRIBUTING](https://github.com/OpenLiberty/stack/blob/master/CONTRIBUTING.md) document contains details for submitting pull requests.
+Our [CONTRIBUTING](https://github.com/OpenLiberty/application-stack/blob/master/CONTRIBUTING.md) document contains details for submitting pull requests.
 
 # Open Liberty Application Stack
 
 The Open Liberty application stack provides a consistent way of developing microservices based upon the [Jakarta EE](https://jakarta.ee/) and [Eclipse MicroProfile](https://microprofile.io) specifications. This stack lets you use [Maven](https://maven.apache.org) to develop applications for [Open Liberty](https://openliberty.io) runtime, that is running on OpenJDK with container-optimizations in OpenJ9.
 
-This stack is based on OpenJDK with container-optimizations in OpenJ9 and `Open Liberty v20.0.0.3`. It provides live reloading during development by utilizing the "dev mode" capability in the liberty-maven-plugin.  To see dev mode in action (though not in Odo) check out this [shorter demo](https://openliberty.io/blog/2019/10/22/liberty-dev-mode.html) and this  [a bit longer demo](https://blog.sebastian-daschner.com/entries/openliberty-plugin-dev-mode).
+This stack is based on OpenJDK with container-optimizations in OpenJ9 and `Open Liberty v20.0.0.3`. It provides live reloading during development by utilizing the ["dev mode"](https://openliberty.io/blog/2019/10/22/liberty-dev-mode.html) capability in the liberty-maven-plugin.  
 
-**Note:** Maven is provided by the Odo devfile, allowing you to build, test, and debug your Java application without installing Maven locally. However, we recommend installing Maven locally for the best IDE experience.
+**Note:** Maven is provided by the stack, allowing you to build, test, and debug your Java application without installing Maven locally. However, we recommend installing Maven locally for the best development experience.
 
-## Templates
-
-Templates are used to create your local project and start your development. When initializing your project you will be provided with an Open Liberty template application.
-
-### Default template
+## Default template
 
 The default template provides a `pom.xml` file that enables Liberty features that support [Eclipse MicroProfile 3.2](https://openliberty.io/docs/ref/feature/#microProfile-3.2.html). Specifically, this template includes:
 
@@ -80,6 +76,8 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
 ## Getting Started
 
 1. Perform an `oc login` to your Open Shift cluster for development purposes.
+
+2.  Get the [odo v.1.2.1](https://mirror.openshift.com/pub/openshift-v4/clients/odo/v1.2.1/) CLI (or later).
 
 1. Create a new folder in your local directory and initialize it using the Odo CLI, e.g.:
     ```bash
