@@ -113,11 +113,11 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
 
 1. You should be able to access the following endpoints, as they are exposed by your template application by default:
 
-    - Readiness endpoint: http://<project name>-9080-<namespace>.<host-ip>/health/ready
-    - Liveness endpoint: http://<project name>-9080-<namespace>.<host-ip>/health/live
-    - Metrics endpoint: http://<project name>-9080-<namespace>.<host-ip>/metrics (login as `admin` user with password obtained as mentioned [here](#Metrics-Password).
-    - OpenAPI endpoint: http://<project name>-9080-<namespace>.<host-ip>/openapi
-    - Swagger UI endpoint: http://<project name>-9080-<namespace>.<host-ip>/openapi/ui
+    - Readiness endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/health/ready
+    - Liveness endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/health/live
+    - Metrics endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/metrics (login as `admin` user with password obtained as mentioned [here](#Metrics-Password).
+    - OpenAPI endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/openapi
+    - Swagger UI endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/openapi/ui
 
 ## Odo local development operations: (run/debug/test )
 
