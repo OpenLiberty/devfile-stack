@@ -13,7 +13,6 @@
     </parent>
 -->
     <properties>
-	<wlp.install.dir>/opt/ol/wlp</wlp.install.dir>
         <version.maven-war-plugin>3.2.2</version.maven-war-plugin>
         <version.dockerfile-maven-plugin>1.4.10</version.dockerfile-maven-plugin>
         <version.maven-surefire-plugin>3.0.0-M1</version.maven-surefire-plugin>
@@ -114,7 +113,6 @@
                         <default.https.port>${https.port}</default.https.port>
                         <app.context.root>${app.name}</app.context.root>
                     </bootstrapProperties>
-                    <installDirectory>/opt/ol/wlp</installDirectory>
                 </configuration>
             </plugin>
             <!-- Plugin to run unit tests -->

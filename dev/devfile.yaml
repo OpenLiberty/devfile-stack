@@ -3,9 +3,9 @@ metadata:
 projects:
   - name: user-app
     source:
-      location: 'https://github.com/ajm01/odo-run-sampleproj.git'
+      location: 'https://github.com/OpenLiberty/application-stack.git'
       type: git
-      branch: master
+      sparseCheckoutDir: /templates/default
 components:
   - id: redhat/java/latest
     memoryLimit: 1512Mi
@@ -17,19 +17,28 @@ components:
     memoryLimit: 1512Mi
     type: dockerimage
     alias: appsodyrun
-    image: 'ajymau/java-openliberty-dev:latest'
+    image: 'kabanero/ubi8-maven:0.3.1'
     env:
       - value: TEST2
         name: MODE2
       - value: myval2
         name: myprop2
+    volumes:
+      - name: m2
+        containerPath: /root/.m2/repository
 apiVersion: 1.0.0
 commands:
+  - name: devInit
+    actions:
+      - workdir: /projects/user-app
+        type: exec
+        command: mvn -B -DskipTests=true liberty:install-server liberty:create liberty:install-feature install dependency:go-offline 
+        component: appsodyrun 
   - name: devRun
     actions:
       - workdir: /projects/user-app
         type: exec
-        command: mvn -DhotTests=true -DappsDirectory=apps -Dmaven.repo.local=/mvn/repository liberty:dev
+        command: mvn -DhotTests=true -DappsDirectory=apps liberty:dev
         component: appsodyrun
     attributes:
         restart: "false"
