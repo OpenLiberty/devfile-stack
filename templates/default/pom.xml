@@ -14,7 +14,6 @@
 -->
     <properties>
         <version.maven-war-plugin>3.2.2</version.maven-war-plugin>
-        <version.dockerfile-maven-plugin>1.4.10</version.dockerfile-maven-plugin>
         <version.maven-surefire-plugin>3.0.0-M1</version.maven-surefire-plugin>
         <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
         <http.port>9080</http.port>
