@@ -34,6 +34,17 @@ commands:
         type: exec
         command: mvn -B liberty:install-server liberty:create liberty:install-feature dependency:go-offline
         component: appsodyrun 
+  - name: devBuild
+    actions:
+      - workdir: /projects/user-app
+        type: exec
+        command: if [ -e /projects/user-app/.disable-bld-cmd ]; 
+                 then 
+                     echo "found the disable file" && echo "devBuild command will not run" && exit 0; 
+                 else
+                     echo "will run the devBuild command" && mvn package && touch ./.disable-bld-cmd;
+                 fi 
+        component: appsodyrun
   - name: devRun
     actions:
       - workdir: /projects/user-app
