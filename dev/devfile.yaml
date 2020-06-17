@@ -1,39 +1,38 @@
+apiVersion: 1.0.0
 metadata:
-  name: java-openliberty
+  name: openLiberty
+attributes:
+  odo.autorestart: "false"
 projects:
-  - name: user-app
+  - name: user-app 
     source:
-      location: 'https://github.com/OpenLiberty/application-stack.git'
       type: git
+      location: 'https://github.com/OpenLiberty/application-stack.git'
       sparseCheckoutDir: /templates/default
 components:
   - id: redhat/java/latest
     memoryLimit: 1512Mi
     type: chePlugin
-  - mountSources: true
-    endpoints:
-      - name: 9080/tcp
-        port: 9080
-    memoryLimit: 1512Mi
+  - alias: devruntime
+    mountSources: true
     type: dockerimage
-    alias: appsodyrun
-    image: 'kabanero/ubi8-maven:0.3.1'
-    env:
-      - value: TEST2
-        name: MODE2
-      - value: myval2
-        name: myprop2
+    image: kabanero/ubi8-maven:0.3.1 
+    memoryLimit: 1512Mi
     volumes:
-      - name: m2
-        containerPath: /root/.m2/repository
-apiVersion: 1.0.0
+    - name: m2
+      containerPath: /home/user/.m2
+    endpoints:
+    - name: 9080/tcp
+      port: 9080
+    - name: 9443/tcp
+      port: 9443
 commands:
   - name: devInit
     actions:
       - workdir: /projects/user-app
         type: exec
         command: mvn -B liberty:install-server liberty:create liberty:install-feature dependency:go-offline
-        component: appsodyrun 
+        component: devruntime 
   - name: devBuild
     actions:
       - workdir: /projects/user-app
@@ -44,12 +43,12 @@ commands:
                  else
                      echo "will run the devBuild command" && mvn package && touch ./.disable-bld-cmd;
                  fi 
-        component: appsodyrun
+        component: devruntime 
   - name: devRun
     actions:
       - workdir: /projects/user-app
         type: exec
         command: mvn -DhotTests=true liberty:dev
-        component: appsodyrun
+        component: devruntime 
     attributes:
         restart: "false"
