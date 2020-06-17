@@ -8,6 +8,6 @@ public class StarterResource {
 
     @GET
     public String getRequest() {
-        return "StarterResource response";
+        return "Hello! Welcome to Openliberty";
     }
 }
