@@ -1,6 +1,6 @@
 apiVersion: 1.0.0
 metadata:
-  name: openLiberty
+  generateName: java-openliberty 
 attributes:
   odo.autorestart: "false"
 projects:
