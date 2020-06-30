@@ -1,10 +1,10 @@
 apiVersion: 1.0.0
 metadata:
-  generateName: java-openliberty 
+  generateName: java-openliberty
 attributes:
   odo.autorestart: "false"
 projects:
-  - name: user-app 
+  - name: user-app
     source:
       type: git
       location: 'https://github.com/OpenLiberty/application-stack.git'
@@ -18,7 +18,7 @@ components:
   type: dockerimage
   # this custom image source can be found in the baseimage section of the repo at:
   # https://github.com/OpenLiberty/application-stack.git
-  image: ajymau/java-openliberty-odo 
+  image: ajymau/java-openliberty-odo:0.1
   memoryLimit: 1512Mi
   endpoints:
   - name: 9080/tcp
@@ -30,24 +30,24 @@ commands:
     actions:
       - workdir: /projects/user-app
         type: exec
-        command: echo "moving liberty" && mkdir -p /projects/user-app/target/liberty && mv /opt/ol/wlp /projects/user-app/target/liberty 
-        component: devruntime 
+        command: echo "moving liberty" && mkdir -p /projects/user-app/target/liberty && mv /opt/ol/wlp /projects/user-app/target/liberty
+        component: devruntime
   - name: devBuild
     actions:
       - workdir: /projects/user-app
         type: exec
-        command: if [ -e /projects/user-app/.disable-bld-cmd ]; 
-                 then 
-                     echo "found the disable file" && echo "devBuild command will not run" && exit 0; 
+        command: if [ -e /projects/user-app/.disable-bld-cmd ];
+                 then
+                     echo "found the disable file" && echo "devBuild command will not run" && exit 0;
                  else
                      echo "will run the devBuild command" && mvn package && touch ./.disable-bld-cmd;
-                 fi 
-        component: devruntime 
+                 fi
+        component: devruntime
   - name: devRun
     actions:
       - workdir: /projects/user-app
         type: exec
         command: mvn -DhotTests=true liberty:dev
-        component: devruntime 
+        component: devruntime
     attributes:
         restart: "false"

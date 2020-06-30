@@ -1,2 +1,1 @@
-docker build -t ajymau/ubi8-maven -t ajymau/ubi8-maven:0.3.1 -f ./Dockerfile-maven .
-docker build -t ajymau/java-openliberty-odo -f ./Dockerfile-stack .
+docker build -t ajymau/java-openliberty-odo -t ajymau/java-openliberty-odo:0.1 -f ./Dockerfile .
