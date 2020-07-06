@@ -47,7 +47,7 @@ commands:
     actions:
       - workdir: /projects/user-app
         type: exec
-        command: mvn -DhotTests=true liberty:dev
+        command: mvn -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
         component: devruntime
     attributes:
         restart: "false"
