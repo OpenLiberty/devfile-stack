@@ -1,53 +1,70 @@
-apiVersion: 1.0.0
+schemaVersion: 2.0.0
 metadata:
-  generateName: java-openliberty
-attributes:
-  odo.autorestart: "false"
+  name: java-openliberty
+  version: 1.0.0
+  description: Java application stack using Open Liberty runtime
 projects:
   - name: user-app
-    source:
-      type: git
+    git:
       location: 'https://github.com/OpenLiberty/application-stack.git'
       sparseCheckoutDir: /templates/default
+      branch: master
 components:
-- type: chePlugin
-  id: redhat/java/latest
-  memoryLimit: 1512Mi
-- alias: devruntime
-  mountSources: true
-  type: dockerimage
-  # this custom image source can be found in the baseimage section of the repo at:
-  # https://github.com/OpenLiberty/application-stack.git
-  image: ajymau/java-openliberty-odo:0.1
-  memoryLimit: 1512Mi
-  endpoints:
-  - name: 9080/tcp
-    port: 9080
-  - name: 9443/tcp
-    port: 9443
+  - container:
+      name: devruntime
+      # this custom image source can be found in the baseimage section of the repo at:
+      # https://github.com/OpenLiberty/application-stack.git
+      image: ajymau/java-openliberty-odo:0.1
+      memoryLimit: 1512Mi
+      mountSources: true
+      endpoints:
+        - name: 9080/tcp
+          configuration:
+            discoverable: false
+            public: true
+            protocol: tcp
+            scheme: http
+          targetPort: 9080
 commands:
-  - name: devInit
-    actions:
-      - workdir: /projects/user-app
-        type: exec
-        command: echo "moving liberty" && mkdir -p /projects/user-app/target/liberty && mv /opt/ol/wlp /projects/user-app/target/liberty
-        component: devruntime
-  - name: devBuild
-    actions:
-      - workdir: /projects/user-app
-        type: exec
-        command: if [ -e /projects/user-app/.disable-bld-cmd ];
-                 then
-                     echo "found the disable file" && echo "devBuild command will not run" && exit 0;
-                 else
-                     echo "will run the devBuild command" && mvn package && touch ./.disable-bld-cmd;
-                 fi
-        component: devruntime
-  - name: devRun
-    actions:
-      - workdir: /projects/user-app
-        type: exec
-        command: mvn -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
-        component: devruntime
-    attributes:
+# devInit currently not functional in odo devfile v2 - will re-enable when available
+# as a workaround, moved devInit command to the devBuild command since our stack
+# runs devBuild once only on forst push (similar to devInit intended function)
+#  - exec:
+#      id: devInit
+#      component: appsodyrun
+#      commandLine: echo "temp -> devInit cmd currently on the one-time devBld cmd"
+#      workingDir: /projects/user-app
+#      attributes:
+#        restart: "false"
+#      group:
+#        kind: build
+#        isDefault: true
+  - exec:
+      id: devBuild
+      component: devruntime 
+      commandLine: if [ -e /projects/user-app/.disable-bld-cmd ];
+                   then
+                       echo "found the disable file" && echo "devBuild command will not run" && exit 0;
+                   else
+                       echo "will run the devBuild command" && echo "...moving liberty"
+                                                            && mkdir -p /projects/user-app/target/liberty
+                                                            && mv /opt/ol/wlp /projects/user-app/target/liberty
+                                                            && mvn package
+                                                            && touch ./.disable-bld-cmd;
+                   fi
+      workingDir: /projects/user-app
+      attributes:
         restart: "false"
+      group:
+        kind: build 
+        isDefault: true
+  - exec:
+      id: devRun
+      component: devruntime 
+      commandLine: mvn -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
+      workingDir: /projects/user-app
+      attributes:
+        restart: "false"
+      group:
+        kind: run
+        isDefault: true
