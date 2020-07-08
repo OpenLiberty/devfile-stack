@@ -20,8 +20,6 @@
         <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
         <liberty.env.DEFAULT_HTTP_PORT>9080</liberty.env.DEFAULT_HTTP_PORT>
         <liberty.env.DEFAULT_HTTPS_PORT>9443</liberty.env.DEFAULT_HTTPS_PORT>
-        <http.port>9080</http.port>
-        <https.port>9443</https.port>
         <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
     </properties>
 
@@ -167,9 +165,6 @@
                                 <include>**/it/**</include>
                             </includes>
                             <systemPropertyVariables>
-                                <liberty.test.port>${liberty.env.default.http.port}</liberty.test.port>
-                                <default.https.port>${liberty.env.default.http.port}</default.https.port>
-                                <default.http.port>${liberty.env.default.https.port}</default.http.port>                                
                                 <war.name>${app.name}</war.name>
                             </systemPropertyVariables>
                         </configuration>
