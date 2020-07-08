@@ -18,13 +18,15 @@
         <version.maven-war-plugin>3.2.2</version.maven-war-plugin>
         <version.maven-surefire-plugin>3.0.0-M1</version.maven-surefire-plugin>
         <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
+        <liberty.env.DEFAULT_HTTP_PORT>9080</liberty.env.DEFAULT_HTTP_PORT>
+        <liberty.env.DEFAULT_HTTPS_PORT>9443</liberty.env.DEFAULT_HTTPS_PORT>
         <http.port>9080</http.port>
         <https.port>9443</https.port>
         <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
     </properties>
 
-    <groupId>dev.appsody.starter.java-openliberty</groupId>
-    <artifactId>starter-app</artifactId>
+    <groupId>dev.odo.starter.java-openliberty</groupId>
+    <artifactId>starter</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -89,7 +91,7 @@
         </dependency>
         <dependency>
             <groupId>org.microshed</groupId>
-            <artifactId>microshed-testing-testcontainers</artifactId>
+            <artifactId>microshed-testing-liberty</artifactId>
             <version>0.9</version>
             <scope>test</scope>
         </dependency>
@@ -121,8 +123,6 @@
                     <stripVersion>true</stripVersion>
                     <serverStartTimeout>360</serverStartTimeout>
                     <bootstrapProperties>
-                        <default.http.port>${http.port}</default.http.port>
-                        <default.https.port>${https.port}</default.https.port>
                         <app.context.root>${app.name}</app.context.root>
                     </bootstrapProperties>
                 </configuration>
@@ -167,7 +167,9 @@
                                 <include>**/it/**</include>
                             </includes>
                             <systemPropertyVariables>
-                                <liberty.test.port>${http.port}</liberty.test.port>
+                                <liberty.test.port>${liberty.env.default.http.port}</liberty.test.port>
+                                <default.https.port>${liberty.env.default.http.port}</default.https.port>
+                                <default.http.port>${liberty.env.default.https.port}</default.http.port>                                
                                 <war.name>${app.name}</war.name>
                             </systemPropertyVariables>
                         </configuration>

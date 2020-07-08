@@ -11,15 +11,13 @@
         <feature>mpOpenAPI-1.1</feature>
         <feature>mpHealth-2.2</feature>
         <feature>mpConfig-1.4</feature>
-        <feature>mpOpenTracing-1.3</feature>
         <feature>mpRestClient-1.4</feature>
     </featureManager>
-    <!--  quickStartSecurity userName="admin" userPassword="adminpwd"/ -->
+    <quickStartSecurity userName="admin" userPassword="adminpwd"/>
     <keyStore id="defaultKeyStore" location="key.jks" type="jks" password="mpKeystore"/>
-    <httpEndpoint host="*" httpPort="9080"
-        httpsPort="9443" id="defaultHttpEndpoint"/>
+    <httpEndpoint host="*" httpPort="${env.DEFAULT_HTTP_PORT}"
+        httpsPort="${env.DEFAULT_HTTPS_PORT}" id="defaultHttpEndpoint"/>
 
     <httpDispatcher enableWelcomePage="false" />
-    
-    <webApplication location="starter-app.war" contextRoot="/"/>
+   
 </server>
