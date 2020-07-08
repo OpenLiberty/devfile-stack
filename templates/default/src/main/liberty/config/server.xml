@@ -8,8 +8,8 @@
     </featureManager>
     <quickStartSecurity userName="admin" userPassword="adminpwd"/>
     <keyStore id="defaultKeyStore" location="key.jks" type="jks" password="mpKeystore"/>
-    <httpEndpoint host="*" httpPort="${env.DEFAULT_HTTP_PORT}"
-        httpsPort="${env.DEFAULT_HTTPS_PORT}" id="defaultHttpEndpoint"/>
+    <httpEndpoint host="*" httpPort="${DEFAULT_HTTP_PORT}"
+        httpsPort="${DEFAULT_HTTPS_PORT}" id="defaultHttpEndpoint"/>
 
     <httpDispatcher enableWelcomePage="false" />
    

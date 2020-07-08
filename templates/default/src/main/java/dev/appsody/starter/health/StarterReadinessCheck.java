@@ -1,4 +1,3 @@
-// tag::copyright[]
 /*******************************************************************************
 Copyright (c) 2020 IBM Corporation and others
 
@@ -14,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 *******************************************************************************/
-// end::copyright[]
 package dev.appsody.starter.health;
 
 import javax.enterprise.context.ApplicationScoped;
