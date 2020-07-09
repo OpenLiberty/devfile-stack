@@ -44,6 +44,9 @@ RUN rm -rf ./target/liberty/wlp/usr/servers/tmp
 
 #FROM ajymau/ubi-maven:0.3.1
 FROM maven
+RUN mkdir /mvn
 RUN mkdir -p /opt/ol
-COPY --from=builder /root/.m2 /root/.m2
+COPY --from=builder /root/.m2 /mvn
 COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
+RUN chmod -R 777 /mvn
+RUN chmod -R 777 /opt/ol
