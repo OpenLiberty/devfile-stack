@@ -49,7 +49,7 @@ commands:
                        echo "will run the devBuild command" && echo "...moving liberty"
                                                             && mkdir -p /projects/user-app/target/liberty
                                                             && mv /opt/ol/wlp /projects/user-app/target/liberty
-                                                            && mvn package
+                                                            && mvn -Dmaven.repo.local=/mvn/repository package
                                                             && touch ./.disable-bld-cmd;
                    fi
       workingDir: /projects/user-app
@@ -61,7 +61,7 @@ commands:
   - exec:
       id: devRun
       component: devruntime 
-      commandLine: mvn -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
       workingDir: /projects/user-app
       attributes:
         restart: "false"
