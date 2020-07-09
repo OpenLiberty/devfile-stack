@@ -26,7 +26,6 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
-#FROM ajymau/ubi-maven:0.3.1 AS builder
 FROM maven AS builder
 
 RUN  mkdir -p /opt/ol \
@@ -42,8 +41,10 @@ WORKDIR /stacks/java-openliberty/starterapp
 RUN mvn -DserverName=tmp liberty:create liberty:install-feature dependency:go-offline
 RUN rm -rf ./target/liberty/wlp/usr/servers/tmp
 
-#FROM ajymau/ubi-maven:0.3.1
 FROM maven
+RUN mkdir /mvn
 RUN mkdir -p /opt/ol
-COPY --from=builder /root/.m2 /root/.m2
+COPY --from=builder /root/.m2 /mvn
 COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
+RUN chmod -R 777 /mvn
+RUN chmod -R 777 /opt/ol
