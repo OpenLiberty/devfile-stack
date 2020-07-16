@@ -18,8 +18,10 @@
         <version.maven-war-plugin>3.2.2</version.maven-war-plugin>
         <version.maven-surefire-plugin>3.0.0-M1</version.maven-surefire-plugin>
         <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
-        <liberty.env.DEFAULT_HTTP_PORT>9080</liberty.env.DEFAULT_HTTP_PORT>
-        <liberty.env.DEFAULT_HTTPS_PORT>9443</liberty.env.DEFAULT_HTTPS_PORT>
+        <!-- liberty.env.DEFAULT_HTTP_PORT>9080</liberty.env.DEFAULT_HTTP_PORT>
+        <liberty.env.DEFAULT_HTTPS_PORT>9443</liberty.env.DEFAULT_HTTPS_PORT -->
+        <liberty.defaultVar.default.http.port>9080</liberty.defaultVar.default.http.port>
+        <liberty.defaultVar.default.https.port>9443</liberty.defaultVar.default.https.port>
         <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
     </properties>
 
@@ -164,9 +166,6 @@
                             <includes>
                                 <include>**/it/**</include>
                             </includes>
-                            <systemPropertyVariables>
-                                <war.name>${app.name}</war.name>
-                            </systemPropertyVariables>
                         </configuration>
                     </execution>
                     <execution>
