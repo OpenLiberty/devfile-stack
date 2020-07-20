@@ -1,0 +1,29 @@
+apiVersion: openliberty.io/v1beta1
+kind: OpenLibertyApplication
+metadata:
+  name: {{.COMPONENT_NAME}}
+spec:
+  # Add fields here
+  version: 1.0.0
+  applicationImage: {{.CONTAINER_IMAGE}}
+  service:
+    type: ClusterIP
+    port: {{.PORT}}
+    annotations:
+      prometheus.io/scrape: 'true'
+  readinessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /health/ready
+      port: {{.PORT}}
+    initialDelaySeconds: 5
+    periodSeconds: 2
+    timeoutSeconds: 1
+  livenessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /health/live
+      port: {{.PORT}}
+    initialDelaySeconds: 5
+    periodSeconds: 2
+  expose: true
