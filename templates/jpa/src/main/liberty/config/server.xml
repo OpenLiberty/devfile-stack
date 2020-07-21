@@ -1,0 +1,31 @@
+<server>
+
+  <featureManager>
+    <feature>jaxrs-2.1</feature>
+    <feature>jsonp-1.1</feature>
+    <feature>cdi-2.0</feature>
+    <feature>jpa-2.2</feature>
+    <feature>jdbc-4.3</feature>
+  </featureManager>
+
+   <!-- Postgres coffee-shop-db definition -->
+    <dataSource id="DefaultDataSource"
+                jndiName="jdbc/sampledb"
+                jdbcDriverRef="postgresql-driver">
+
+        <properties serverName="${POSTGRES_HOSTNAME}"
+                    portNumber="${POSTGRES_PORT}"
+                    databaseName="sampledb"
+                    user="tester"
+                    password="tester" />
+    </dataSource>
+
+    <jdbcDriver id="postgresql-driver"
+                javax.sql.XADataSource="org.postgresql.xa.PGXADataSource"
+                javax.sql.ConnectionPoolDataSource="org.postgresql.ds.PGConnectionPoolDataSource"
+                libraryRef="postgresql-library"/>
+
+    <library id="postgresql-library">
+        <file name="${shared.resource.dir}/postgresql-42.1.1.jar" />
+    </library>
+</server>
