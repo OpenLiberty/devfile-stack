@@ -40,9 +40,9 @@ import javax.persistence.Id;
 @Entity
 @Table(name = "Person")
 @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p")
-@NamedQuery(name = "Person.findEvent", query = "SELECT p FROM Person p WHERE "
+@NamedQuery(name = "Person.findPerson", query = "SELECT p FROM Person p WHERE "
                  + "p.name = :name AND p.age = :age")
-public class Person {
+public class Person implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static final Random r = new Random();

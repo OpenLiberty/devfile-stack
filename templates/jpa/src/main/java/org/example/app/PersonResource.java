@@ -18,6 +18,7 @@
  */
 package org.example.app;
 
+import java.util.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -58,27 +59,43 @@ import org.example.app.Person;
 @Path("/")
 @RequestScoped
 //@ApplicationScoped
-@Transactional(Transactional.TxType.REQUIRES_NEW)
+//@Transactional(Transactional.TxType.SUPPORTS)
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PersonResource {
 
-    @PersistenceContext(name = "jpa-unit")
+    @PersistenceContext(unitName = "mysql-jpa-unit")
+    //@PersistenceContext(unitName = "postgresql-jpa-unit")
     EntityManager em;
 
     @Resource UserTransaction userTran;
 
-	@PostConstruct
+        @PostConstruct
 	public void initPeople() {
+                try {
 		System.out.println("Seeding database with sample data");
 		createPerson("Sample Person A", 25);
-		createPerson("Sample Person B", 26);   
+		createPerson("Sample Person B", 26); 
+                } catch (Exception e){
+                  System.out.println("AJM: CAUGHT SOMEEXCEPTION -> \n");
+                  e.printStackTrace();
+                }  
     }
 
     @GET
     public Collection<Person> getAllPeople(){
         //Set<Person> allPeople = new HashSet<>();
-        return em.createNamedQuery("Person.findAll", Person.class).getResultList();	
+        Collection<Person> people = new ArrayList<>();
+        try{
+        //userTran.begin();
+        people = em.createNamedQuery("Person.findAll", Person.class).getResultList();	
+        //userTran.commit();
+        }
+        catch (Exception e){
+                e.printStackTrace();
+       }
+
+        return people;
     }
 
     @GET

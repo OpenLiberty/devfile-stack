@@ -8,24 +8,60 @@
     <feature>jdbc-4.3</feature>
   </featureManager>
 
-   <!-- Postgres coffee-shop-db definition -->
-    <dataSource id="DefaultDataSource"
-                jndiName="jdbc/sampledb"
-                jdbcDriverRef="postgresql-driver">
+<!-- mysql -->
+    <dataSource jndiName="jdbc/mysql-ds" 
+                id="mysql-ds">
+      <jdbcDriver libraryRef="MySQLLib"/>
+      <properties databaseName="sampledb" 
+                serverName="10.254.2.33" portNumber="3306" 
+                user="user84U" password="wHbBsT4RwAuNfvhr"/>
+    </dataSource>
+<!-- mysql nontx ds -->
+    <dataSource jndiName="jdbc/mysql-ds-nontx"
+                transactional="false" 
+                id="mysql-ds-nontx">
+      <jdbcDriver libraryRef="MySQLLib"/>
+      <properties databaseName="sampledb"
+                serverName="10.254.2.33" portNumber="3306"
+                user="user84U" password="wHbBsT4RwAuNfvhr"/>
+    </dataSource>
+    <library id="MySQLLib">
+      <fileset dir="${shared.resource.dir}" includes="m*.jar"/>
+    </library>
 
-        <properties serverName="${POSTGRES_HOSTNAME}"
-                    portNumber="${POSTGRES_PORT}"
+<!-- postgresql -->
+    <dataSource id="DefaultDataSource"
+                jndiName="jdbc/postgresql-ds"
+                jdbcDriverRef="postgresql-driver"
+                type="javax.sql.ConnectionPoolDataSource"
+                transactional="true">
+        <properties serverName="10.254.9.191"
+                    portNumber="5432"
                     databaseName="sampledb"
                     user="tester"
-                    password="tester" />
+                    password="tester"/>
     </dataSource>
 
     <jdbcDriver id="postgresql-driver"
+                libraryRef="postgresqlLib"
                 javax.sql.XADataSource="org.postgresql.xa.PGXADataSource"
                 javax.sql.ConnectionPoolDataSource="org.postgresql.ds.PGConnectionPoolDataSource"
-                libraryRef="postgresql-library"/>
+                javax.sql.DataSource="org.postgresql.ds.PGPoolingDataSource"/>
 
-    <library id="postgresql-library">
-        <file name="${shared.resource.dir}/postgresql-42.1.1.jar" />
+<!-- non-tx postgresql ds, needed for table create -->
+    <dataSource id="postgresqlDataSourceNonTx"
+                jndiName="jdbc/postgresql-ds-nontx"
+                jdbcDriverRef="postgresql-driver"
+                type="javax.sql.ConnectionPoolDataSource"
+                transactional="false">
+        <properties serverName="10.254.9.191"
+                    portNumber="5432"
+                    databaseName="sampledb"
+                    user="tester"
+                    password="tester"/>
+    </dataSource>
+
+    <library id="postgresqlLib">
+      <fileset dir="${shared.resource.dir}" includes="p*.jar"/>
     </library>
 </server>
