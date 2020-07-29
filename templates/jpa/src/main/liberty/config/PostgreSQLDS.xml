@@ -1,0 +1,37 @@
+<server>
+<!-- postgresql -->
+    <dataSource id="DefaultDataSource"
+                jndiName="jdbc/DefaultDataSource"
+                jdbcDriverRef="postgresql-driver"
+                type="javax.sql.ConnectionPoolDataSource"
+                transactional="true">
+        <properties serverName="${DB_HOSTNAME}"
+                    portNumber="${DB_PORT}"
+                    databaseName="sampledb"
+                    user="tester"
+                    password="tester"/>
+    </dataSource>
+
+    <jdbcDriver id="postgresql-driver"
+                libraryRef="postgresqlLib"
+                javax.sql.XADataSource="org.postgresql.xa.PGXADataSource"
+                javax.sql.ConnectionPoolDataSource="org.postgresql.ds.PGConnectionPoolDataSource"
+                javax.sql.DataSource="org.postgresql.ds.PGPoolingDataSource"/>
+
+<!-- non-tx postgresql ds, needed for table create -->
+    <dataSource id="postgresqlDataSourceNonTx"
+                jndiName="jdbc/DefaultDataSourceNonJTA"
+                jdbcDriverRef="postgresql-driver"
+                type="javax.sql.ConnectionPoolDataSource"
+                transactional="false">
+        <properties serverName="${DB_HOSTNAME}"
+                    portNumber="${DB_PORT}"
+                    databaseName="sampledb"
+                    user="tester"
+                    password="tester"/>
+    </dataSource>
+
+    <library id="postgresqlLib">
+      <fileset dir="${shared.resource.dir}" includes="p*.jar"/>
+    </library>
+</server>

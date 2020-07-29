@@ -8,7 +8,11 @@
     <feature>jdbc-4.3</feature>
   </featureManager>
 
+ <include optional="true" location="${server.config.dir}/PostgreSQLDS.xml"/>
+<!-- <include optional="true" location="${server.config.dir}/MySQLDS.xml"/> -->
+
 <!-- mysql -->
+<!--
     <dataSource jndiName="jdbc/mysql-ds" 
                 id="mysql-ds">
       <jdbcDriver libraryRef="MySQLLib"/>
@@ -16,7 +20,9 @@
                 serverName="10.254.2.33" portNumber="3306" 
                 user="user84U" password="wHbBsT4RwAuNfvhr"/>
     </dataSource>
+-->
 <!-- mysql nontx ds -->
+<!--
     <dataSource jndiName="jdbc/mysql-ds-nontx"
                 transactional="false" 
                 id="mysql-ds-nontx">
@@ -28,8 +34,9 @@
     <library id="MySQLLib">
       <fileset dir="${shared.resource.dir}" includes="m*.jar"/>
     </library>
-
+-->
 <!-- postgresql -->
+<!--
     <dataSource id="DefaultDataSource"
                 jndiName="jdbc/postgresql-ds"
                 jdbcDriverRef="postgresql-driver"
@@ -47,8 +54,9 @@
                 javax.sql.XADataSource="org.postgresql.xa.PGXADataSource"
                 javax.sql.ConnectionPoolDataSource="org.postgresql.ds.PGConnectionPoolDataSource"
                 javax.sql.DataSource="org.postgresql.ds.PGPoolingDataSource"/>
-
+-->
 <!-- non-tx postgresql ds, needed for table create -->
+<!--
     <dataSource id="postgresqlDataSourceNonTx"
                 jndiName="jdbc/postgresql-ds-nontx"
                 jdbcDriverRef="postgresql-driver"
@@ -64,4 +72,5 @@
     <library id="postgresqlLib">
       <fileset dir="${shared.resource.dir}" includes="p*.jar"/>
     </library>
+-->
 </server>

@@ -1,0 +1,84 @@
+schemaVersion: 2.0.0
+metadata:
+  name: java-openliberty
+  version: 1.0.0
+  description: Java application stack using Open Liberty runtime
+projects:
+  - name: user-app
+    git:
+      location: 'https://github.com/OpenLiberty/application-stack.git'
+      sparseCheckoutDir: /templates/default
+      branch: master
+components:
+  - container:
+      name: devruntime
+      # this custom image source can be found in the baseimage section of the repo at:
+      # https://github.com/OpenLiberty/application-stack.git
+      image: ajymau/java-openliberty-odo:0.1
+      memoryLimit: 1512Mi
+      mountSources: true
+      env:
+        - value: "10.254.8.2"
+          name: DBHOST 
+        - value: "5432" 
+          name: DBPORT 
+      endpoints:
+        - name: 9080/tcp
+          configuration:
+            discoverable: false
+            public: true
+            protocol: tcp
+            scheme: http
+          targetPort: 9080
+commands:
+# devInit currently not functional in odo devfile v2 - will re-enable when available
+# as a workaround, moved devInit command to the devBuild command since our stack
+# runs devBuild once only on forst push (similar to devInit intended function)
+#  - exec:
+#      id: devInit
+#      component: appsodyrun
+#      commandLine: echo "temp -> devInit cmd currently on the one-time devBld cmd"
+#      workingDir: /projects/user-app
+#      attributes:
+#        restart: "false"
+#      group:
+#        kind: build
+#        isDefault: true
+  - exec:
+      id: devBuild
+      component: devruntime 
+      commandLine: if [ -e /projects/user-app/.disable-bld-cmd ];
+                   then
+                       echo "found the disable file" && echo "devBuild command will not run" && exit 0;
+                   else
+                       echo "will run the devBuild command" && echo "...moving liberty"
+                                                            && mkdir -p /projects/user-app/target/liberty
+                                                            && mv /opt/ol/wlp /projects/user-app/target/liberty
+                                                            && mvn -Dmaven.repo.local=/mvn/repository package
+                                                            && touch ./.disable-bld-cmd;
+                   fi
+      workingDir: /projects/user-app
+      attributes:
+        restart: "false"
+      group:
+        kind: build 
+        isDefault: true
+  - exec:
+      id: devRun
+      component: devruntime 
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
+      workingDir: /projects/user-app
+      attributes:
+        restart: "false"
+      group:
+        kind: run
+        isDefault: true
+  - exec:
+      id: devRunJPA
+      component: devruntime
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 -DhotTests=true pre-integration-test liberty:dev
+      workingDir: /projects/user-app
+      group:
+        kind: run
+        isDefault: false
+

@@ -1,0 +1,21 @@
+<server>
+    <dataSource jndiName="jdbc/DefaultDataSource"
+                id="mysql-ds">
+      <jdbcDriver libraryRef="MySQLLib"/>
+      <properties databaseName="sampledb"
+                serverName="10.254.2.33" portNumber="3306"
+                user="user84U" password="wHbBsT4RwAuNfvhr"/>
+    </dataSource>
+<!-- mysql nontx ds -->
+    <dataSource jndiName="jdbc/DefaultDataSourceNonJTA"
+                transactional="false"
+                id="mysql-ds-nontx">
+      <jdbcDriver libraryRef="MySQLLib"/>
+      <properties databaseName="sampledb"
+                serverName="10.254.2.33" portNumber="3306"
+                user="user84U" password="wHbBsT4RwAuNfvhr"/>
+    </dataSource>
+    <library id="MySQLLib">
+      <fileset dir="${shared.resource.dir}" includes="m*.jar"/>
+    </library>
+</server>

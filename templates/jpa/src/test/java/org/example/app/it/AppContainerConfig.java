@@ -33,7 +33,7 @@ public class AppContainerConfig implements SharedContainerConfiguration {
     @Container
     public static ApplicationContainer app = new ApplicationContainer()
                     .withAppContextRoot("/jpa-starter-app")
-                    .withEnv("POSTGRES_HOSTNAME", "postgresql")
-                    .withEnv("POSTGRES_PORT", "5432");
+                    .withEnv("DB_HOSTNAME",System.getenv("DBHOST"))
+                    .withEnv("DB_PORT", System.getenv("DBPORT"));
     
 }

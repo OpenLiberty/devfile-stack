@@ -38,7 +38,6 @@ public class DatabaseIT {
 
     @Test
     public void testGetPerson() {
-        System.out.println("AJM: are we even getting here?");
         Long bobId = personSvc.createPerson("Bob", 24);
         Person bob = personSvc.getPerson(bobId);
         assertEquals("Bob", bob.name);

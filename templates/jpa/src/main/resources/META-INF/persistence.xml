@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-
+<!--
     <persistence-unit name="mysql-jpa-unit" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>jdbc/mysql-ds</jta-data-source>
@@ -14,6 +14,7 @@
            <property name="eclipselink.ddl-generation.output-mode" value="database" />
         </properties>
     </persistence-unit>
+
     <persistence-unit name="postgresql-jpa-unit" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>jdbc/postgresql-ds</jta-data-source>
@@ -23,4 +24,16 @@
            <property name="eclipselink.ddl-generation.output-mode" value="database" />
         </properties>
     </persistence-unit>
+-->
+    <persistence-unit name="jpa-unit" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>jdbc/DefaultDataSource</jta-data-source>
+        <!-- needed by eclipselink to do table creates/drops -->
+        <non-jta-data-source>jdbc/DefaultDataSourceNonJTA</non-jta-data-source>
+        <properties>
+           <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+           <property name="eclipselink.ddl-generation.output-mode" value="database" />
+        </properties>
+    </persistence-unit>
+
 </persistence>
