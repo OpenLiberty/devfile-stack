@@ -13,7 +13,7 @@
 <br />
 
 
-[![License](https://img.shields.io/badge/License-EPL%201.0-green.svg)](https://opensource.org/licenses/EPL-1.0)
+[![License](https://img.shields.io/badge/License-ASL%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # Summary
 
@@ -130,5 +130,5 @@ Not currently supported
 
 ## License
 
-Usage is provided under the [EPL 1.0 license](https://opensource.org/licenses/EPL-1.0) See LICENSE for the full details.
+Usage is provided under the [Apache 2.0 license](https://opensource.org/licenses/Apache-2.0).  See LICENSE for the full details.
 

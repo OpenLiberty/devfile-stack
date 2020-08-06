@@ -1,4 +1,5 @@
-FROM adoptopenjdk/openjdk11-openj9:ubi AS maven
+ARG JAVA_LEVEL=8
+FROM adoptopenjdk/openjdk${JAVA_LEVEL}-openj9:ubi
 
 RUN yum upgrade --disableplugin=subscription-manager -y \
    && yum clean --disableplugin=subscription-manager packages \
@@ -12,7 +13,6 @@ RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject
 
 # Maven install
 ARG MAVEN_VERSION=3.6.3
-ARG USER_HOME_DIR="/root"
 ARG SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/
 
@@ -23,28 +23,8 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && rm -f /tmp/apache-maven.tar.gz \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
-ENV MAVEN_HOME /usr/share/maven
-ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+RUN  groupadd --gid 1000 java_group \
+  && useradd --uid 1000 --gid java_group --shell /bin/bash --create-home java_user
+USER java_user
 
-FROM maven AS builder
-
-RUN  mkdir -p /opt/ol \
-  && mkdir -p /stacks/java-openliberty/starterapp
-
-RUN chmod -R 777 /stacks/java-openliberty/starterapp
-
-COPY ./LICENSE /licenses/
-ADD ./starterapp/src /stacks/java-openliberty/starterapp/src
-COPY ./starterapp/pom.xml /stacks/java-openliberty/starterapp/
-
-WORKDIR /stacks/java-openliberty/starterapp
-RUN mvn -DserverName=tmp liberty:create liberty:install-feature dependency:go-offline
-RUN rm -rf ./target/liberty/wlp/usr/servers/tmp
-
-FROM maven
-RUN mkdir /mvn
-RUN mkdir -p /opt/ol
-COPY --from=builder /root/.m2 /mvn
-COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
-RUN chmod -R 777 /mvn
-RUN chmod -R 777 /opt/ol
+CMD /bin/bash
