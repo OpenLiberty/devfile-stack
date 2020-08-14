@@ -19,11 +19,6 @@ components:
       mountSources: true
       endpoints:
         - name: 9080/tcp
-          configuration:
-            discoverable: false
-            public: true
-            protocol: tcp
-            scheme: http
           targetPort: 9080
 commands:
 # devInit currently not functional in odo devfile v2 - will re-enable when available
@@ -42,17 +37,17 @@ commands:
   - exec:
       id: devBuild
       component: devruntime 
-      commandLine: if [ -e /projects/user-app/.disable-bld-cmd ];
+      commandLine: if [ -e /projects/.disable-bld-cmd ];
                    then
                        echo "found the disable file" && echo "devBuild command will not run" && exit 0;
                    else
                        echo "will run the devBuild command" && echo "...moving liberty"
-                                                            && mkdir -p /projects/user-app/target/liberty
-                                                            && mv /opt/ol/wlp /projects/user-app/target/liberty
+                                                            && mkdir -p /projects/target/liberty
+                                                            && mv /opt/ol/wlp /projects/target/liberty
                                                             && mvn -Dmaven.repo.local=/mvn/repository package
                                                             && touch ./.disable-bld-cmd;
                    fi
-      workingDir: /projects/user-app
+      workingDir: /projects
       attributes:
         restart: "false"
       group:
@@ -61,10 +56,20 @@ commands:
   - exec:
       id: devRun
       component: devruntime 
-      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
-      workingDir: /projects/user-app
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 liberty:dev
+      workingDir: /projects
       attributes:
         restart: "false"
       group:
         kind: run
         isDefault: true
+  - exec:
+      id: devRun-hot-tests
+      component: devruntime 
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
+      workingDir: /projects
+      attributes:
+        restart: "false"
+      group:
+        kind: run
+        isDefault: false
