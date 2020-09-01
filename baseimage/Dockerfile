@@ -38,12 +38,13 @@ ADD ./starterapp/src /stacks/java-openliberty/starterapp/src
 COPY ./starterapp/pom.xml /stacks/java-openliberty/starterapp/
 
 WORKDIR /stacks/java-openliberty/starterapp
-RUN mvn -DserverName=tmp liberty:create liberty:install-feature dependency:go-offline
+RUN mvn -DserverName=tmp -Dliberty.runtime.version=20.0.0.9 liberty:create liberty:install-feature dependency:go-offline
 RUN rm -rf ./target/liberty/wlp/usr/servers/tmp
 
 FROM maven
 RUN mkdir /mvn
 RUN mkdir -p /opt/ol
+CMD /bin/bash
 COPY --from=builder /root/.m2 /mvn
 COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
 RUN chmod -R 777 /mvn

@@ -3,7 +3,7 @@ metadata:
   name: java-openliberty
   version: 0.1.1
   description: Java application stack using Open Liberty runtime
-projects:
+starterProjects:
   - name: user-app
     git:
       location: 'https://github.com/OpenLiberty/application-stack.git'
@@ -56,7 +56,7 @@ commands:
   - exec:
       id: devRun
       component: devruntime 
-      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 liberty:dev
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 -DhotTests=true liberty:dev
       workingDir: /projects
       attributes:
         restart: "false"
@@ -64,9 +64,9 @@ commands:
         kind: run
         isDefault: true
   - exec:
-      id: devRun-hot-tests
-      component: devruntime 
-      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
+      id: devRunDisableHotTests
+      component: devruntime
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:dev
       workingDir: /projects
       attributes:
         restart: "false"
