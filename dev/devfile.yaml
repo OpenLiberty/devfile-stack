@@ -1,7 +1,7 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-openliberty
-  version: 0.1.1
+  version: 0.1.2
   description: Java application stack using Open Liberty runtime
 starterProjects:
   - name: user-app
@@ -14,7 +14,7 @@ components:
       name: devruntime
       # this custom image source can be found in the baseimage section of the repo at:
       # https://github.com/OpenLiberty/application-stack.git
-      image: ajymau/java-openliberty-odo:0.1.1
+      image: ajymau/java-openliberty-odo:0.1.2
       memoryLimit: 1512Mi
       mountSources: true
       endpoints:
