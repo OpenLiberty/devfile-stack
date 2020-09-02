@@ -23,11 +23,7 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && rm -f /tmp/apache-maven.tar.gz \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
-ENV MAVEN_HOME /usr/share/maven
-ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
-
 FROM maven AS builder
-
 RUN  mkdir -p /opt/ol \
   && mkdir -p /stacks/java-openliberty/starterapp
 
@@ -38,14 +34,16 @@ ADD ./starterapp/src /stacks/java-openliberty/starterapp/src
 COPY ./starterapp/pom.xml /stacks/java-openliberty/starterapp/
 
 WORKDIR /stacks/java-openliberty/starterapp
-RUN mvn -DserverName=tmp -Dliberty.runtime.version=20.0.0.9 liberty:create liberty:install-feature dependency:go-offline
+RUN mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:create liberty:install-feature dependency:go-offline
 RUN rm -rf ./target/liberty/wlp/usr/servers/tmp
 
 FROM maven
 RUN mkdir /mvn
 RUN mkdir -p /opt/ol
 CMD /bin/bash
-COPY --from=builder /root/.m2 /mvn
+COPY --from=builder /mvn /mvn
 COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
 RUN chmod -R 777 /mvn
 RUN chmod -R 777 /opt/ol
+ARG stacklabel
+LABEL org.opencontainers.image.revision=$stacklabel
