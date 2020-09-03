@@ -12,5 +12,7 @@
         httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
 
     <httpDispatcher enableWelcomePage="false" />
+
+    <webApplication contextRoot="/" location="starter.war" />
    
 </server>
