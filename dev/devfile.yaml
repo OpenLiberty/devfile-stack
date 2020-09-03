@@ -1,7 +1,7 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-openliberty
-  version: 0.1.2
+  version: 0.1.3
   description: Java application stack using Open Liberty runtime
 starterProjects:
   - name: user-app
@@ -14,7 +14,7 @@ components:
       name: devruntime
       # this custom image source can be found in the baseimage section of the repo at:
       # https://github.com/OpenLiberty/application-stack.git
-      image: ajymau/java-openliberty-odo:0.1.2
+      image: ajymau/java-openliberty-odo:0.1.3
       memoryLimit: 1512Mi
       mountSources: true
       endpoints:
@@ -43,8 +43,8 @@ commands:
                    else
                        echo "will run the devBuild command" && echo "...moving liberty"
                                                             && mkdir -p /projects/target/liberty
-                                                            && mv /opt/ol/wlp /projects/target/liberty
                                                             && mvn -Dmaven.repo.local=/mvn/repository package
+                                                            && mv /opt/ol/wlp /projects/target/liberty
                                                             && touch ./.disable-bld-cmd;
                    fi
       workingDir: /projects
@@ -54,9 +54,9 @@ commands:
         kind: build 
         isDefault: true
   - exec:
-      id: devRun
+      id: run
       component: devruntime 
-      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 -DhotTests=true liberty:dev
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 -Ddebug=false -DhotTests=true -DcompileWait=3 liberty:dev
       workingDir: /projects
       attributes:
         restart: "false"
@@ -64,12 +64,32 @@ commands:
         kind: run
         isDefault: true
   - exec:
-      id: devRunDisableHotTests
+      id: run-test-off
       component: devruntime
-      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:dev
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 -Ddebug=false liberty:dev
       workingDir: /projects
       attributes:
         restart: "false"
       group:
         kind: run
         isDefault: false
+  - exec:
+      id: debug
+      component: devruntime 
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 -DdebugPort=${DEBUG_PORT} liberty:dev -Dliberty.env.WLP_DEBUG_REMOTE=y
+      workingDir: /projects
+      attributes:
+        restart: "false"
+      group:
+        kind: debug
+        isDefault: true
+  - exec:
+      id: test
+      component: devruntime 
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dmicroshed_hostname=localhost -Dmicroshed_http_port=9080 -Dmicroshed_manual_env=true -Dmicroshed_app_context_root=/ failsafe:integration-test
+      workingDir: /projects
+      attributes:
+        restart: "false"
+      group:
+        kind: test
+        isDefault: true
