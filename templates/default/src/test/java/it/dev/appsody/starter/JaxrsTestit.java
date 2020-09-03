@@ -32,7 +32,7 @@ public class JaxrsTestit {
 	
 	@Container
     public static ApplicationContainer app = new ApplicationContainer()
-                    .withAppContextRoot("/starter")
+                    .withAppContextRoot("/")
                     .withReadinessPath("/health/ready")
                     .withEnv("DEFAULT_HTTP_PORT", "9080")
 	                .withEnv("DEFAULT_HTTPS_PORT", "9443");

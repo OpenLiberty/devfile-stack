@@ -120,6 +120,7 @@
                 <artifactId>liberty-maven-plugin</artifactId>
                 <version>${version.liberty-maven-plugin}</version>
                 <configuration>
+                    <mergeServerEnv>true</mergeServerEnv>
                     <stripVersion>true</stripVersion>
                     <serverStartTimeout>360</serverStartTimeout>
                     <bootstrapProperties>
@@ -158,7 +159,7 @@
                 <executions>
                     <execution>
                         <phase>integration-test</phase>
-                        <id>it-exec</id>
+                        <id>default-cli</id>
                         <goals>
                             <goal>integration-test</goal>
                         </goals>
