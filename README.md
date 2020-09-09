@@ -31,9 +31,9 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and `Open 
 
 **Note:** Maven is provided by the stack, allowing you to build, test, and debug your Java application without installing Maven locally. However, we recommend installing Maven locally for the best development experience.
 
-## Default template
+## Default starter app
 
-The default template provides a `pom.xml` file that enables Liberty features that support [Eclipse MicroProfile 3.2](https://openliberty.io/docs/ref/feature/#microProfile-3.2.html). Specifically, this template includes:
+The default starter provides a `pom.xml` file that enables Liberty features that support [Eclipse MicroProfile 3.3](https://openliberty.io/docs/ref/feature/#microProfile-3.3.html). Specifically, this template includes:
 
 #### Health
 
@@ -77,50 +77,67 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
 
 1. Perform an `oc login` to your Open Shift cluster for development purposes.
 
-2.  Get the [odo v.1.2.1](https://mirror.openshift.com/pub/openshift-v4/clients/odo/v1.2.1/) CLI (or later).
+1.  Get the [odo v.1.2.1](https://mirror.openshift.com/pub/openshift-v4/clients/odo/v1.2.1/) CLI (or later).
 
-1. Create a new folder in your local directory and initialize it using the Odo CLI, e.g.:
+1. Create a new folder in your local directory and create an odo project using the Odo CLI, e.g.:
     ```bash
     mkdir my-project
     cd my-project
-    odo create --downloadSource
+    odo project create <project namespace name> 
     ```
-    Provide a name for the project when prompted
-    identify the Open Shift namespace to be used
-    
-    This will initialize an Open Liberty project and download the default template.
+    The project namespace name will be used to create an openshift namespace that will house your application and related pods
 
-1. Once your project has been initialized, you can run your application using the following command:
-
+1. Initialize the local folder for the odo project
     ```bash
-    odo watch 
+    odo create java-openliberty <app project name> --starter
     ```
     
-    Upon first time invocation, this initializes an Open Shift managed kubernetes pod, launches a Docker container in that pod and  syncs your source code to that container. Finally, this will start your application, exposing it on port 9080 of the container. 
-    
-    This command is making use of an odo watcher that will will recieve notification when any source ile within the project is updated and saved. 
+    This will initialize an Open Liberty project and download the default starter app artifacts.
 
-1. To access your application from the host, you must create an Open Shift URL connection to the container by using the following command:
+1. Create an odo URL that will be used to access the starter app:
     ```bash
     odo url create --port 9080
-    odo push
     ```
-    The url will take the form of `<project name>-9080-<namespace>`
+1. Once your project has been initialized and the URL created, you can push your application to your openshift cluster for the first time using the following command:
+
+    ```bash
+    odo push 
+    ```
+
+    Upon a first time `odo push` invocation, the following occurs:
+    1. An Open Shift managed kubernetes pod is launched within the namespace created in step 3 above, 
+    1. A container based on the image referenced in the devfile is started in that pod 
+    1. odo syncs your local source code directory to that container. (under the `/projects` directory)
+    1. The app is compiled and built within the container and liberty dev mode is started to host the app once built.
+    1. The URL is activated and is usable to access the app 
+
+1. Retrieve the URL created in step 5 using the odo CLI:
+    ```bash
+    odo url list
+    ```
     
-    You can continue to edit the application in your preferred IDE (Eclipse, VSCode or others) and your changes will be reflected in the running container within a few seconds.
+    Edits to source code can be made using any preferred IDE (Eclipse, VSCode or others). To see source code changes reflected in the running application re-issue the `odo push` command after any edit session is complete and saved. Source code changes will be reflected in the running container within a few seconds.
 
 1. You should be able to access the following endpoints, as they are exposed by your template application by default:
 
-    - Readiness endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/health/ready
-    - Liveness endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/health/live
-    - Metrics endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/metrics (login as `admin` user with password obtained as mentioned [here](#Metrics-Password).
-    - OpenAPI endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/openapi
-    - Swagger UI endpoint: http://`<project name>-9080-<namespace>.<host-ip>`/openapi/ui
+    - Readiness endpoint: http://`<odo url>`/health/ready
+    - Liveness endpoint: http://`<odo url>>`/health/live
+    - Metrics endpoint: http://`<odo url>`/metrics (login as `admin` user with password obtained as mentioned [here](#Metrics-Password).
+    - OpenAPI endpoint: http://`<odo url>`/openapi
+    - Swagger UI endpoint: http://`<odo url>`/openapi/ui
 
 ## Odo local development operations: (run/debug/test )
 
 ### RUN
-If you launch via `odo push` then the liberty-maven-plugin will launch dev mode in "hot test" mode, where unit tests and integration tests get automatically re-executed after each detected change. You must have visibility to the logs on the Open Shift container to see these test results.  
+By default, `odo push`, in conjuction with the java-openliberty devfile, runs a liberty:dev mode in "hot test" mode, where unit tests and integration tests get automatically re-executed after each detected change. Visibility to the logs on the Open Shift container is to see these test results. To see the realtime contents of the container logs, use the odo CLI:
+```bash
+odo log
+```
+
+It is also possible to disable the "hot test" mode of liberty:dev mode by re-running the `odo push` with the following argument:
+```bash
+odo push --run-command=run-test-off
+```
 
 ### DEBUG
 Not currently supported
