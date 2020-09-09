@@ -60,13 +60,6 @@ To get the generated password for project **my-project**, you can exec in the co
 
 So in the above example the password value would be: `2r1aquTO3VVUVON7kCDdzno`
 
-#### OpenAPI
-
-The `mpOpenAPI` feature provides a set of Java interfaces and programming models that allow Java developers to natively produce OpenAPI v3 documents from their JAX-RS applications. This provides a standard interface for documenting and exposing RESTful APIs.
-
-OpenAPI endpoints:
-- http://localhost:9080/openapi (the RESTful APIs of the inventory service)
-- http://localhost:9080/openapi/ui (Swagger UI of the deployed APIs)
 
 #### Junit 5
 
