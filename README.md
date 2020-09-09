@@ -54,7 +54,7 @@ Log in as the `admin` user to see both the system and application metrics in a t
 
 To get the generated password for project **my-project**, you can exec in the container like this, for example:
 
-    $ docker exec -it my-project-dev  bash -c "grep keystore /opt/ol/wlp/usr/servers/defaultServer/server.env"
+    $ docker exec -it my-project-dev  shell -c "grep keystore /opt/ol/wlp/usr/servers/defaultServer/server.env"
 
     keystore_password=2r1aquTO3VVUVON7kCDdzno
 
@@ -77,10 +77,15 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
 
 1. Perform an `oc login` to your Open Shift cluster for development purposes.
 
-1.  Get the [odo v.1.2.1](https://mirror.openshift.com/pub/openshift-v4/clients/odo/v1.2.1/) CLI (or later).
+1.  Get the [odo v.1.2.6](https://mirror.openshift.com/pub/openshift-v4/clients/odo/v1.2.6/) CLI (or later).
+
+1. Odo must be run in experimental mode at the 1.x level in order to access the devfile support. Enable experimental mode using the odo CLI:
+    ```shell
+    odo preference set experimental true
+    ```
 
 1. Create a new folder in your local directory and create an odo project using the Odo CLI, e.g.:
-    ```bash
+    ```shell
     mkdir my-project
     cd my-project
     odo project create <project namespace name> 
@@ -88,19 +93,19 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
     The project namespace name will be used to create an openshift namespace that will house your application and related pods
 
 1. Initialize the local folder for the odo project
-    ```bash
+    ```shell
     odo create java-openliberty <app project name> --starter
     ```
     
     This will initialize an Open Liberty project and download the default starter app artifacts.
 
 1. Create an odo URL that will be used to access the starter app:
-    ```bash
+    ```shell
     odo url create --port 9080
     ```
 1. Once your project has been initialized and the URL created, you can push your application to your openshift cluster for the first time using the following command:
 
-    ```bash
+    ```shell
     odo push 
     ```
 
@@ -112,7 +117,7 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
     1. The URL is activated and is usable to access the app 
 
 1. Retrieve the URL created in step 5 using the odo CLI:
-    ```bash
+    ```shell
     odo url list
     ```
     
@@ -130,12 +135,12 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
 
 ### RUN
 By default, `odo push`, in conjuction with the java-openliberty devfile, runs a liberty:dev mode in "hot test" mode, where unit tests and integration tests get automatically re-executed after each detected change. Visibility to the logs on the Open Shift container is to see these test results. To see the realtime contents of the container logs, use the odo CLI:
-```bash
+```shell
 odo log
 ```
 
 It is also possible to disable the "hot test" mode of liberty:dev mode by re-running the `odo push` with the following argument:
-```bash
+```shell
 odo push --run-command=run-test-off
 ```
 
