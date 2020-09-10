@@ -1,0 +1,12 @@
+[
+  {
+    "name": "java-openliberty",
+    "displayName": "Open Liberty",
+    "description": "Open Liberty microservice in Java",
+    "projectType": "docker",
+    "language": "java",
+    "links": {
+      "self": "/devfiles/java-openliberty/devfile.yaml"
+    }
+  }
+]
