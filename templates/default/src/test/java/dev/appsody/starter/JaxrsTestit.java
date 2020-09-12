@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 *******************************************************************************/
-package it.dev.appsody.starter;
+package dev.odo.starter;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,26 +25,26 @@ import org.microshed.testing.jaxrs.RESTClient;
 import org.microshed.testing.jupiter.MicroShedTest;
 import org.microshed.testing.testcontainers.ApplicationContainer;
 import org.testcontainers.junit.jupiter.Container;
-import dev.appsody.starter.StarterResource;
+import dev.odo.starter.StarterResource;
 
 @MicroShedTest
-public class JaxrsTestit {
-	
-	@Container
+public class JaxrsIT {
+    
+    @Container
     public static ApplicationContainer app = new ApplicationContainer()
                     .withAppContextRoot("/")
                     .withReadinessPath("/health/ready")
                     .withEnv("DEFAULT_HTTP_PORT", "9080")
-	                .withEnv("DEFAULT_HTTPS_PORT", "9443");
+                    .withEnv("DEFAULT_HTTPS_PORT", "9443");
                     
-	
-	@RESTClient 
-	public static StarterResource appService;
-	
-	
-	@Test
-	public void testAppResponse() {
-		   assertEquals("Hello! Welcome to Openliberty", appService.getRequest());
-	}
-	               
+    
+    @RESTClient 
+    public static StarterResource appService;
+    
+    
+    @Test
+    public void testAppResponse() {
+           assertEquals("Hello! Welcome to Openliberty", appService.getRequest());
+    }
+                   
 }

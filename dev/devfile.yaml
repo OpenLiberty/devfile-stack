@@ -26,7 +26,7 @@ commands:
 # runs devBuild once only on forst push (similar to devInit intended function)
 #  - exec:
 #      id: devInit
-#      component: appsodyrun
+#      component: devruntime
 #      commandLine: echo "temp -> devInit cmd currently on the one-time devBld cmd"
 #      workingDir: /projects/user-app
 #      attributes:

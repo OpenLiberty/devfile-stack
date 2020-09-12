@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 *******************************************************************************/
 
-package dev.appsody.starter.health;
+package dev.odo.starter.health;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -31,7 +31,7 @@ public class StarterLivenessCheck implements HealthCheck {
 
         return true;
     }
-	
+
     @Override
     public HealthCheckResponse call() {
         boolean up = isAlive();
