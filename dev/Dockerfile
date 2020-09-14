@@ -1,5 +1,5 @@
 # Step 1: Build the user's application
-FROM ajymau/java-openliberty-odo:0.1.4 as compile
+FROM ajymau/java-openliberty-odo:0.1.3 as compile
 
 # Make a well known place for shared library jars seperate from the rest of the defaultServer contents (to help with caching)
 RUN mkdir /configlibdir \
