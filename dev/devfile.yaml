@@ -1,7 +1,7 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-openliberty
-  version: 0.1.4
+  version: 0.1.4-r1
   description: Java application stack using Open Liberty runtime
   alpha.build-dockerfile: "https://raw.githubusercontent.com/OpenLiberty/application-stack/master/dev/Dockerfile"
   alpha.deployment-manifest: "https://raw.githubusercontent.com/OpenLiberty/application-stack/master/dev/app-deploy.yaml"
@@ -9,14 +9,13 @@ starterProjects:
   - name: user-app
     git:
       remotes:
-        origin: 'https://github.com/OpenLiberty/application-stack.git'
-      sparseCheckoutDir: /templates/default
+        origin: 'https://github.com/OpenLiberty/application-stack-starters.git'
 components:
   - name: devruntime
     container:
       # this custom image source can be found in the baseimage section of the repo at:
       # https://github.com/OpenLiberty/application-stack.git
-      image: ajymau/java-openliberty-odo:0.1.4
+      image: ajymau/java-openliberty-odo:0.1.3
       memoryLimit: 1512Mi
       mountSources: true
       endpoints:
