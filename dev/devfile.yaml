@@ -1,7 +1,7 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-openliberty
-  version: 0.2.0
+  version: 0.2.1
   description: Java application stack using Open Liberty runtime
   alpha.build-dockerfile: "https://raw.githubusercontent.com/OpenLiberty/application-stack/master/dev/Dockerfile"
   alpha.deployment-manifest: "https://raw.githubusercontent.com/OpenLiberty/application-stack/master/dev/app-deploy.yaml"
@@ -19,8 +19,11 @@ components:
       memoryLimit: 1512Mi
       mountSources: true
       endpoints:
-        - name: 9080/tcp
+        - exposure: public
+          path: /
+          name: ep1
           targetPort: 9080
+          protocol: http
 commands:
 # devInit currently not functional in odo devfile v2 - will re-enable when available
 # as a workaround, moved devInit command to the devBuild command since our stack
