@@ -1,7 +1,7 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-openliberty
-  version: 0.2.1
+  version: 0.2.2
   description: Java application stack using Open Liberty runtime
   alpha.build-dockerfile: "https://raw.githubusercontent.com/OpenLiberty/application-stack/master/dev/Dockerfile"
   alpha.deployment-manifest: "https://raw.githubusercontent.com/OpenLiberty/application-stack/master/dev/app-deploy.yaml"
@@ -25,18 +25,13 @@ components:
           targetPort: 9080
           protocol: http
 commands:
-# devInit currently not functional in odo devfile v2 - will re-enable when available
-# as a workaround, moved devInit command to the devBuild command since our stack
-# runs devBuild once only on forst push (similar to devInit intended function)
-#  - id: devInit
-#    exec:
-#      component: devrun
-#      commandLine: echo "temp -> devInit cmd currently on the one-time devBld cmd"
-#      workingDir: /projects/user-app
-#      hotReloadCapable: true
-#      group:
-#        kind: build
-#        isDefault: true
+  - id: copy
+    exec:
+      component: devruntime
+      commandLine: echo "in the copy command"  && echo "...moving liberty"
+                                               && mkdir -p /projects/target/liberty
+                                               && mv -n /opt/ol/wlp /projects/target/liberty
+      workingDir: /
   - id: build
     exec:  
       component: devruntime 
@@ -44,10 +39,7 @@ commands:
                    then
                        echo "found the disable file" && echo "devBuild command will not run" && exit 0;
                    else
-                       echo "will run the devBuild command" && echo "...moving liberty"
-                                                            && mkdir -p /projects/target/liberty
-                                                            && mvn -Dmaven.repo.local=/mvn/repository package
-                                                            && mv /opt/ol/wlp /projects/target/liberty
+                       echo "will run the devBuild command" && mvn -Dmaven.repo.local=/mvn/repository package
                                                             && touch ./.disable-bld-cmd;
                    fi
       workingDir: /projects
@@ -91,3 +83,6 @@ commands:
       group:
         kind: test
         isDefault: true
+events:
+  postStart:
+    - "copy"
