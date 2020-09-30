@@ -1,28 +1,42 @@
 <?xml version='1.0' encoding='utf-8'?>
+<!--
+   Copyright (c) 2020 IBM Corporation and others
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-<!-- not using the parent pom for now
-    <parent>
-        <groupId>dev.appsody</groupId>
-        <artifactId>java-openliberty</artifactId>
-        <version>[0.1, 0.3)</version>
-        <relativePath/>
-    </parent>
--->
+
     <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
         <version.maven-war-plugin>3.2.2</version.maven-war-plugin>
         <version.maven-surefire-plugin>3.0.0-M1</version.maven-surefire-plugin>
         <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
-        <http.port>9080</http.port>
-        <https.port>9443</https.port>
-        <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
+        <version.liberty-maven-plugin>3.3-M3</version.liberty-maven-plugin>
+
+        <liberty.defaultVar.default.http.port>9080</liberty.defaultVar.default.http.port>
+        <liberty.defaultVar.default.https.port>9443</liberty.defaultVar.default.https.port>
+        <!-- Workaround for https://github.com/OpenLiberty/ci.maven/issues/936 -->
+        <liberty.env.lmp936>foo</liberty.env.lmp936>
     </properties>
 
-    <groupId>dev.appsody.starter.java-openliberty</groupId>
-    <artifactId>starter-app</artifactId>
+    <groupId>dev.odo.starter.java-openliberty</groupId>
+    <artifactId>starter</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -37,9 +51,9 @@
         </dependency>
         <!-- For tests -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.6.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -85,6 +99,12 @@
             <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.microshed</groupId>
+            <artifactId>microshed-testing-liberty</artifactId>
+            <version>0.9</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -99,17 +119,21 @@
                     <packagingExcludes>pom.xml</packagingExcludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
             <!-- Enable liberty-maven plugin -->
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
                 <version>${version.liberty-maven-plugin}</version>
                 <configuration>
+                    <mergeServerEnv>true</mergeServerEnv>
                     <stripVersion>true</stripVersion>
                     <serverStartTimeout>360</serverStartTimeout>
                     <bootstrapProperties>
-                        <default.http.port>${http.port}</default.http.port>
-                        <default.https.port>${https.port}</default.https.port>
                         <app.context.root>${app.name}</app.context.root>
                     </bootstrapProperties>
                 </configuration>
@@ -145,7 +169,7 @@
                 <executions>
                     <execution>
                         <phase>integration-test</phase>
-                        <id>it-exec</id>
+                        <id>default-cli</id>
                         <goals>
                             <goal>integration-test</goal>
                         </goals>
@@ -153,10 +177,6 @@
                             <includes>
                                 <include>**/it/**</include>
                             </includes>
-                            <systemPropertyVariables>
-                                <liberty.test.port>${http.port}</liberty.test.port>
-                                <war.name>${app.name}</war.name>
-                            </systemPropertyVariables>
                         </configuration>
                     </execution>
                     <execution>
