@@ -1,7 +1,7 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-openliberty
-  version: 0.2.3
+  version: 0.2.4
   description: Java application stack using Open Liberty runtime
   alpha.build-dockerfile: "https://raw.githubusercontent.com/OpenLiberty/application-stack/master/dev/Dockerfile"
   alpha.deployment-manifest: "https://raw.githubusercontent.com/OpenLiberty/application-stack/master/dev/app-deploy.yaml"
@@ -15,7 +15,7 @@ components:
     container:
       # this custom image source can be found in the baseimage section of the repo at:
       # https://github.com/OpenLiberty/application-stack.git
-      image: ajymau/java-openliberty-odo:0.2.0
+      image: openliberty/application-stack:0.1
       memoryLimit: 1512Mi
       mountSources: true
       endpoints:
