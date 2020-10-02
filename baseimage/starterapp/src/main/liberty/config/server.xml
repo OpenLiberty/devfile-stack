@@ -1,13 +1,22 @@
-<server description="Liberty server">
-    <featureManager>
-        <feature>microProfile-3.3</feature>
-    </featureManager>
-    <quickStartSecurity userName="admin" userPassword="adminpwd"/>
-    <keyStore id="defaultKeyStore" location="key.jks" type="jks" password="mpKeystore"/>
-    <httpEndpoint host="*" httpPort="${default.http.port}" 
-        httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
+<server description="simple-jaxrs">
 
-    <httpDispatcher enableWelcomePage="false" />
+    <featureManager>
+        <feature>cdi-2.0 </feature>
+        <feature>jaxrs-2.1</feature>
+        <feature>mpMetrics-2.3</feature>
+        <feature>mpHealth-2.2</feature>
+        <feature>mpConfig-1.4</feature>
+    </featureManager>
+
+    <httpEndpoint host="*" httpPort="9080"
+        httpsPort="9443" id="defaultHttpEndpoint"/>
+
+    <webApplication contextRoot="/" location="simple-jaxrs.war" />
+
+    <!--Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+
+    <!--Default SSL configuration enables trust for default certificates from the Java runtime -->
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
     
-    <webApplication location="starter-app.war" contextRoot="/"/>
 </server>
