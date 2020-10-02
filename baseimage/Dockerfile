@@ -34,8 +34,11 @@ ADD ./starterapp/src /stacks/java-openliberty/starterapp/src
 COPY ./starterapp/pom.xml /stacks/java-openliberty/starterapp/
 
 WORKDIR /stacks/java-openliberty/starterapp
-RUN mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:create liberty:install-feature dependency:go-offline
-RUN rm -rf ./target/liberty/wlp/usr/servers/tmp
+
+# This layer isn't strictly necessary given the next layer, but gets a bunch of mvn caching accomplished so there's a smaller delta we need to do in the next step, in the background
+RUN mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:create liberty:install-feature install
+# A hack maybe but there's quite a few dependencies that only are detected when dev mode is executed, due to use of mojo executor, etc.
+RUN nohup bash -c "mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:dev -DhotTests=true &" && sleep 180 && echo "Done sleeping"
 
 FROM maven
 RUN mkdir /mvn
@@ -43,6 +46,8 @@ RUN mkdir -p /opt/ol
 CMD /bin/bash
 COPY --from=builder /mvn /mvn
 COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
+# Delete the server, users will create their own server
+RUN rm -rf /opt/ol/wlp/usr/servers/tmp
 RUN chmod -R 777 /mvn
 RUN chmod -R 777 /opt/ol
 ARG stacklabel
