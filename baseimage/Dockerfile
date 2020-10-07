@@ -4,7 +4,10 @@ RUN yum upgrade --disableplugin=subscription-manager -y \
    && yum clean --disableplugin=subscription-manager packages \
    && echo 'Finished installing dependencies'
 
-USER root
+#USER root
+
+RUN  groupadd --gid 1000 java_group \
+  && useradd --uid 1000 --gid java_group --shell /bin/bash --create-home java_user
 
 # Dependency install
 RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
@@ -12,7 +15,6 @@ RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject
 
 # Maven install
 ARG MAVEN_VERSION=3.6.3
-ARG USER_HOME_DIR="/root"
 ARG SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/
 
@@ -24,8 +26,15 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
 FROM maven AS builder
+
 RUN  mkdir -p /opt/ol \
-  && mkdir -p /stacks/java-openliberty/starterapp
+  && chown -R java_user:java_group /opt \
+  && mkdir -p /mvn/repository \
+  && chown -R java_user:java_group /mvn \
+  && mkdir -p /stacks/java-openliberty/starterapp \
+  && chown -R java_user:java_group /stacks 
+
+USER java_user
 
 RUN chmod -R 777 /stacks/java-openliberty/starterapp
 
@@ -41,8 +50,8 @@ RUN mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.ve
 RUN nohup bash -c "mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:dev -DhotTests=true &" && sleep 180 && echo "Done sleeping"
 
 FROM maven
-RUN mkdir /mvn
-RUN mkdir -p /opt/ol
+RUN mkdir /mvn && chown -R java_user:java_group /mvn
+RUN mkdir -p /opt/ol && chown -R java_user:java_group /opt/ol
 CMD /bin/bash
 COPY --from=builder /mvn /mvn
 COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
