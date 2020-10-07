@@ -34,11 +34,12 @@ RUN  mkdir -p /opt/ol \
   && mkdir -p /stacks/java-openliberty/starterapp \
   && chown -R java_user:java_group /stacks 
 
+COPY ./LICENSE /licenses/
+
 USER java_user
 
 RUN chmod -R 777 /stacks/java-openliberty/starterapp
 
-COPY ./LICENSE /licenses/
 ADD ./starterapp/src /stacks/java-openliberty/starterapp/src
 COPY ./starterapp/pom.xml /stacks/java-openliberty/starterapp/
 
@@ -55,6 +56,7 @@ RUN mkdir -p /opt/ol && chown -R java_user:java_group /opt/ol
 CMD /bin/bash
 COPY --from=builder /mvn /mvn
 COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
+COPY --from=builder /licenses /licenses
 # Delete the server, users will create their own server
 RUN rm -rf /opt/ol/wlp/usr/servers/tmp
 RUN chmod -R 777 /mvn
