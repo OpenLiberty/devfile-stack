@@ -4,8 +4,6 @@ RUN yum upgrade --disableplugin=subscription-manager -y \
    && yum clean --disableplugin=subscription-manager packages \
    && echo 'Finished installing dependencies'
 
-#USER root
-
 RUN  useradd --uid 1000 --gid 0 --shell /bin/bash --create-home java_user
 
 # Dependency install
@@ -26,23 +24,21 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 
 FROM maven AS builder
 
-RUN  mkdir -p /opt/ol \
-  && chown -R java_user /opt \
-  && mkdir -p /mvn/repository \
+RUN  mkdir -p /mvn/repository \
   && chown -R java_user /mvn \
-  && mkdir -p /stacks/java-openliberty/starterapp \
+  && mkdir -p /stacks/java-openliberty/priming-app \
   && chown -R java_user /stacks 
 
 COPY ./LICENSE /licenses/
 
 USER java_user
 
-RUN chmod -R 755 /stacks/java-openliberty/starterapp
+RUN chmod -R 755 /stacks/java-openliberty/priming-app
 
-ADD ./starterapp/src /stacks/java-openliberty/starterapp/src
-COPY ./starterapp/pom.xml /stacks/java-openliberty/starterapp/
+ADD ./priming-app/src /stacks/java-openliberty/priming-app/src
+COPY ./priming-app/pom.xml /stacks/java-openliberty/priming-app/
 
-WORKDIR /stacks/java-openliberty/starterapp
+WORKDIR /stacks/java-openliberty/priming-app
 
 # This layer isn't strictly necessary given the next layer, but gets a bunch of mvn caching accomplished so there's a smaller delta we need to do in the next step, in the background
 RUN mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:create liberty:install-feature install
@@ -50,11 +46,11 @@ RUN mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.ve
 RUN nohup bash -c "mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:dev -DhotTests=true &" && sleep 180 && echo "Done sleeping"
 
 FROM maven
-RUN mkdir /mvn && chown -R java_user /mvn
-RUN mkdir -p /opt/ol && chown -R java_user /opt/ol
+RUN mkdir /mvn
+RUN mkdir -p /opt/ol
 CMD /bin/bash
 COPY --from=builder /mvn /mvn
-COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
+COPY --from=builder /stacks/java-openliberty/priming-app/target/liberty /opt/ol
 COPY --from=builder /licenses /licenses
 # Delete the server, users will create their own server
 RUN rm -rf /opt/ol/wlp/usr/servers/tmp
