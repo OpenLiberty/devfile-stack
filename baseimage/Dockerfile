@@ -6,8 +6,7 @@ RUN yum upgrade --disableplugin=subscription-manager -y \
 
 #USER root
 
-RUN  groupadd --gid 1000 java_group \
-  && useradd --uid 1000 --gid java_group --shell /bin/bash --create-home java_user
+RUN  useradd --uid 1000 --gid 0 --shell /bin/bash --create-home java_user
 
 # Dependency install
 RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
@@ -28,17 +27,17 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 FROM maven AS builder
 
 RUN  mkdir -p /opt/ol \
-  && chown -R java_user:java_group /opt \
+  && chown -R java_user /opt \
   && mkdir -p /mvn/repository \
-  && chown -R java_user:java_group /mvn \
+  && chown -R java_user /mvn \
   && mkdir -p /stacks/java-openliberty/starterapp \
-  && chown -R java_user:java_group /stacks 
+  && chown -R java_user /stacks 
 
 COPY ./LICENSE /licenses/
 
 USER java_user
 
-RUN chmod -R 777 /stacks/java-openliberty/starterapp
+RUN chmod -R 755 /stacks/java-openliberty/starterapp
 
 ADD ./starterapp/src /stacks/java-openliberty/starterapp/src
 COPY ./starterapp/pom.xml /stacks/java-openliberty/starterapp/
@@ -51,15 +50,15 @@ RUN mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.ve
 RUN nohup bash -c "mvn -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.9 liberty:dev -DhotTests=true &" && sleep 180 && echo "Done sleeping"
 
 FROM maven
-RUN mkdir /mvn && chown -R java_user:java_group /mvn
-RUN mkdir -p /opt/ol && chown -R java_user:java_group /opt/ol
+RUN mkdir /mvn && chown -R java_user /mvn
+RUN mkdir -p /opt/ol && chown -R java_user /opt/ol
 CMD /bin/bash
 COPY --from=builder /mvn /mvn
 COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
 COPY --from=builder /licenses /licenses
 # Delete the server, users will create their own server
 RUN rm -rf /opt/ol/wlp/usr/servers/tmp
-RUN chmod -R 777 /mvn
-RUN chmod -R 777 /opt/ol
+RUN chmod -R 775 /mvn
+RUN chmod -R 775 /opt/ol
 ARG stacklabel
 LABEL org.opencontainers.image.revision=$stacklabel
