@@ -81,6 +81,11 @@ RUN rm -rf /mvn/repository/dev/odo/java-openliberty/samples/priming-app
 
 FROM maven
 
+ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.classCache/"
+
+RUN mkdir -p /output \
+  && chown -R java_user /output
+
 # Point to local /mvn/repository within container
 COPY --chown=1001:0 ./mvn-stack-settings.xml /usr/share/maven/conf/settings.xml
 COPY --chown=1001:0 --from=builder /mvn /mvn
