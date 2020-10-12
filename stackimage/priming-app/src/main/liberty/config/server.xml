@@ -1,17 +1,18 @@
-<server description="simple-jaxrs">
+<server description="${project.name}">
 
     <featureManager>
-        <feature>cdi-2.0 </feature>
         <feature>jaxrs-2.1</feature>
-        <feature>mpMetrics-2.3</feature>
-        <feature>mpHealth-2.2</feature>
-        <feature>mpConfig-1.4</feature>
+        <feature>cdi-2.0</feature>
+        <feature>ejbLite-3.2</feature>
+        <feature>javaee-8.0</feature>
+        <feature>jpa-2.2</feature>
+        <feature>microProfile-3.3</feature>
     </featureManager>
 
     <httpEndpoint host="*" httpPort="9080"
         httpsPort="9443" id="defaultHttpEndpoint"/>
 
-    <webApplication contextRoot="/" location="simple-jaxrs.war" />
+    <webApplication contextRoot="/" location="${project.name}.war" />
 
     <!--Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
