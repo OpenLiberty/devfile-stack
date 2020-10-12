@@ -8,8 +8,8 @@ parent:
   components:
      - container:
          name: devruntime
-         # this custom image source can be found in the baseimage section of the repo at: 
-         # https://github.com/OpenLiberty/application-stack.git
+         # this custom image source can be found at:
+         # https://github.com/OpenLiberty/application-stack/tree/master/stackimage
          image: uberskigeek/java-openliberty-java8-odo:0.1.1
          memoryLimit: 1512Mi
          mountSources: true
