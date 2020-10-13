@@ -28,10 +28,12 @@ ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.
 
 RUN umask -S u=rwx,g=rwx,o=rx; mkdir -p /mvn/repository \
   && chown -R java_user /mvn \
+  && chmod 775 /mvn \
   && mkdir -p /stacks/java-openliberty/priming-app \
   && chown -R java_user /stacks \
   && mkdir -p /output \
-  && chown -R java_user /output
+  && chown -R java_user /output \
+  && chmod 775 /output
 
 COPY ./LICENSE /licenses/
 
@@ -83,15 +85,16 @@ FROM maven
 
 ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.classCache/"
 
-RUN mkdir -p /output \
-  && chown -R java_user /output
-
 # Point to local /mvn/repository within container
 COPY --chown=1001:0 ./mvn-stack-settings.xml /usr/share/maven/conf/settings.xml
 COPY --chown=1001:0 --from=builder /mvn /mvn
 RUN mkdir -p /opt/ol \
   && chown -R java_user /opt/ol \
-  && chmod 775 /opt/ol
+  && chmod 775 /opt/ol \
+  && mkdir -p /output \
+  && chown -R java_user /output \
+  && chmod 775 /output
+
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/target/liberty /opt/ol
 COPY --chown=1001:0 ./LICENSE /licenses/
 
