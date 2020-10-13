@@ -128,7 +128,32 @@ The default template uses JUnit 5. You may be used to JUnit 4, but here are some
     - Liveness endpoint: http://`<odo url>>`/health/live
     - Metrics endpoint: http://`<odo url>`/metrics (login as `admin` user with password obtained as mentioned [here](#Metrics-Password).
 
-To see source code changes reflected in the running application you can re-issue the `odo push` command after any edit session is complete and saved. Source code changes will be reflected in the running container within a few seconds. Alternatively, you can issue `odo watch` once which will monitor for changes in your local project and automatically push changes to your remote cluster. 
+To see source code changes reflected in the running application you can re-issue the `odo push` command after any edit session is complete and saved. Source code changes will be reflected in the running container within a few seconds. Alternatively, you can issue `odo watch` once which will monitor for changes in your local project and automatically push changes to your remote cluster.
+
+## Creating a project from an existing application
+
+You can initialize an existing application as a stack project. The following steps show how to do this using the Open Liberty [application-stack-intro sample application](https://github.com/OpenLiberty/application-stack-intro).
+
+1. Clone the application-stack-intro repository
+
+```shell
+git clone git@github.com:OpenLiberty/application-stack-intro.git
+cd application-stack-intro
+```
+
+2. Initialize the project with the java-openliberty stack
+
+```shell
+odo create java-openliberty my-component
+```
+
+3. Push the sample application to OpenShift
+
+```shell
+odo push
+```
+
+For more details on the application-stack-intro application, check out https://github.com/OpenLiberty/application-stack-intro
 
 ## Odo development operations
 
