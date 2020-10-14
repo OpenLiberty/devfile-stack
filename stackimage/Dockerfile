@@ -85,20 +85,24 @@ FROM maven
 
 ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.classCache/"
 
+RUN mkdir -p /output \
+  && chown -R java_user /output \
+  && chmod 775 /output \
+  && mkdir -p /opt/ol \
+  && chown -R java_user /opt/ol \
+  && chmod 775 /opt/ol \
+  && mkdir -p /work/outer-loop-app \
+  && chown -R java_user /work \
+  && chmod -R 775 /work
 # Point to local /mvn/repository within container
 COPY --chown=1001:0 ./mvn-stack-settings.xml /usr/share/maven/conf/settings.xml
 COPY --chown=1001:0 --from=builder /mvn /mvn
-RUN mkdir -p /opt/ol \
-  && chown -R java_user /opt/ol \
-  && chmod 775 /opt/ol \
-  && mkdir -p /output \
-  && chown -R java_user /output \
-  && chmod 775 /output
 
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/target/liberty /opt/ol
 COPY --chown=1001:0 ./LICENSE /licenses/
 
 USER java_user
 CMD /bin/bash
+
 ARG stacklabel
 LABEL org.opencontainers.image.revision=$stacklabel
