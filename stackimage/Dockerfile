@@ -103,6 +103,3 @@ COPY --chown=1001:0 ./LICENSE /licenses/
 
 USER java_user
 CMD /bin/bash
-
-ARG stacklabel
-LABEL org.opencontainers.image.revision=$stacklabel
