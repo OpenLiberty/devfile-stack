@@ -1,5 +1,5 @@
 # Step 1: Build the user's application
-FROM openliberty/application-stack:0.2 as compile
+FROM openliberty/application-stack:0.3 as compile
 
 # Make a well known place for shared library jars separate from the rest of the <server> contents (to help with caching)
 RUN mkdir /work/configlibdir \
