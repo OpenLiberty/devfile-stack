@@ -73,7 +73,11 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 
 You can now begin developing your app! Changes will be detected and pushed automatically.
 
-For more details on using the starter app, checkout https://github.com/OpenLiberty/application-stack/wiki/Using-the-Default-Starter-Application
+For more details on the starter, check out https://github.com/OpenLiberty/application-stack/wiki/Using-the-Default-Starter
+
+## Intro Sample 
+
+For a simple, sample application see:  https://github.com/OpenLiberty/application-stack-intro
 
 ## User Doc
 
