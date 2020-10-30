@@ -27,19 +27,11 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 
 **Note:** Maven is provided by the stack, allowing you to build, test, and debug your Java application without installing Maven locally.
 
-## Getting Started
+## Intro sample
 
-> It's recommended to use the latest version of OpenShift Do (odo). You can install odo using [these instructions](https://odo.dev/docs/installing-odo/)
+> It's recommended to use the latest version of OpenShift Do (odo). You can install odo using [these instructions](https://odo.dev/docs/installing-odo/) and follow the guides from the [odo.dev](https://odo.dev) site.
 
 1. Perform an `oc login` to your cluster.
-
-1. Create a new odo project
-
-    ```shell
-    odo project create my-project
-    ```
-
-    This will create a new namespace in your cluster called `my-project`
 
 1. Initialize the local folder with the Open Liberty stack
 
@@ -73,15 +65,22 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 
 You can now begin developing your app! Changes will be detected and pushed automatically.
 
+## Getting Started
 For more details on the starter, check out https://github.com/OpenLiberty/application-stack/wiki/Using-the-Default-Starter
 
-## Intro Sample 
+## Further Reading
 
+### Intro Sample 
 For a simple, sample application see:  https://github.com/OpenLiberty/application-stack-intro
 
-## User Doc
+### User Doc
 
 Checkout the application-stack [wiki](https://github.com/OpenLiberty/application-stack/wiki) for details on using the Open Liberty stack.
+
+### odo.dev
+
+ follow the guides from the [odo.dev](https://odo.dev) site.
+
 
 ## Contributing
 
