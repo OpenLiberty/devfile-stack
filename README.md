@@ -27,57 +27,72 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 
 **Note:** Maven is provided by the stack, allowing you to build, test, and debug your Java application without installing Maven locally.
 
-## Getting Started
+## Getting Started With the Intro Sample
 
 > It's recommended to use the latest version of OpenShift Do (odo). You can install odo using [these instructions](https://odo.dev/docs/installing-odo/)
 
 1. Perform an `oc login` to your cluster.
 
-1. Create a new odo project
+1. Clone the application-stack-intro repository
 
     ```shell
-    odo project create my-project
+    git clone git@github.com:OpenLiberty/application-stack-intro.git
+    cd application-stack-intro
     ```
 
-    This will create a new namespace in your cluster called `my-project`
-
-1. Initialize the local folder with the Open Liberty stack
+1. Create your odo component
 
     ```shell
-    mkdir my-project
-    cd my-project
-    odo create java-openliberty --starter
+    odo create my-component
     ```
 
-    This will download the default starter app
-
-1. Push your app to your cluster
+1. Push the sample application to OpenShift
 
     ```shell
     odo push
     ```
+1. Wait for tests to complete
 
-1. Retrieve the URL for your app
+    ```shell
+    odo log -f
+    ```
+
+1. Retrieve the URL for your app deployed to OpenShift
 
     ```shell
     odo url list
     ```
 
-    This URL will show the starter app's welcome page by default.
+    This URL will show the intro app's welcome page by default.  
 
-1. Watch for changes in your local project
+   Click the link:  *Try your new Microservice "here"* to invoke the JAX-RS resource within (or invoke the URL at `<endpoint>/api/resource` to do so directly).
+
+1. If you wish to continue and make changes to your local project, you can start odo watch
 
     ```shell
     odo watch
     ```
 
-You can now begin developing your app! Changes will be detected and pushed automatically.
+You can now begin developing your app (in another shell or editor)! Changes will be detected and pushed automatically.
 
-For more details on using the starter app, checkout https://github.com/OpenLiberty/application-stack/wiki/Using-the-Default-Starter-Application
+## Further Reading
 
-## User Doc
+### Creating a new stack project
+
+To use the starter to create new projects, see: https://github.com/OpenLiberty/application-stack/wiki/Using-the-Default-Starter
+
+### Creating a java-openliberty devfile component from an existing project
+
+See:  https://github.com/OpenLiberty/application-stack/wiki/Migrating-Existing-Maven-Apps-To-Stack
+
+### User Doc
 
 Checkout the application-stack [wiki](https://github.com/OpenLiberty/application-stack/wiki) for details on using the Open Liberty stack.
+
+### odo.dev
+
+ follow the guides from the [odo.dev](https://odo.dev) site.
+
 
 ## Contributing
 
