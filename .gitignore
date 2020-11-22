@@ -1,5 +1,8 @@
 target/
 
+# generated from stack build.sh, not source
+generated/
+
 # eclipse specific git ignore
 *.pydevproject
 .project

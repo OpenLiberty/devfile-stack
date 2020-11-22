@@ -13,8 +13,7 @@ starterProjects:
 components:
   - name: devruntime
     container:
-      # In the original upstream of this devfile, the image used is openliberty/application-stack:<x.y.z>, which is built from source at:
-      #   https://github.com/OpenLiberty/application-stack/tree/master/stackimage
+        # In the original upstream of this devfile, the image used is openliberty/application-stack:<x.y.z>, which is built from the repository: https://github.com/OpenLiberty/application-stack
       image: {{.STACK_IMAGE}}
       memoryLimit: 1512Mi
       mountSources: true
