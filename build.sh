@@ -28,15 +28,14 @@ STACK_IMAGE="${STACK_IMAGE:-openliberty/application-stack:0.4}"
 #
 # URL at which your outer loop Dockerfile is hosted
 #
-DEVFILE_DOCKERFILE_LOC="${DEVFILE_DOCKERFILE_LOC:-https://raw.githubusercontent.com/OpenLiberty/application-stack/releases/outer-loop/0.4/Dockerfile}"
+DEVFILE_DOCKERFILE_LOC="${DEVFILE_DOCKERFILE_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/outer-loop-0.4.0-rc1/Dockerfile}"
 
 #
 # URL at which your outer loop deploy YAML template is hosted
 #
-DEVFILE_DEPLOY_YAML_LOC="${DEVFILE_DEPLOY_YAML_LOC:-https://raw.githubusercontent.com/OpenLiberty/application-stack/releases/outer-loop/0.4/app-deploy.yaml}"
+DEVFILE_DEPLOY_YAML_LOC="${DEVFILE_DEPLOY_YAML_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/outer-loop-0.4.0-rc1/app-deploy.yaml}"
 
 generate() {
-
     # Base customization.
     mkdir -p generated
     sed -e "s!{{.OL_RUNTIME_VERSION}}!$OL_RUNTIME_VERSION!; s!{{.STACK_IMAGE}}!$STACK_IMAGE!; s!{{.DEVFILE_DOCKERFILE_LOC}}!$DEVFILE_DOCKERFILE_LOC!; s!{{.DEVFILE_DEPLOY_YAML_LOC}}!$DEVFILE_DEPLOY_YAML_LOC!" templates/devfile.yaml > generated/devfile.yaml
