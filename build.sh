@@ -85,21 +85,22 @@ release() {
     git commit -m "Commit 0.4.0 release artifacts"
 }
 
-
 #set the action, default to generate if none passed.
-ACTION=
+ACTION="generate"
 if [ $# -ge 1 ]; then
   ACTION=$1
   shift
 fi
-
 case "${ACTION}" in
   release)
     generate
     release
   ;;
-  *)
+  generate)
     generate
   ;;
+  *)
+    echo "Invalid input action. Allowed values: generate, release. Default: generate."
+    exit 1
+  ;;
 esac
-
