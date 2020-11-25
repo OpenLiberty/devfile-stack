@@ -30,6 +30,7 @@ RUN umask -S u=rwx,g=rwx,o=rx; mkdir -p /mvn/repository \
   && chown -R java_user /mvn \
   && chmod 775 /mvn \
   && mkdir -p /stacks/java-openliberty/priming-app \
+  && mkdir -p /stacks/java-openliberty/config \
   && chown -R java_user /stacks \
   && mkdir -p /output \
   && chown -R java_user /output \
@@ -39,6 +40,7 @@ COPY ./LICENSE /licenses/
 
 USER java_user
 
+ADD ./config /stacks/java-openliberty/config
 ADD ./priming-app/src /stacks/java-openliberty/priming-app/src
 COPY --chown=1001:0 ./priming-app/pom.xml /stacks/java-openliberty/priming-app/
 
@@ -94,11 +96,15 @@ RUN mkdir -p /output \
   && chmod 775 /opt/ol \
   && mkdir -p /work/outer-loop-app \
   && chown -R java_user /work \
-  && chmod -R 775 /work
+  && chmod -R 775 /work \
+  && mkdir -p /stack/ol/config/configDropins/defaults \
+  && chmod -R 775 /stack/ol/config/configDropins/defaults
+
 # Point to local /mvn/repository within container
 COPY --chown=1001:0 ./mvn-stack-settings.xml /usr/share/maven/conf/settings.xml
 COPY --chown=1001:0 --from=builder /mvn /mvn
 
+COPY --chown=1001:0 --from=builder /stacks/java-openliberty/config/configDropins/defaults/ /stack/ol/config/configDropins/defaults/
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/target/liberty /opt/ol
 COPY --chown=1001:0 ./LICENSE /licenses/
 
