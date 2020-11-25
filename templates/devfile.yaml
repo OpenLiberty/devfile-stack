@@ -1,7 +1,7 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-openliberty
-  version: 0.4.0-rc
+  version: 0.4.0-rc.1
   description: Java application stack using Open Liberty runtime
   alpha.build-dockerfile: "{{.DEVFILE_DOCKERFILE_LOC}}"
   alpha.deployment-manifest: "{{.DEVFILE_DEPLOY_YAML_LOC}}"
