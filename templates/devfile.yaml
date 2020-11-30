@@ -1,7 +1,7 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-openliberty
-  version: 0.4.0-rc.1
+  version: 0.4.0
   description: Java application stack using Open Liberty runtime
   alpha.build-dockerfile: "{{.DEVFILE_DOCKERFILE_LOC}}"
   alpha.deployment-manifest: "{{.DEVFILE_DEPLOY_YAML_LOC}}"
@@ -76,7 +76,7 @@ commands:
     # The 'test' command requires an active container, so we don't need to specify the liberty runtime version
     exec:
       component: devruntime 
-      commandLine: mvn -Dmicroshed_hostname=localhost -Dmicroshed_http_port=9080 -Dmicroshed_manual_env=true -Dmicroshed_app_context_root=/ failsafe:integration-test
+      commandLine: mvn -Dmicroshed_hostname=localhost -Dmicroshed_http_port=9080 -Dmicroshed_manual_env=true -Dmicroshed_app_context_root=/ failsafe:integration-test failsafe:verify
       workingDir: /projects
       hotReloadCapable: true
       group:
