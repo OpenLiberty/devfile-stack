@@ -40,19 +40,23 @@ COPY --from=compile --chown=1001:0 /work/configlibdir/ /config
 # 2c) Copy user defined server config, bootstrap.properties, etc.
 COPY --from=compile --chown=1001:0 /work/config/ /config/
 
-# 2d) Install the required features based on the defined configuration. This enables Liberty features and image size to be fit-for-purpose using featureUtility.
-RUN features.sh
+# 2d) Add the microprofile health feature configuration if it is not already defined in the user's configuration.
+#     This allows k8s to use the deployment's health probes.
+COPY --from=compile --chown=1001:0 /stack/ol/config/configDropins/defaults/liberty-stack-mpHealth.xml /config/configDropins/defaults
+RUN for FILE in /config/*.xml; do \
+        if cat $FILE | sed '/<!--.*-->/d' | sed '/<!--/,/-->/d' \
+        | grep -q '<feature>\s*mpHealth-[0-9]*.[0-9]*\s*</feature>\|<feature>\s*microProfile-[0-9]*.[0-9]*\s*</feature>'; then \
+            rm /config/configDropins/defaults/liberty-stack-mpHealth.xml; \
+        fi; \
+    done
 
-# 2e) Add the microprofile health feature configuration if it is not already defined in the user's configuration.
-RUN mkdir -p /tmp/stack/config/configDropins/defaults
-COPY --from=compile --chown=1001:0 /stack/ol/config/configDropins/defaults/ /tmp/stack/config/configDropins/defaults/
-RUN if ! /opt/ol/wlp/bin/productInfo featureInfo | grep -q mpHealth-[0-9]*.[0-9]*; then \
-        cp /tmp/stack/config/configDropins/defaults/liberty-stack-mpHealth.xml /config/configDropins/defaults; \
-        features.sh; \
-    fi
-RUN rm -rf /tmp/stack
+# This Dockerfile uses the Open Liberty "full" image. If this is changed to use the Open Liberty kernel-slim image, uncomment the line below to install all necessary features. 
+# RUN features.sh
 
-# 2f) Copy the application binary
+# 2e) Copy the application binary
 COPY --from=compile --chown=1001:0 /work/outer-loop-app/target/*.[ew]ar /config/apps
+
+# 2f) Run configure.sh
+ENV OPENJ9_SCC=true
 RUN configure.sh && \
     chmod 664 /opt/ol/wlp/usr/servers/*/configDropins/defaults/keystore.xml
