@@ -1,0 +1,74 @@
+name: stack-regression-tests
+on: [push]
+jobs:
+   stack-tests:
+     runs-on: ubuntu-latest
+     steps:
+     
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Get stack image diff
+        id: stack-image-diff
+        uses: softprops/diffset@v1
+        with:
+          base: main
+          stackimage_files: |
+            stackimage/*
+            templates/stackimage/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          
+      - name: Get outer loop diff
+        id: outer-loop-diff
+        uses: softprops/diffset@v1
+        with:
+          base: main
+          outerloop_files: |
+            stackimage/*
+            templates/stackimage/*
+            templates/outer-loop/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        
+      - name: Setup Minikube
+        uses: manusa/actions-setup-minikube@v2.3.0
+        with:
+          minikube version: 'v1.11.0'
+          kubernetes version: 'v1.17.0'
+          github token: ${{ secrets.GITHUB_TOKEN }}
+          start args: '--addons=registry --addons=ingress' 
+    
+      - name: Wait for nodes to be ready
+        run: |
+          while [[ $(kubectl get nodes -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do 
+          echo "waiting for nodes" && sleep 1; 
+          done
+    
+      - name: Install odo
+        run: | 
+         sudo curl -L https://mirror.openshift.com/pub/openshift-v4/clients/odo/latest/odo-linux-amd64 -o /usr/local/bin/odo
+         sudo chmod +x /usr/local/bin/odo
+    
+      - name: Print version info
+        run: |
+         set -x
+         docker version
+         kubectl version
+         odo version
+         minikube version
+         set +x
+        
+      - name: Build stack
+        run: ./test/utils.sh buildStack
+        
+      - name: Build stack image
+        if: steps.stack-image-diff.outputs.stackimage_files
+        run: ./test/utils.sh buildStackImage
+     
+      - name: Inner loop test
+        run: ./test/stack-test-inner-loop.sh
+        
+      - name: Outer loop test
+        if: steps.outer-loop-diff.outputs.outerloop_files
+        run: ./test/stack-test-outer-loop.sh
