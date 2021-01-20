@@ -42,16 +42,25 @@ COPY --from=compile --chown=1001:0 /work/config/ /config/
 
 # 2d) Add the microprofile health feature configuration if it is not already defined in the user's configuration.
 #     This allows k8s to use the deployment's health probes.
-COPY --from=compile --chown=1001:0 /stack/ol/config/configDropins/defaults/liberty-stack-mpHealth.xml /config/configDropins/defaults
-RUN for FILE in /config/*.xml; do \
-        if cat $FILE | sed '/<!--.*-->/d' | sed '/<!--/,/-->/d' \
-        | grep -q '<feature>\s*mpHealth-[0-9]*.[0-9]*\s*</feature>\|<feature>\s*microProfile-[0-9]*.[0-9]*\s*</feature>'; then \
-            rm /config/configDropins/defaults/liberty-stack-mpHealth.xml; \
-        fi; \
-    done
+RUN mkdir -p /tmp/stack/config/configDropins/defaults
+COPY --from=compile --chown=1001:0 /stack/ol/config/configDropins/defaults/ /tmp/stack/config/configDropins/defaults/
 
-# This Dockerfile uses the Open Liberty "full" image. If this is changed to use the Open Liberty kernel-slim image, uncomment the line below to install all necessary features. 
-# RUN features.sh
+ARG ADD_MP_HEALTH=true
+RUN if [ "$ADD_MP_HEALTH" = "true" ]; then \
+        /opt/ol/wlp/bin/server start; \
+        /opt/ol/wlp/bin/server stop; \
+        if ! grep "CWWKF0012I" /logs/messages.log | grep -q 'mpHealth-[0-9]*.[0-9]*\|microProfile-[0-9]*.[0-9]*'; then \
+            echo "Missing mpHealth feature - adding config snippet"; \
+            cp /tmp/stack/config/configDropins/defaults/liberty-stack-mpHealth.xml /config/configDropins/overrides; \
+        else \
+            echo "Found mpHealth feature - not adding config snippet"; \
+        fi; \
+        rm -rf /logs/*; \
+    elif [ "$ADD_MP_HEALTH" != "false" ]; then \
+        echo "Invalid ADD_MP_HEALTH value: $ADD_MP_HEALTH. Valid values are \"true\" | \"false\" "; \
+    fi
+
+RUN rm -rf /tmp/stack
 
 # 2e) Copy the application binary
 COPY --from=compile --chown=1001:0 /work/outer-loop-app/target/*.[ew]ar /config/apps
