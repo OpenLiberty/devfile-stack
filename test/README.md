@@ -67,3 +67,6 @@ Error: unable to create ingress: error creating ingress: Internal error occurred
 Unexpected input(s) 'stackimage_files', valid inputs are ['base']
 ```
 
+## Future Tests
+
+1. Validate version changes in build.sh to make sure proper incrementation (i.e. you changed the outerloop Dockerfile but didnt increment the outerloop version)
