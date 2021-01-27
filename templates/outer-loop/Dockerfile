@@ -33,13 +33,9 @@ FROM {{.OL_UBI_IMAGE}}
 # 2a) Copy user defined shared resources 
 COPY --from=compile --chown=1001:0 /work/shared /opt/ol/wlp/usr/shared/
 
-RUN true
-
 # 2b) Copy user defined shared libraries
 #      but can't assume config/lib exists - copy from previous stage to a tmp holding place and test
 COPY --from=compile --chown=1001:0 /work/configlibdir/ /config
-
-RUN true
 
 # 2c) Copy user defined server config, bootstrap.properties, etc.
 COPY --from=compile --chown=1001:0 /work/config/ /config/

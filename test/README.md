@@ -61,6 +61,8 @@ Applying URL changes
 Error: unable to create ingress: error creating ingress: Internal error occurred: failed calling webhook "validate.nginx.ingress.kubernetes.io": Post https://ingress-nginx-controller-admission.kube-system.svc:443/extensions/v1beta1/ingresses?timeout=30s: dial tcp 10.96.251.20:443: connect: connection refused
 ```
 
+If this occurs, the tests will need to be rerun. 
+
 1. Warning message due to known "bug" in `softprops/diffset@v1` plugin (https://github.com/softprops/diffset/issues/5):
 
 ```

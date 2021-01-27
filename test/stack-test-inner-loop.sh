@@ -24,7 +24,7 @@ odo push
 
 echo -e "\n> Check for server start"
 count=1
-while ! odo log | grep -q "The defaultServer server is ready to run a smarter planet"; do 
+while ! odo log | grep -q "CWWKF0011I: The defaultServer server"; do 
     echo "waiting for server start... " && sleep 3; 
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then

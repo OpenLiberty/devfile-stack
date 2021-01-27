@@ -24,6 +24,7 @@ odo project create ${OUTER_LOOP_TEST_NAMESPACE}
 #eval $(minikube docker-env)
 
 echo -e "\n> Build Docker image"
+sed -i '/COPY --from=compile/a RUN true' Dockerfile
 docker build -t outerloop/application-stack-intro:1.0 .
 
 echo -e "\n> Replace variables in app-deploy.yaml"
