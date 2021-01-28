@@ -16,7 +16,7 @@ This runs the `build.sh` script to generate all stack content in the `generated/
 
 ### Build stack image
 
-The stack image is built if changes are detected to `stackimage/` or `templates/stackimage`
+The stack image is built into the local docker registry using the name:version specified in the devfile
 
 ### Run inner loop tests
 
@@ -32,7 +32,6 @@ Tests against following endpoints:
 
 ### Run outer loop tests
 
-Outerloop tests are only done if changes are detected to `templates/outer-loop` or any stack image content (`stackimage/` or `templates/stackimage`)
 Basic setup:
 
 Clone application-stack-intro, build docker image, install OL operator, deploy.
@@ -48,7 +47,6 @@ Tests against following endpoints:
 
 1. Tests are triggered on each PR or update to a PR
 1. All local docker images are available for use by the Minikube cluster since Minikube is installed/started with `driver=none` (bare metal)
-1. Changes to specific files (which gates what steps are run) is controlled via the `softprops/diffset@v1` actions plugin
 
 
 ## Known issues
@@ -62,12 +60,6 @@ Error: unable to create ingress: error creating ingress: Internal error occurred
 ```
 
 If this occurs, the tests will need to be rerun. 
-
-1. Warning message due to known "bug" in `softprops/diffset@v1` plugin (https://github.com/softprops/diffset/issues/5):
-
-```
-Unexpected input(s) 'stackimage_files', valid inputs are ['base']
-```
 
 ## Future Tests
 
