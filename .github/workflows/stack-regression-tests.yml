@@ -11,29 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         
-      - name: Get stack image diff
-        id: stack-image-diff
-        uses: softprops/diffset@v1
-        with:
-          base: main
-          stackimage_files: |
-            stackimage/*
-            templates/stackimage/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-          
-      - name: Get outer loop diff
-        id: outer-loop-diff
-        uses: softprops/diffset@v1
-        with:
-          base: main
-          outerloop_files: |
-            stackimage/*
-            templates/stackimage/*
-            templates/outer-loop/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        
       - name: Setup Minikube
         uses: manusa/actions-setup-minikube@v2.3.0
         with:
@@ -66,12 +43,10 @@ jobs:
         run: ./test/utils.sh buildStack
         
       - name: Build stack image
-        if: steps.stack-image-diff.outputs.stackimage_files
         run: ./test/utils.sh buildStackImage
      
       - name: Inner loop test
         run: ./test/stack-test-inner-loop.sh
         
       - name: Outer loop test
-        if: steps.outer-loop-diff.outputs.outerloop_files
         run: ./test/stack-test-outer-loop.sh
