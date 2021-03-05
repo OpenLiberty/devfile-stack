@@ -7,7 +7,7 @@ echo -e "\n> Clone application-stack-intro project"
 git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
 
-echo -e "\n> Copy devfile"
+echo -e "\n> Copy devfile and scripts"
 cp ../../generated/devfile.yaml devfile.yaml
 
 echo -e "\n> Create new odo project"

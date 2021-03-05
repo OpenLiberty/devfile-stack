@@ -8,7 +8,7 @@ RUN  useradd --uid 1001 --gid 0 --shell /bin/bash --create-home java_user
 
 # Dependency install
 RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-   && yum install --disableplugin=subscription-manager -y unzip curl ca-certificates wget xmlstarlet
+   && yum install --disableplugin=subscription-manager -y unzip curl ca-certificates wget xmlstarlet procps
 
 # Maven install
 ARG MAVEN_VERSION=3.6.3
@@ -41,6 +41,7 @@ COPY ./LICENSE /licenses/
 USER java_user
 
 ADD ./config /stacks/java-openliberty/config
+ADD ./scripts /stacks/java-openliberty/scripts
 ADD ./priming-app/src /stacks/java-openliberty/priming-app/src
 COPY --chown=1001:0 ./priming-app/pom.xml /stacks/java-openliberty/priming-app/
 
@@ -80,7 +81,7 @@ RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven
 RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dartifact=io.openliberty:openliberty-runtime:${LIBERTY_RUNTIME_VERSION}:zip -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get
 
 # Delete the server, users will create their own server
-RUN rm -rf /stacks/java-openliberty/priming-app/target/liberty/wlp/usr/servers/tmp
+RUN rm -rf /stacks/java-openliberty/priming-app/target/liberty/wlp/usr/servers/tmp/stack/ol/scripts
 # Don't let the sample appear in the user repo
 RUN rm -rf /mvn/repository/dev/odo/java-openliberty/samples/priming-app
 
@@ -97,6 +98,8 @@ RUN mkdir -p /output \
   && mkdir -p /work/outer-loop-app \
   && chown -R java_user /work \
   && chmod -R 775 /work \
+  && mkdir -p /stack/ol/scripts \
+  && chmod -R 775 /stack/ol/scripts \
   && mkdir -p /stack/ol/config/configDropins/defaults \
   && chmod -R 775 /stack/ol/config/configDropins/defaults
 
@@ -105,6 +108,10 @@ COPY --chown=1001:0 ./mvn-stack-settings.xml /usr/share/maven/conf/settings.xml
 COPY --chown=1001:0 --from=builder /mvn /mvn
 
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/config/configDropins/defaults/ /stack/ol/config/configDropins/defaults/
+
+COPY --chown=1001:0 --from=builder /stacks/java-openliberty/scripts /stack/ol/scripts
+RUN chmod -R 755 /stack/ol/scripts
+
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/target/liberty /opt/ol
 COPY --chown=1001:0 ./LICENSE /licenses/
 
