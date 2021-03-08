@@ -17,7 +17,7 @@ jobs:
           minikube version: 'v1.11.0'
           kubernetes version: 'v1.17.0'
           github token: ${{ secrets.GITHUB_TOKEN }}
-          start args: '--addons=registry --addons=ingress' 
+          start args: '--addons=registry --addons=ingress --insecure-registry "10.0.0.0/24"' 
     
       - name: Wait for nodes to be ready
         run: |
