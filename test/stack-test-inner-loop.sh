@@ -34,7 +34,7 @@ while ! odo log | grep -q "CWWKF0011I: The defaultServer server"; do
 done
 
 echo -e "\n> Test liveness endpoint"
-livenessResults=$(curl http://my-ol-component.$(minikube ip).nip.io/health/live)
+livenessResults=$(curl http://my-ol-component-9080.$(minikube ip).nip.io/health/live)
 if echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLivenessCheck","status":"UP"}],"status":"UP"}'; then
     
     echo "Liveness check passed!"
@@ -45,7 +45,7 @@ else
 fi
 
 echo -e "\n> Test readiness endpoint"
-readinessResults=$(curl http://my-ol-component.$(minikube ip).nip.io/health/ready)
+readinessResults=$(curl http://my-ol-component-9080.$(minikube ip).nip.io/health/ready)
 if echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleReadinessCheck","status":"UP"}],"status":"UP"}'; then
     
     echo "Readiness check passed!"
@@ -56,7 +56,7 @@ else
 fi
 
 echo -e "\n> Test REST endpoint"
-restResults=$(curl http://my-ol-component.$(minikube ip).nip.io/health/live)
+restResults=$(curl http://my-ol-component-9080.$(minikube ip).nip.io/health/live)
 if ! echo $restResults | grep -qF 'Hello! Welcome to Open Liberty'; then
     
     echo "REST endpoint check passed!"
@@ -65,3 +65,12 @@ else
     echo $restResults
     exit 12
 fi
+
+echo -e "\n> Run odo test"
+odo test --show-log
+rc=$?
+if [ $rc -ne 0 ]; then
+    echo "odo test completed with failures"
+    exit 12
+fi
+
