@@ -7,7 +7,7 @@ else
     if [ ! -e /projects/pom.xml ];
 	then 
              echo
-             echo "  pom.xml not found, non-viable or empty maven project. Please add src code and re-push";
+             echo "  ERROR: pom.xml not found, non-viable or empty maven project. Please add src code and re-push";
              echo
              exit 1
 	else
