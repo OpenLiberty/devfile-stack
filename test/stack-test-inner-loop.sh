@@ -67,9 +67,12 @@ else
 fi
 
 echo -e "\n> Run odo test"
-odo test --show-log
+odo test -v 4 --show-log
 rc=$?
 if [ $rc -ne 0 ]; then
+    echo "--------------------------------"
+    odo log
+    echo "--------------------------------"
     echo "odo test completed with failures"
     exit 12
 fi
