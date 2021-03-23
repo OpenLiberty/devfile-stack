@@ -44,9 +44,12 @@ jobs:
         
       - name: Build stack image
         run: ./test/utils.sh buildStackImage
-     
+
       - name: Inner loop test
-        run: ./test/stack-test-inner-loop.sh
-        
+        run: ./test/inner-loop-test.sh
+
+      - name: Inner loop parent plugin test
+        run: ./test/inner-loop-parent-plugin-test.sh
+
       - name: Outer loop test
-        run: ./test/stack-test-outer-loop.sh
+        run: ./test/outer-loop-test.sh

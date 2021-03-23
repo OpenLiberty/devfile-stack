@@ -1,30 +1,20 @@
 #!/bin/bash
 
-mkdir inner-loop-test-dir
-cd inner-loop-test-dir
+# Component name. 
+COMP_NAME="${COMP_NAME:-default-component}"
 
-echo -e "\n> Clone application-stack-intro project"
-git clone https://github.com/OpenLiberty/application-stack-intro.git
-cd application-stack-intro
+# Namespace/project name.
+PROJ_NAME="${PROJ_NAME:-default-test}"
 
-echo -e "\n> Copy devfile and scripts"
-cp ../../generated/devfile.yaml devfile.yaml
+# Liberty server config directory path.
+LIBERTY_SERVER_LOGS_DIR_PATH='/projects/target/liberty/wlp/usr/servers/defaultServer/logs'
 
-# this is a workaround to avoid surefire fork failures when running
-# the GHA test suite.
-# Issue #138 has been opened to track and address this
-# add the -DforkCount arg to the odo test cmd only for this run
-echo -e "\n> Modifying the odo test command"
-sed -i 's/\B-Dmicroshed_hostname/-DforkCount=0 &/' devfile.yaml
-
-echo -e "\n Updated devfile contents:"
-cat devfile.yaml
-
+# Base inner loop test using ODO.
 echo -e "\n> Create new odo project"
-odo project create inner-loop-test
+odo project create $PROJ_NAME
 
 echo -e "\n> Create new odo component"
-odo create my-ol-component
+odo create $COMP_NAME
 
 echo -e "\n> Create URL with Minikube IP"
 odo url create --host $(minikube ip).nip.io
@@ -34,59 +24,102 @@ kubectl get pods -n kube-system
 
 echo -e "\n> Push to Minikube"
 odo push
+rc=$?
+if [ $rc -ne 0 ]; then
+    echo "\n> Retrying odo push" && sleep 5
+    odo push -v 4 --show-log
+    rc=$?
+    if [ $rc -ne 0 ]; then 
+      exit 12
+    fi
+fi
 
 echo -e "\n> Check for server start"
 count=1
 while ! odo log | grep -q "CWWKF0011I: The defaultServer server"; do 
-    echo "waiting for server start... " && sleep 3; 
+    echo "waiting for server start... " && sleep 3
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then
         echo "Timed out waiting for server to start"
+        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
     fi
 done
 
 echo -e "\n> Test liveness endpoint"
-livenessResults=$(curl http://my-ol-component-9080.$(minikube ip).nip.io/health/live)
-if echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLivenessCheck","status":"UP"}],"status":"UP"}'; then
-    
-    echo "Liveness check passed!"
-else
-    echo "Liveness check failed. Liveness endpoint returned: " 
-    echo $livenessResults
-    exit 12
-fi
+livenessResults=$(curl http://$COMP_NAME-9080.$(minikube ip).nip.io/health/live)
+count=1
+while ! echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLivenessCheck","status":"UP"}],"status":"UP"}'; do 
+    echo "Waiting for liveness check to pass... " && sleep 3
+    count=`expr $count + 1`
+    if [ $count -eq 20 ]; then
+        echo "Timed out waiting for liveness check to pass. Liveness results:"
+        echo $livenessResults
+        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        exit 12
+    fi
+done
 
 echo -e "\n> Test readiness endpoint"
-readinessResults=$(curl http://my-ol-component-9080.$(minikube ip).nip.io/health/ready)
-if echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleReadinessCheck","status":"UP"}],"status":"UP"}'; then
-    
-    echo "Readiness check passed!"
-else
-    echo "Readiness check failed! Readiness endpoint returned: " 
-    echo $readinessResults
-    exit 12
-fi
+readinessResults=$(curl http://$COMP_NAME-9080.$(minikube ip).nip.io/health/ready)
+count=1
+while ! echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleReadinessCheck","status":"UP"}],"status":"UP"}'; do 
+    echo "Waiting for readiness check to pass... " && sleep 3
+    count=`expr $count + 1`
+    if [ $count -eq 20 ]; then
+        echo "Timed out waiting for Readiness check to pass. Readiness results:"
+        echo $readinessResults
+        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        exit 12
+    fi
+done
 
 echo -e "\n> Test REST endpoint"
-restResults=$(curl http://my-ol-component-9080.$(minikube ip).nip.io/health/live)
+restResults=$(curl http://$COMP_NAME-9080.$(minikube ip).nip.io/health/live)
 if ! echo $restResults | grep -qF 'Hello! Welcome to Open Liberty'; then
-    
     echo "REST endpoint check passed!"
 else
-    echo "REST endpoint check failed. REST endpoint returned: " 
+    echo "REST endpoint check failed. REST endpoint returned:"
     echo $restResults
+    ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
     exit 12
 fi
 
 echo -e "\n> Run odo test"
-odo test -v 4 --show-log
+odo test
 rc=$?
 if [ $rc -ne 0 ]; then
-    echo "--------------------------------"
-    odo log
-    echo "--------------------------------"
-    echo "odo test completed with failures"
-    exit 12
+    echo "\n> Retrying odo test" && sleep 5
+    odo test -v 4 --show-log
+    rc=$?
+    if [ $rc -ne 0 ]; then 
+        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        exit 12
+    fi
 fi
 
+echo -e "\n> Cleanup: Delete component"
+odo delete -a -f
+count=1
+while [ ! -z $(kubectl get pod -l component=$COMP_NAME -o jsonpath='{.items[*].metadata.name}') ]; do
+    echo "Waiting for component pod to be terminated..." && sleep 3
+    count=`expr $count + 1`
+    if [ $count -eq 20 ]; then
+        echo "Timed out waiting for component pod to be terminated"
+        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        exit 12
+    fi
+done
+
+echo -e "\n> Cleanup: Delete project"
+odo project delete $PROJ_NAME -f
+count=1
+while odo project list | grep -q $PROJ_NAME; do 
+    echo "Waiting for project to be deleted..." && sleep 3
+    count=`expr $count + 1`
+    if [ $count -eq 20 ]; then
+        echo "Timed out waiting for project $PROJECT_NAME to be deleted. Namespace information:"
+        kubectl get namespace $PROJECT_NAME -o yaml
+        exit 12
+    fi
+done
