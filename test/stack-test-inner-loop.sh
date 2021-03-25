@@ -7,8 +7,18 @@ echo -e "\n> Clone application-stack-intro project"
 git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
 
-echo -e "\n> Copy devfile"
+echo -e "\n> Copy devfile and scripts"
 cp ../../generated/devfile.yaml devfile.yaml
+
+# this is a workaround to avoid surefire fork failures when running
+# the GHA test suite.
+# Issue #138 has been opened to track and address this
+# add the -DforkCount arg to the odo test cmd only for this run
+echo -e "\n> Modifying the odo test command"
+sed -i 's/\B-Dmicroshed_hostname/-DforkCount=0 &/' devfile.yaml
+
+echo -e "\n Updated devfile contents:"
+cat devfile.yaml
 
 echo -e "\n> Create new odo project"
 odo project create inner-loop-test
@@ -18,6 +28,9 @@ odo create my-ol-component
 
 echo -e "\n> Create URL with Minikube IP"
 odo url create --host $(minikube ip).nip.io
+
+echo -e "\n> Checking on ingress readiness"
+kubectl get pods -n kube-system 
 
 echo -e "\n> Push to Minikube"
 odo push
