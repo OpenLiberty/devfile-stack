@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Inner loop test using the application-stack-intro application that defines a pom.xml containing the liberty-maven-app-parent artifact.
-echo -e "\n> Inner loop parent plugin test setup."
+echo -e "\n> Parent plugin inner loop test."
 mkdir inner-loop-parent-plugin-test-dir
 cd inner-loop-parent-plugin-test-dir
 
@@ -24,7 +24,7 @@ echo -e "\n Updated devfile contents:"
 cat devfile.yaml
 
 echo -e "\n> Inner loop parent plugin test run."
-COMP_NAME=parent-plugin-comp PROJ_NAME=parent-plugin-proj ./../../test/stack-inner-loop.sh
+COMP_NAME=parent-plugin-comp PROJ_NAME=parent-plugin-proj ./../../test/inner-loop/base-inner-loop.sh
 rc=$?
 if [ $rc -ne 0 ]; then
     exit 12
