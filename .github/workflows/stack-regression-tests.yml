@@ -45,6 +45,9 @@ jobs:
       - name: Build stack image
         run: ./test/utils.sh buildStackImage
 
+      - name: Devfile regression
+        run: ./test/devfile-regression.sh
+
       - name: Inner loop test
         run: ./test/inner-loop-test.sh
 
