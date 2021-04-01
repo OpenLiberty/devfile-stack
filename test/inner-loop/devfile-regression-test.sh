@@ -43,7 +43,7 @@ cat devfile.yaml
 # the only accomodation we have to make is that
 # we are one dir level deeper from the GHA test dir
 echo -e "\n> Base Inner loop test run"
-COMP_NAME=my-ol-component PROJ_NAME=devfile-regression-inner-loop-test ./../../../../test/inner-loop/stack-inner-loop.sh
+COMP_NAME=my-ol-component PROJ_NAME=devfile-regression-inner-loop-test ./../../../../test/inner-loop/base-inner-loop.sh
 rc=$?
 if [ $rc -ne 0 ]; then
     exit 12
