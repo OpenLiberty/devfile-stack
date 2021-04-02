@@ -41,7 +41,7 @@ while ! odo log | grep -q "CWWKF0011I: The defaultServer server"; do
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then
         echo "Timed out waiting for server to start"
-        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
     fi
 done
@@ -55,7 +55,7 @@ while ! echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLi
     if [ $count -eq 20 ]; then
         echo "Timed out waiting for liveness check to pass. Liveness results:"
         echo $livenessResults
-        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
     fi
 done
@@ -69,7 +69,7 @@ while ! echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleR
     if [ $count -eq 20 ]; then
         echo "Timed out waiting for Readiness check to pass. Readiness results:"
         echo $readinessResults
-        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
     fi
 done
@@ -81,7 +81,7 @@ if ! echo $restResults | grep -qF 'Hello! Welcome to Open Liberty'; then
 else
     echo "REST endpoint check failed. REST endpoint returned:"
     echo $restResults
-    ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+    ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
     exit 12
 fi
 
@@ -93,7 +93,7 @@ if [ $rc -ne 0 ]; then
     odo test -v 4 --show-log
     rc=$?
     if [ $rc -ne 0 ]; then 
-        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
     fi
 fi
@@ -106,7 +106,7 @@ while [ ! -z $(kubectl get pod -l component=$COMP_NAME -o jsonpath='{.items[*].m
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then
         echo "Timed out waiting for component pod to be terminated"
-        ./../../test/utils.sh printDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
     fi
 done

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Base inner loop test using the application-stack-intro application.
-echo -e "\n> Base Inner loop test setup"
+echo -e "\n> Basic inner loop test"
 mkdir inner-loop-test-dir
 cd inner-loop-test-dir
 
@@ -23,7 +23,7 @@ echo -e "\n Updated devfile contents:"
 cat devfile.yaml
 
 echo -e "\n> Base Inner loop test run"
-COMP_NAME=my-ol-component PROJ_NAME=inner-loop-test ./../../test/stack-inner-loop.sh
+COMP_NAME=my-ol-component PROJ_NAME=inner-loop-test ./../../test/inner-loop/base-inner-loop.sh
 rc=$?
 if [ $rc -ne 0 ]; then
     exit 12
