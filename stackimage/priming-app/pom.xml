@@ -28,6 +28,8 @@
         <version.maven-surefire-plugin>3.0.0-M1</version.maven-surefire-plugin>
         <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
         <version.liberty-maven-plugin>3.3-M4</version.liberty-maven-plugin>
+        <eclipse-microprofile-version>4.0.1</eclipse-microprofile-version>
+        <jakarta-jakartaee-api-version>8.0.0</jakarta-jakartaee-api-version>
         <liberty.bootstrap.project.name>${project.artifactId}</liberty.bootstrap.project.name>
     </properties>
 
@@ -41,14 +43,14 @@
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>3.3</version>
+            <version>${eclipse-microprofile-version}</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>8.0.0</version>
+            <version>${jakarta-jakartaee-api-version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- For tests -->

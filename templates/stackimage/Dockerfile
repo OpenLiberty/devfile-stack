@@ -51,7 +51,6 @@ ARG LIBERTY_RUNTIME_VERSION={{.OL_RUNTIME_VERSION}}
 
 RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -DskipITs=true install
 
-#
 # A hack maybe but there's quite a few dependencies that only are detected when dev mode is executed, due to use of mojo executor, etc.
 #
 # If you see this then you got enough cached, but if you don't, you need to build with --no-cache next time or you won't even redo this step
@@ -71,14 +70,16 @@ RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mv
 # [INFO] Integration tests finished.
 #
 # Done sleeping
-
-#
 RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} liberty:dev -DhotTests=true &" \
  && sleep 600 \
  && echo  && echo "Done sleeping" && echo
 
 # Grab the runtime artifact as well, it's big and it might be useful
 RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dartifact=io.openliberty:openliberty-runtime:${LIBERTY_RUNTIME_VERSION}:zip -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get
+
+# Cache dependencies associated with the previous major version of the microprofile APIs and OL microprofile features.
+RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=io.openliberty.features:microProfile-{{.OL_MP_FEATURE_PREV_VERSION}}:${LIBERTY_RUNTIME_VERSION}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
+    && umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=org.eclipse.microprofile:microprofile:{{.ECLIPSE_MP_API_PREV_VERSION}}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get
 
 # Delete the server, users will create their own server
 RUN rm -rf /stacks/java-openliberty/priming-app/target/liberty/wlp/usr/servers/tmp
