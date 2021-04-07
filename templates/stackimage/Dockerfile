@@ -81,7 +81,7 @@ RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven
 RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dartifact=io.openliberty:openliberty-runtime:${LIBERTY_RUNTIME_VERSION}:zip -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get
 
 # Delete the server, users will create their own server
-RUN rm -rf /stacks/java-openliberty/priming-app/target/liberty/wlp/usr/servers/tmp/stack/ol/scripts
+RUN rm -rf /stacks/java-openliberty/priming-app/target/liberty/wlp/usr/servers/tmp
 # Don't let the sample appear in the user repo
 RUN rm -rf /mvn/repository/dev/odo/java-openliberty/samples/priming-app
 
