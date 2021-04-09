@@ -5,12 +5,16 @@ echo -e "\n> Basic inner loop test"
 mkdir inner-loop-test-dir
 cd inner-loop-test-dir
 
+echo -e "\n> Clone application-stack-samples project"
+git clone https://github.com/OpenLiberty/application-stack-samples.git
+
 echo -e "\n> Clone application-stack-intro project"
 git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
 
-echo -e "\n> Copy devfile"
-cp ../../generated/devfile.yaml devfile.yaml
+echo -e "\n> Copy the m2 sample devfile and update the stack image with the one built"
+cp ../application-stack-samples/devfiles/m2-repo-volume/devfile.yaml devfile.yaml
+sed -i '/container:/a\ \ \ \ \ \ \ \ image: localhost:5000/test-image' devfile.yaml
 
 # this is a workaround to avoid surefire fork failures when running
 # the GHA test suite.

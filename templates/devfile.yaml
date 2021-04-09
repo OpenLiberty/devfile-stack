@@ -80,7 +80,7 @@ commands:
     # The 'test' command requires an active container, so we don't need to specify the liberty runtime version
     exec:
       component: devruntime 
-      commandLine: mvn -Dmicroshed_hostname=localhost -Dmicroshed_http_port=9080 -Dmicroshed_manual_env=true -Dmicroshed_app_context_root=/ failsafe:integration-test failsafe:verify
+      commandLine: mvn failsafe:integration-test failsafe:verify
       workingDir: /projects
       hotReloadCapable: true
       group:

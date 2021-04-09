@@ -34,13 +34,13 @@ if [ $rc -ne 0 ]; then
     fi
 fi
 
-echo -e "\n> Check for server start"
+echo -e "\n> Wait for the intro application to become available"
 count=1
-while ! odo log | grep -q "CWWKF0011I: The defaultServer server"; do 
-    echo "waiting for server start... " && sleep 3
+while ! odo log | grep -q "CWWKZ0003I: The application intro updated"; do 
+    echo "Waiting for the intro application to become available... " && sleep 3
     count=`expr $count + 1`
-    if [ $count -eq 20 ]; then
-        echo "Timed out waiting for server to start"
+    if [ $count -eq 40 ]; then
+        echo "Timed out waiting for the intro application to become available"
         ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
     fi
@@ -92,7 +92,8 @@ if [ $rc -ne 0 ]; then
     echo "\n> Retrying odo test" && sleep 5
     odo test -v 4 --show-log
     rc=$?
-    if [ $rc -ne 0 ]; then 
+    if [ $rc -ne 0 ]; then
+        echo "Odo test run failed:"
         ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
     fi
