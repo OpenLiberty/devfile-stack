@@ -36,14 +36,14 @@ while [[ $(kubectl get pods -n ${NAMESPACE} -l app.kubernetes.io/name=${COMP_NAM
 fi
 done
 
-echo -e "\n> Check that the intro app was started"
+echo -e "\n> Wait for the intro application to become available"
 count=1
 olpodlog=$(./../../test/utils.sh printLibertyServerMsgLog "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH)
-while ! echo $olpodlog | grep -q "CWWKF0011I: The defaultServer server"; do 
-    echo "waiting for intro app start... " && sleep 3
+while ! echo $olpodlog | grep -q "CWWKZ0001I: Application intro started"; do 
+    echo "Waiting for the intro application to become available... " && sleep 3
     count=`expr $count + 1`
-    if [ $count -eq 20 ]; then
-        echo "Timed out waiting for intro app to start"
+    if [ $count -eq 40 ]; then
+        echo "Timed out waiting for the intro application to become available"
         echo $olpodlog
         ./../../test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
@@ -54,7 +54,7 @@ echo -e "\n> Test liveness endpoint"
 livenessResults=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/health/live)
 count=1
 while ! echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLivenessCheck","status":"UP"}],"status":"UP"}'; do 
-    echo "Waiting for liveness check to pass... " && sleep 3; 
+    echo "Waiting for liveness check to pass... " && sleep 5; 
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then
         echo "Timed out waiting for liveness check to pass. Liveness results:"
@@ -67,6 +67,8 @@ while ! echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLi
         ./../../test/utils.sh printPodConfig "app.kubernetes.io/name=ingress-nginx,app.kubernetes.io/component=controller" "kube-system"
         echo "Nginx ingress controller pod log:"
         ./../../test/utils.sh printPodLog "app.kubernetes.io/name=ingress-nginx,app.kubernetes.io/component=controller" "kube-system"
+        echo "Liberty debug data:"
+        ./../../test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
        exit 12
     fi
 done
@@ -75,7 +77,7 @@ echo -e "\n> Test readiness endpoint"
 readinessResults=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/health/ready)
 count=1
 while ! echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleReadinessCheck","status":"UP"}],"status":"UP"}'; do 
-    echo "Waiting for readiness check to pass... " && sleep 3; 
+    echo "Waiting for readiness check to pass... " && sleep 5; 
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then
         echo "Timed out waiting for Readiness check to pass. Readiness results:"

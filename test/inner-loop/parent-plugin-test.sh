@@ -18,7 +18,7 @@ cp ../../generated/devfile.yaml devfile.yaml
 # Issue #138 has been opened to track and address this
 # add the -DforkCount arg to the odo test cmd only for this run
 echo -e "\n> Modifying the odo test command"
-sed -i 's/\B-Dmicroshed_hostname/-DforkCount=0 &/' devfile.yaml
+sed -i 's/failsafe:integration-test/-DforkCount=0 failsafe:integration-test/' devfile.yaml
 
 echo -e "\n Updated devfile contents:"
 cat devfile.yaml

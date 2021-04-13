@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
         
       - name: 'Setup: Install Minikube'
-        uses: manusa/actions-setup-minikube@v2.3.0
+        uses: manusa/actions-setup-minikube@v2.3.1
         with:
           minikube version: 'v1.11.0'
           kubernetes version: 'v1.17.0'
@@ -56,6 +56,12 @@ jobs:
 
       - name: 'Test: InnerLoop: Devfile regression'
         run: ./test/inner-loop/devfile-regression-test.sh
+
+      - name: 'Test: InnerLoop: microprofile v3 regression'
+        run: ./test/inner-loop/mp3-regression-test.sh
+
+      - name: 'Test: InnerLoop: m2 parent sample regression'
+        run: ./test/inner-loop/sample-m2-parent-test.sh
 
       - name: 'Test: OuterLoop: Basic'
         run: ./test/outer-loop/basic-test.sh
