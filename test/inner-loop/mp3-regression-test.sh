@@ -10,10 +10,14 @@ git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
 cp ../../test/files/intro-app/microprofile-v3/pom.xml pom.xml
 cp ../../test/files/intro-app/microprofile-v3/server.xml src/main/liberty/config/server.xml
+cp ../../test/files/intro-app/microprofile-v3/SampleLivenessCheck.java src/main/java/dev/odo/sample/SampleLivenessCheck.java
+cp ../../test/files/intro-app/microprofile-v3/SampleReadinessCheck.java src/main/java/dev/odo/sample/SampleReadinessCheck.java
 
-echo -e "\n Updated pom.xml and server.xml contents."
+echo -e "\n Updated files."
 cat pom.xml
 cat src/main/liberty/config/server.xml
+cat src/main/java/dev/odo/sample/SampleLivenessCheck.java
+cat src/main/java/dev/odo/sample/SampleReadinessCheck.java
 
 # Copy the stack devfile and customize it with a workaround to avoid surefire fork failures when running the GHA test suite.
 # Issue #138 has been opened to track and address this add the -DforkCount arg to the odo test cmd only for this run

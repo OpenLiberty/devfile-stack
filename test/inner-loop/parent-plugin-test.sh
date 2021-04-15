@@ -8,7 +8,12 @@ cd inner-loop-parent-plugin-test-dir
 echo -e "\n> Clone application-stack-intro project"
 git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
-cp ../../test/files/intro-app/parent-plugin-pom.xml pom.xml
+
+echo -e "\n> Add the liberty maven parent entry to pom.xml"
+sed -i '/<\/modelVersion>/a\\n\ \ \ \ <parent>\n\ \ \ \ \ \ \ \ <groupId>io.openliberty.tools<\/groupId>\n\ \ \ \ \ \ \ \ <artifactId>liberty-maven-app-parent<\/artifactId>\n\ \ \ \ \ \ \ \ <version>3.3.4<\/version>\n\ \ \ \ <\/parent>\n' pom.xml
+
+echo -e "\n> Updated pom.xml"
+cat pom.xml
 
 echo -e "\n> Copy devfile"
 cp ../../generated/devfile.yaml devfile.yaml
