@@ -21,13 +21,11 @@ cd devfile-regression-inner-loop-test-dir
 echo -e "\n> Clone application-stack-intro project"
 git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
-# Remove devfile from intro project
-rm -rf devfile.yaml
 
 # This is a copy of the 'main' version of the devfile - vs an updated devfile from this PR.
 # vis-a-vie the fact that we git cloned the main branch of the stack repo above
 echo -e "\n> Copy devfile and scripts"
-cp ../../generated/devfile.yaml . 
+cp ../../generated/devfile.yaml devfile.yaml
 
 # This is a workaround to avoid surefire fork failures when running
 # the GHA test suite.

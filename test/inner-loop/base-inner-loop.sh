@@ -17,7 +17,10 @@ echo -e "\n> Create new odo component"
 odo create $COMP_NAME
 
 echo -e "\n> Create URL with Minikube IP"
-odo url create --host $(minikube ip).nip.io
+odo url create --host $(minikube ip).nip.io --ingress
+
+echo -e "\n> ODO env:"
+cat .odo/env/env.yaml
 
 echo -e "\n> Checking on ingress readiness"
 kubectl get pods -n kube-system 
@@ -47,7 +50,7 @@ while ! odo log | grep -q "CWWKZ0003I: The application intro updated"; do
 done
 
 echo -e "\n> Test liveness endpoint"
-livenessResults=$(curl http://$COMP_NAME-9080.$(minikube ip).nip.io/health/live)
+livenessResults=$(curl http://ep1.$(minikube ip).nip.io/health/live)
 count=1
 while ! echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLivenessCheck","status":"UP"}],"status":"UP"}'; do 
     echo "Waiting for liveness check to pass... " && sleep 3
@@ -61,7 +64,7 @@ while ! echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLi
 done
 
 echo -e "\n> Test readiness endpoint"
-readinessResults=$(curl http://$COMP_NAME-9080.$(minikube ip).nip.io/health/ready)
+readinessResults=$(curl http://ep1.$(minikube ip).nip.io/health/ready)
 count=1
 while ! echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleReadinessCheck","status":"UP"}],"status":"UP"}'; do 
     echo "Waiting for readiness check to pass... " && sleep 3
@@ -75,7 +78,7 @@ while ! echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleR
 done
 
 echo -e "\n> Test REST endpoint"
-restResults=$(curl http://$COMP_NAME-9080.$(minikube ip).nip.io/health/live)
+restResults=$(curl http://ep1.$(minikube ip).nip.io/health/live)
 if ! echo $restResults | grep -qF 'Hello! Welcome to Open Liberty'; then
     echo "REST endpoint check passed!"
 else

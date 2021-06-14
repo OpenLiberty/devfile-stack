@@ -44,7 +44,7 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 1. Create your odo component
 
     ```shell
-    odo create my-component
+    odo create java-openliberty my-component
     ```
 
 1. Push the sample application to OpenShift
