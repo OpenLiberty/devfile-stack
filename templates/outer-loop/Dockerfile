@@ -28,11 +28,13 @@ RUN cd /work/outer-loop-app/target/liberty/wlp/usr/servers && \
     chmod -R 770 /work/config/apps && \
     if [ -d ../shared ]; then mv ../shared/* /work/shared/; fi
 
-# Step 2: Package Open Liberty image
-FROM {{.OL_UBI_IMAGE}}
+# Step 2: Package Liberty image
+FROM {{.LIBERTY_IMAGE}}
+
+ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
 
 # 2a) Copy user defined shared resources 
-COPY --from=compile --chown=1001:0 /work/shared /opt/ol/wlp/usr/shared/
+COPY --from=compile --chown=1001:0 /work/shared $WLP_INSTALL_PATH/usr/shared/
 
 # 2b) Copy user defined shared libraries
 #      but can't assume config/lib exists - copy from previous stage to a tmp holding place and test
@@ -51,8 +53,8 @@ COPY --from=compile --chown=1001:0 /stack/ol/config/configDropins/defaults/ /tmp
 
 ARG ADD_MP_HEALTH=true
 RUN if [ "$ADD_MP_HEALTH" = "true" ]; then \
-        /opt/ol/wlp/bin/server start && \
-        /opt/ol/wlp/bin/server stop && \
+        $WLP_INSTALL_PATH/bin/server start && \
+        $WLP_INSTALL_PATH/bin/server stop && \
         if ! grep "CWWKF0012I" /logs/messages.log | grep -q 'mpHealth-[0-9]*.[0-9]*\|microProfile-[0-9]*.[0-9]*'; then \
             echo "Missing mpHealth feature - adding config snippet" && \
             cp /tmp/stack/config/configDropins/defaults/liberty-stack-mpHealth.xml /config/configDropins/overrides; \
@@ -85,4 +87,4 @@ ENV OPENJ9_SCC=$ENABLE_OPENJ9_SCC
 
 # 2g) Run configure.sh
 RUN configure.sh && \
-    chmod 664 /opt/ol/wlp/usr/servers/*/configDropins/defaults/keystore.xml
+    chmod 664 $WLP_INSTALL_PATH/usr/servers/*/configDropins/defaults/keystore.xml
