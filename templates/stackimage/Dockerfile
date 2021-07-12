@@ -91,14 +91,16 @@ RUN rm -rf /mvn/repository/dev/odo/java-openliberty/samples/priming-app
 
 FROM maven
 
+ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
+
 ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.classCache/"
 
 RUN mkdir -p /output \
   && chown -R java_user /output \
   && chmod 775 /output \
-  && mkdir -p /opt/ol \
-  && chown -R java_user /opt/ol \
-  && chmod 775 /opt/ol \
+  && mkdir -p $WLP_INSTALL_PATH \
+  && chown -R java_user $WLP_INSTALL_PATH \
+  && chmod 775 $WLP_INSTALL_PATH \
   && mkdir -p /work/outer-loop-app \
   && chown -R java_user /work \
   && chmod -R 775 /work \
@@ -116,7 +118,7 @@ COPY --chown=1001:0 --from=builder /stacks/java-openliberty/config/configDropins
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/scripts /stack/ol/scripts
 RUN chmod -R 755 /stack/ol/scripts
 
-COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/target/liberty /opt/ol
+COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/target/liberty/wlp $WLP_INSTALL_PATH
 COPY --chown=1001:0 ./LICENSE /licenses/
 
 USER java_user

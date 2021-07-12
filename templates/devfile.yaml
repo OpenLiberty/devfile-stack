@@ -40,20 +40,11 @@ components:
           targetPort: 9080
           protocol: http
 commands:
-  - id: build
-    exec:  
-      component: devruntime 
-      commandLine: /stack/ol/scripts/devbuild-cmd.sh {{.LIBERTY_RUNTIME_VERSION}}
-      workingDir: /projects
-      hotReloadCapable: true
-      group:
-        kind: build 
-        isDefault: true
   - id: run
     exec:
       component: devruntime 
       # Use the installDirectory property to prevent the Liberty Maven plugin from installing a different server instance
-      commandLine: mvn -Dliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -DinstallDirectory=/projects/target/liberty/wlp -Ddebug=false -DhotTests=true -DcompileWait=3 liberty:dev
+      commandLine: mvn -Dliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -DinstallDirectory={{.WLP_INSTALL_PATH}} -Ddebug=false -DhotTests=true -DcompileWait=3 liberty:dev
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -62,7 +53,7 @@ commands:
   - id: run-test-off
     exec:
       component: devruntime
-      commandLine: mvn -Dliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -DinstallDirectory=/projects/target/liberty/wlp -Ddebug=false liberty:dev
+      commandLine: mvn -Dliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -DinstallDirectory={{.WLP_INSTALL_PATH}} -Ddebug=false liberty:dev
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -71,7 +62,7 @@ commands:
   - id: debug
     exec:
       component: devruntime 
-      commandLine: mvn -Dliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -DinstallDirectory=/projects/target/liberty/wlp -DdebugPort=${DEBUG_PORT} liberty:dev -Dliberty.env.WLP_DEBUG_REMOTE=y
+      commandLine: mvn -Dliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -DinstallDirectory={{.WLP_INSTALL_PATH}} -DdebugPort=${DEBUG_PORT} liberty:dev -Dliberty.env.WLP_DEBUG_REMOTE=y
       workingDir: /projects
       hotReloadCapable: true
       group:
