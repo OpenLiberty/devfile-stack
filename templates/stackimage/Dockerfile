@@ -84,6 +84,9 @@ RUN rm -rf /stacks/java-openliberty/priming-app/target/liberty/wlp/usr/servers/t
 # Don't let the sample appear in the user repo
 RUN rm -rf /mvn/repository/dev/odo/java-openliberty/samples/priming-app
 
+# Remove openliberty-runtime zip from Maven repo - just taking up space
+RUN rm -rf /mvn/repository/io/openliberty/openliberty-runtime
+
 FROM maven
 
 ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
