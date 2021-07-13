@@ -16,13 +16,9 @@ BASE_OS_IMAGE="${BASE_OS_IMAGE:-adoptopenjdk/openjdk11-openj9:ubi}"
 LIBERTY_RUNTIME_VERSION="${LIBERTY_RUNTIME_VERSION:-21.0.0.3}"
 
 #
-# Archive Id of the Liberty kernel runtime archive
+# Archive Id of the Liberty runtime archive
 #
-LIBERTY_RUNTIME_ARTIFACTID="${LIBERTY_RUNTIME_ARTIFACTID:-openliberty-kernel}"
-
-# Archive Id of the Liberty full runtime archive
-#
-LIBERTY_FULL_RUNTIME_ARTIFACTID="${LIBERTY_FULL_RUNTIME_ARTIFACTID:-openliberty-runtime}"
+LIBERTY_RUNTIME_ARTIFACTID="${LIBERTY_RUNTIME_ARTIFACTID:-openliberty-runtime}"
 
 #
 # Group Id of the Liberty runtime archive
@@ -70,7 +66,7 @@ generate() {
     # Base customization.
     mkdir -p generated
     sed -e "s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.STACK_IMAGE}}!$STACK_IMAGE!; s!{{.DEVFILE_DOCKERFILE_LOC}}!$DEVFILE_DOCKERFILE_LOC!; s!{{.DEVFILE_DEPLOY_YAML_LOC}}!$DEVFILE_DEPLOY_YAML_LOC!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!" templates/devfile.yaml > generated/devfile.yaml
-    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_FULL_RUNTIME_ARTIFACTID}}!$LIBERTY_FULL_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!; s!{{.ECLIPSE_MP_API_PREV_VERSION}}!$ECLIPSE_MP_API_PREV_VERSION!; s!{{.LIBERTY_MP_FEATURE_PREV_VERSION}}!$LIBERTY_MP_FEATURE_PREV_VERSION!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!" templates/stackimage/Dockerfile > generated/stackimage-Dockerfile
+    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!; s!{{.ECLIPSE_MP_API_PREV_VERSION}}!$ECLIPSE_MP_API_PREV_VERSION!; s!{{.LIBERTY_MP_FEATURE_PREV_VERSION}}!$LIBERTY_MP_FEATURE_PREV_VERSION!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!" templates/stackimage/Dockerfile > generated/stackimage-Dockerfile
 
     # Outer loop customization of Dockerfile
     sed -e "s!{{.STACK_IMAGE}}!$STACK_IMAGE!; s!{{.LIBERTY_IMAGE}}!$LIBERTY_IMAGE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!" templates/outer-loop/Dockerfile > generated/Dockerfile

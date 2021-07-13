@@ -49,7 +49,6 @@ WORKDIR /stacks/java-openliberty/priming-app
 
 ARG LIBERTY_RUNTIME_VERSION={{.LIBERTY_RUNTIME_VERSION}}
 ARG LIBERTY_RUNTIME_ARTIFACTID={{.LIBERTY_RUNTIME_ARTIFACTID}}
-ARG LIBERTY_FULL_RUNTIME_ARTIFACTID={{.LIBERTY_FULL_RUNTIME_ARTIFACTID}}
 ARG LIBERTY_RUNTIME_GROUPID={{.LIBERTY_RUNTIME_GROUPID}}
 
 RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Dliberty.runtime.artifactid=${LIBERTY_RUNTIME_ARTIFACTID} -Dliberty.runtime.groupid=${LIBERTY_RUNTIME_GROUPID} -DskipITs=true install
@@ -76,9 +75,6 @@ RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mv
 RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Dliberty.runtime.artifactid=${LIBERTY_RUNTIME_ARTIFACTID} -Dliberty.runtime.groupid=${LIBERTY_RUNTIME_GROUPID} liberty:dev -DhotTests=true &" \
  && sleep 600 \
  && echo  && echo "Done sleeping" && echo
-
-# Grab the runtime artifact as well, it's big and it might be useful
-RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dartifact=${LIBERTY_RUNTIME_GROUPID}:${LIBERTY_FULL_RUNTIME_ARTIFACTID}:${LIBERTY_RUNTIME_VERSION}:zip -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get
 
 # Cache dependencies associated with the previous major version of the microprofile APIs and OL microprofile features.
 RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=io.openliberty.features:microProfile-{{.LIBERTY_MP_FEATURE_PREV_VERSION}}:${LIBERTY_RUNTIME_VERSION}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
