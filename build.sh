@@ -33,7 +33,7 @@ LIBERTY_IMAGE="${LIBERTY_IMAGE:-openliberty/open-liberty:21.0.0.3-full-java11-op
 #
 # The name and tag of the "stack image you will build.  This will used to create your inner loop development containers, and also as the base image for the first stage of your outer loop image build.
 #
-STACK_IMAGE="${STACK_IMAGE:-openliberty/application-stack:0.5}"
+STACK_IMAGE="${STACK_IMAGE:-openliberty/application-stack:0.6}"
 
 #
 # URL at which your outer loop Dockerfile is hosted
