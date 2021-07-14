@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -e "\n> Get new stack image version"
-stackImage=$(cat build.sh | grep "openliberty/application-stack:")
+stackImage=$(cat build-ol.sh | grep "openliberty/application-stack:")
 stackImageVersion=$(echo ${stackImage##*:} | sed 's/\}\"//')
 echo "New stack image version: $stackImageVersion"
 
@@ -17,7 +17,7 @@ git clone https://github.com/OpenLiberty/application-stack.git
 cd application-stack
 
 echo -e "\n> Check new stack image version"
-currentStackImage=$(cat build.sh | grep "openliberty/application-stack:")
+currentStackImage=$(cat build-ol.sh | grep "openliberty/application-stack:")
 currentStackImageVersion=$(echo ${currentStackImage##*:} | sed 's/\}\"//')
 
 echo "Current stack image version: $currentStackImageVersion"

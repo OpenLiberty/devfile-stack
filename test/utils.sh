@@ -14,7 +14,7 @@ buildStackImage() {
 buildStack() {
     echo "> Building Stack";
     export STACK_IMAGE=localhost:5000/test-image
-    ./build.sh
+    ./build-ol.sh
     ls -al generated
 }
 

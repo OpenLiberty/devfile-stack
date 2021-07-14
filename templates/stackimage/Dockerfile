@@ -46,9 +46,9 @@ COPY --chown=1001:0 ./priming-app/pom.xml /stacks/java-openliberty/priming-app/
 
 WORKDIR /stacks/java-openliberty/priming-app
 
-ARG LIBERTY_RUNTIME_VERSION={{.LIBERTY_RUNTIME_VERSION}}
-ARG LIBERTY_RUNTIME_ARTIFACTID={{.LIBERTY_RUNTIME_ARTIFACTID}}
-ARG LIBERTY_RUNTIME_GROUPID={{.LIBERTY_RUNTIME_GROUPID}}
+ENV LIBERTY_RUNTIME_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+ENV LIBERTY_RUNTIME_ARTIFACTID={{.LIBERTY_RUNTIME_ARTIFACTID}}
+ENV LIBERTY_RUNTIME_GROUPID={{.LIBERTY_RUNTIME_GROUPID}}
 
 RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Dliberty.runtime.artifactid=${LIBERTY_RUNTIME_ARTIFACTID} -Dliberty.runtime.groupid=${LIBERTY_RUNTIME_GROUPID} -DskipITs=true install
 
@@ -89,7 +89,7 @@ RUN rm -rf /mvn/repository/io/openliberty/openliberty-runtime
 
 FROM maven
 
-ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
+ENV WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
 
 ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.classCache/"
 

@@ -18,22 +18,22 @@ LIBERTY_RUNTIME_VERSION="${LIBERTY_RUNTIME_VERSION:-21.0.0.3}"
 #
 # Archive Id of the Liberty runtime archive
 #
-LIBERTY_RUNTIME_ARTIFACTID="${LIBERTY_RUNTIME_ARTIFACTID:-wlp-javaee8}"
+LIBERTY_RUNTIME_ARTIFACTID="${LIBERTY_RUNTIME_ARTIFACTID:-openliberty-runtime}"
 
 #
 # Group Id of the Liberty runtime archive
 #
-LIBERTY_RUNTIME_GROUPID="${LIBERTY_RUNTIME_GROUPID:-com.ibm.websphere.appserver.runtime}"
+LIBERTY_RUNTIME_GROUPID="${LIBERTY_RUNTIME_GROUPID:-io.openliberty}"
 
 #
 # The Liberty base image used in the final stage of the outer loop Dockerfile used to build your application image from
 #
-LIBERTY_IMAGE="${LIBERTY_IMAGE:-websphere-liberty:21.0.0.3-full-java11-openj9}"
+LIBERTY_IMAGE="${LIBERTY_IMAGE:-openliberty/open-liberty:21.0.0.3-full-java11-openj9-ubi}"
 
 #
 # The name and tag of the "stack image you will build.  This will used to create your inner loop development containers, and also as the base image for the first stage of your outer loop image build.
 #
-STACK_IMAGE="${STACK_IMAGE:-awisniew90/wl-application-stack:0.1}"
+STACK_IMAGE="${STACK_IMAGE:-openliberty/application-stack:0.6}"
 
 #
 # URL at which your outer loop Dockerfile is hosted
@@ -58,6 +58,6 @@ LIBERTY_MP_FEATURE_PREV_VERSION="${LIBERTY_MP_FEATURE_PREV_VERSION:-3.3}"
 #
 # Installation path for Liberty in official Liberty images. This is also used as the installation path for the innerloop stack image
 #
-WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ibm/wlp}"
+WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 
 . ./build.sh $@
