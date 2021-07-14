@@ -25,7 +25,11 @@ cd application-stack-intro
 # This is a copy of the 'main' version of the devfile - vs an updated devfile from this PR.
 # vis-a-vie the fact that we git cloned the main branch of the stack repo above
 echo -e "\n> Copy devfile and scripts"
-cp ../../generated/devfile.yaml devfile.yaml
+if [ $1 -eq "gradle" ]; then
+  cp ../../generated/devfiles/gradle/devfile.yaml devfile.yaml
+else
+  cp ../../generated/devfiles/maven/devfile.yaml devfile.yaml
+fi
 
 # This is a workaround to avoid surefire fork failures when running
 # the GHA test suite.

@@ -69,7 +69,7 @@ while ! echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLi
         ./../../test/utils.sh printPodLog "app.kubernetes.io/name=ingress-nginx,app.kubernetes.io/component=controller" "kube-system"
         echo "Liberty debug data:"
         ./../../test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
-       exit 12
+        exit 12
     fi
 done
 
@@ -88,8 +88,8 @@ while ! echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleR
 done
 
 echo -e "\n> Test REST endpoint"
-restResults=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/health/live)
-if ! echo $restResults | grep -qF 'Hello! Welcome to Open Liberty'; then
+restResults=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/api/resource)
+if echo $restResults | grep -qF 'Hello! Welcome to Open Liberty'; then
     echo "REST endpoint check passed!"
 else
     echo "REST endpoint check failed. REST endpoint returned:"

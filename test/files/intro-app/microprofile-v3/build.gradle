@@ -1,0 +1,90 @@
+/*
+ * Copyright (c) 2021 IBM Corporation and others
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+group = 'dev.odo.java-openliberty.samples'
+description = 'OpenLiberty Application Stack intro built with Gradle'
+
+// Repositories to use.
+repositories {
+    mavenCentral()
+}
+
+// Plugins.
+apply plugin: 'war'
+apply plugin: 'liberty'
+
+// Java properties.
+sourceCompatibility = 11
+targetCompatibility = 11
+compileJava.options.encoding = 'UTF-8'
+
+// Software dependencies.
+dependencies {
+    providedCompile 'org.eclipse.microprofile:microprofile:3.3'   
+    providedCompile 'javax:javaee-api:8.0.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
+    testImplementation 'org.microshed:microshed-testing-liberty:0.9'
+    testImplementation 'io.rest-assured:rest-assured:4.2.0'
+    testImplementation 'org.slf4j:slf4j-log4j12:1.7.30'
+}
+
+// Liberty-gradle-plugin.
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.1.2'
+    }
+}
+
+// Open Liberty definitions.
+liberty {
+    runtime = ['group':'io.openliberty','name':'openliberty-kernel','version':System.getProperty("liberty.runtime.version")]
+    server {
+        mergeServerEnv = true
+        stripVersion = true
+    }
+}
+
+// Property definitions.
+ext  {
+    liberty.server.var.'default.http.port' = '9080'
+    liberty.server.var.'project.name' = project.name
+    liberty.server.var.'app.path' = 'api'
+}
+
+// Test definitions.
+test {
+    useJUnitPlatform()
+
+    reports.html.destination = file("$buildDir/reports/unit")
+    reports.junitXml.destination = file("$buildDir/test-results/unit")
+    testLogging {
+            displayGranularity 1
+            showStandardStreams = true
+            showStackTraces = true
+            exceptionFormat = 'full'
+            events 'PASSED', 'FAILED', 'SKIPPED'
+    }
+
+    systemProperty 'http.port', liberty.server.var.'default.http.port'
+    systemProperty 'app.path',  liberty.server.var.'app.path'
+}
+
+// Task dependencies.
+test.dependsOn 'libertyStart'
+clean.dependsOn 'libertyStop'
+

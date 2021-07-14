@@ -16,7 +16,7 @@ echo -e "\n> Updated pom.xml"
 cat pom.xml
 
 echo -e "\n> Copy devfile"
-cp ../../generated/devfile.yaml devfile.yaml
+cp ../../generated/devfiles/maven/devfile.yaml devfile.yaml
 
 # this is a workaround to avoid surefire fork failures when running
 # the GHA test suite.

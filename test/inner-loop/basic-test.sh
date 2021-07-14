@@ -10,7 +10,11 @@ git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
 
 echo -e "\n> Copy devfile"
-cp ../../generated/devfile.yaml devfile.yaml
+if [ $1 -eq "gradle" ]; then
+  cp ../../generated/devfiles/gradle/devfile.yaml devfile.yaml
+else
+  cp ../../generated/devfiles/maven/devfile.yaml devfile.yaml
+fi
 
 # this is a workaround to avoid surefire fork failures when running
 # the GHA test suite.

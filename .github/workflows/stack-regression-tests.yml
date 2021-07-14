@@ -48,29 +48,56 @@ jobs:
       - name: 'Setup: Build stack image'
         run: ./test/utils.sh buildStackImage
 
-      - name: 'Test: InnerLoop: Basic'
+      - name: 'Test: InnerLoop: Maven: Basic'
         run: ./test/inner-loop/basic-test.sh
 
-      - name: 'Test: InnerLoop: Parent plugin'
-        run: ./test/inner-loop/parent-plugin-test.sh
+      - name: 'Test: InnerLoop: Gradle: Basic'
+        run: ./test/inner-loop/basic-test.sh gradle
 
-      - name: 'Test: InnerLoop: Devfile regression'
-        run: ./test/inner-loop/devfile-regression-test.sh
+      # TODO: Needs pre-existing stack with gradle. Update/Re-enable once code is merged.
+      #- name: 'Test: InnerLoop: Maven: Devfile regression'
+      #  run: ./test/inner-loop/devfile-regression-test.sh
+      #- name: 'Test: InnerLoop: Gradle: Devfile regression'
+      #  run: ./test/inner-loop/devfile-regression-test.sh gradle
 
-      - name: 'Test: InnerLoop: microprofile v3 regression'
+      - name: 'Test: InnerLoop: Maven: microprofile v3 regression'
         run: ./test/inner-loop/mp3-regression-test.sh
 
-      - name: 'Test: InnerLoop: m2 parent sample regression'
+      - name: 'Test: InnerLoop: Gradle: microprofile v3 regression'
+        run: ./test/inner-loop/mp3-regression-test.sh gradle
+
+      - name: 'Test: InnerLoop: Maven: Uses official build type image'
+        run: ./test/inner-loop/build-type-image-test.sh
+
+      - name: 'Test: InnerLoop: Gradle: Uses official maven/gradle images'
+        run: ./test/inner-loop/build-type-image-test.sh gradle
+
+      - name: 'Test: InnerLoop: Maven: m2 parent sample regression'
         run: ./test/inner-loop/sample-m2-parent-test.sh
 
-      - name: 'Test: OuterLoop: Basic'
+      - name: 'Test: InnerLoop: Maven: Parent plugin'
+        run: ./test/inner-loop/parent-plugin-test.sh
+
+      - name: 'Test: OuterLoop: Maven: Basic'
         run: ./test/outer-loop/basic-test.sh
 
-      - name: 'Test: OuterLoop: Docker build MPH-off SCC-off args'
+      - name: 'Test: OuterLoop: Gradle: Basic'
+        run: ./test/outer-loop/basic-test.sh gradle
+
+      - name: 'Test: OuterLoop: Maven: Docker build MPH-off SCC-off args'
         run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh
 
-      - name: 'Test: OuterLoop: Docker build with MPH-on SCC-off args'
+      - name: 'Test: OuterLoop: Gradle: Docker build MPH-off SCC-off args'
+        run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh gradle
+
+      - name: 'Test: OuterLoop: Maven: Docker build with MPH-on SCC-off args'
         run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh
 
-      - name: 'Test: OuterLoop: Docker build with MPH-off SCC-on args'
+      - name: 'Test: OuterLoop: Gradle: Docker build with MPH-on SCC-off args'
+        run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh gradle
+
+      - name: 'Test: OuterLoop: Maven: Docker build with MPH-off SCC-on args'
         run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh
+ 
+      - name: 'Test: OuterLoop: Gradle: Docker build with MPH-off SCC-on args'
+        run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh gradle
