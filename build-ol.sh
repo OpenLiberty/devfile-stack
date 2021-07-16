@@ -13,7 +13,7 @@ BASE_OS_IMAGE="${BASE_OS_IMAGE:-adoptopenjdk/openjdk11-openj9:ubi}"
 #
 # Version of Liberty runtime to use within both inner and outer loops
 #
-LIBERTY_RUNTIME_VERSION="${LIBERTY_RUNTIME_VERSION:-21.0.0.3}"
+LIBERTY_RUNTIME_VERSION="${LIBERTY_RUNTIME_VERSION:-21.0.0.6}"
 
 #
 # Archive Id of the Liberty runtime archive
@@ -28,7 +28,7 @@ LIBERTY_RUNTIME_GROUPID="${LIBERTY_RUNTIME_GROUPID:-io.openliberty}"
 #
 # The Liberty base image used in the final stage of the outer loop Dockerfile used to build your application image from
 #
-LIBERTY_IMAGE="${LIBERTY_IMAGE:-openliberty/open-liberty:21.0.0.3-full-java11-openj9-ubi}"
+LIBERTY_IMAGE="${LIBERTY_IMAGE:-openliberty/open-liberty:21.0.0.6-full-java11-openj9-ubi}"
 
 #
 # The name and tag of the "stack image you will build.  This will used to create your inner loop development containers, and also as the base image for the first stage of your outer loop image build.
