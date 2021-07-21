@@ -28,7 +28,7 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 
 **Note:** Maven or Gradle is provided by the stack. This allows you to build, test, and debug your Java application without installing those tools locally.
 
-## Getting Started With The Intro Sample
+## Getting Started With the Intro Sample
 
 > It's recommended to use the latest version of OpenShift Do (odo). You can install odo using [these instructions](https://odo.dev/docs/installing-odo/)
 

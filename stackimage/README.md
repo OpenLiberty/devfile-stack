@@ -1,6 +1,4 @@
-# Application Stack Gradle
-
-Application stack built with gradle.
+# Application Stack
 
 * [Build](#build)
 * [Test](#test)
@@ -8,7 +6,8 @@ Application stack built with gradle.
 ## Build
 
 ### Prereq
-- Gradle 6.8.3 or later to build artiafcts.
+- Gradle 6.8.3 or later.
+- Maven 3.6.3 or later.
 
 ### Procedure
 

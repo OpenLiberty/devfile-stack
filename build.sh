@@ -24,19 +24,19 @@ OL_UBI_IMAGE="${OL_UBI_IMAGE:-openliberty/open-liberty:21.0.0.6-full-java11-open
 # The name and tag of the stack image you will build.  This will used to create your inner loop development containers, and also as the base image for the first stage of your outer loop image build.
 #
 STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-openliberty/application-stack:0.6.0}"
-STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-openliberty/application-stack:gradle-0.6.0}"
+STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-openliberty/application-stack:gradle-0.1.0}"
 
 #
 # URL at which your outer loop Dockerfile is hosted
 #
 OUTERLOOP_DOCKERFILE_MAVEN_LOC="${OUTERLOOP_DOCKERFILE_MAVEN_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/maven-0.6.0/Dockerfile}"
-OUTERLOOP_DOCKERFILE_GRADLE_LOC="${OUTERLOOP_DOCKERFILE_GRADLE_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/gradle-0.6.0/Dockerfile}"
+OUTERLOOP_DOCKERFILE_GRADLE_LOC="${OUTERLOOP_DOCKERFILE_GRADLE_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/gradle-0.1.0/Dockerfile}"
 
 #
 # URL at which your outer loop deploy YAML template is hosted
 #
 DEVFILE_DEPLOY_YAML_MAVEN_LOC="${DEVFILE_DEPLOY_YAML_MAVEN_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/maven-0.6.0/app-deploy.yaml}"
-DEVFILE_DEPLOY_YAML_GRADLE_LOC="${DEVFILE_DEPLOY_YAML_GRADLE_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/gradle-0.6.0/app-deploy.yaml}"
+DEVFILE_DEPLOY_YAML_GRADLE_LOC="${DEVFILE_DEPLOY_YAML_GRADLE_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/gradle-0.1.0/app-deploy.yaml}"
 
 #
 # The previous major microprofile spec API version supported by the stack.

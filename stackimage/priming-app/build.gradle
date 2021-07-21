@@ -28,7 +28,7 @@ targetCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
 
 dependencies {
-    providedCompile 'org.eclipse.microprofile:microprofile:4.0'   
+    providedCompile 'org.eclipse.microprofile:microprofile:4.0.1'   
     providedCompile 'jakarta.platform:jakarta.jakartaee-api:8.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
     testImplementation 'org.microshed:microshed-testing-liberty:0.9'

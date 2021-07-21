@@ -54,10 +54,18 @@ echo -e "\n> Test liveness endpoint"
 livenessResults=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/health/live)
 count=1
 while ! echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLivenessCheck","status":"UP"}],"status":"UP"}'; do 
-    echo "Waiting for liveness check to pass... " && sleep 5; 
+    echo "Waiting for the liveness check to pass... " && sleep 5; 
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then
-        echo "Timed out waiting for liveness check to pass. Liveness results:"
+        # Last attempt to perform a liveness check using the health endpoint:
+        healthEndpointResult=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/health)
+        if echo $healthEndpointResult | grep -qF '{"data":{},"name":"SampleLivenessCheck","status":"UP"}'; then
+            break
+        fi
+
+        # Print debug data and exit.
+        echo "Timed out waiting for the liveness check to pass."
+        echo $healthEndpointResult
         echo $livenessResults
         echo "App service resource config:"
         kubectl describe service ${COMP_NAME} -n ${NAMESPACE}
@@ -77,10 +85,18 @@ echo -e "\n> Test readiness endpoint"
 readinessResults=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/health/ready)
 count=1
 while ! echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleReadinessCheck","status":"UP"}],"status":"UP"}'; do 
-    echo "Waiting for readiness check to pass... " && sleep 5; 
+    echo "Waiting for the readiness check to pass... " && sleep 5; 
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then
-        echo "Timed out waiting for Readiness check to pass. Readiness results:"
+        # Last attempt to perform a readiness check using the health endpoint:
+        healthEndpointResult=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/health)
+        if echo $healthEndpointResult | grep -qF '{"data":{},"name":"SampleReadinessCheck","status":"UP"}'; then
+            break
+        fi
+
+        # Print debug data and exit.
+        echo "Timed out waiting for the readiness check to pass."
+        echo $healthEndpointResult
         echo $readinessResults
         ./../../test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12

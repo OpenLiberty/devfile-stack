@@ -3,7 +3,7 @@
 if [ -e /projects/.disable-bld-cmd ]; then
     echo "Found the disable-bld-cmd file" && echo "The devBuild command will not run" && exit 0;
 elif [ ! -e /projects/build.gradle ]; then 
-    echo "  ERROR: This project does not contain a pom.xml or a build.gradle file. Please correct the issue and try again.";
+    echo "  ERROR: This project does not contain a build.gradle file. Please correct the issue and try again.";
     exit 1
 else
     echo "will run the devBuild command using gradle" && mkdir -p /projects/build
@@ -12,7 +12,7 @@ else
     elif [[ -d /projects/build/wlp && ! -e /projects/.liberty-mv ]]; then
         echo "STACK WARNING - LIBERTY RUNTIME WAS LOADED FROM HOST";
     fi
-    gradle -Dgradle.user.home=/.gradle assemble
+    gradle -Dgradle.user.home=/.gradle assemble -Pliberty.runtime.version=$1
 fi
 
 touch ./.disable-bld-cmd
