@@ -2,23 +2,22 @@
 
 # buildStackImage builds the base Open Liberty application stack image.
 buildStackImage() {
-
-    echo "> Building Stack Image";
+    echo "> Start docker";
     docker run --rm -it --network=host alpine ash -c "apk add socat && socat TCP-LISTEN:5000,reuseaddr,fork TCP:$(minikube ip):5000"
 
-    stackImage=$(cat generated/devfile.yaml | grep "localhost:5000/test-image")
-    echo $stackImage
+    echo "> Build the stack image and push it to docker";
+    docker build -t localhost:5000/test-image-gradle --build-arg stacklabel=$SHA -f generated/stackimage/gradle/Dockerfile stackimage
+    docker push localhost:5000/test-image-gradle
 
-    docker build -t localhost:5000/test-image --build-arg stacklabel=$SHA -f generated/stackimage-Dockerfile stackimage
-    docker push localhost:5000/test-image
+    docker build -t localhost:5000/test-image-maven --build-arg stacklabel=$SHA -f generated/stackimage/maven/Dockerfile stackimage
+    docker push localhost:5000/test-image-maven
 }
 
 # buildStack builds the Open Liberty stack repository.
 buildStack() {
     echo "> Building Stack";
-    export STACK_IMAGE=localhost:5000/test-image
-    ./build.sh
-    ls -al generated
+    STACK_IMAGE_MAVEN=localhost:5000/test-image-maven STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle ./build.sh
+    ls -laR generated
 }
 
 # installOpenLibertyOperator installs the Open Liberty operator.

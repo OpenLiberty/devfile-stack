@@ -56,7 +56,15 @@ while ! echo $livenessResults | grep -qF '{"checks":[{"data":{},"name":"SampleLi
     echo "Waiting for liveness check to pass... " && sleep 3
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then
-        echo "Timed out waiting for liveness check to pass. Liveness results:"
+        # Last attempt to perform a liveness check using the health endpoint:
+        healthEndpointResult=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/health)
+        if echo $healthEndpointResult | grep -qF '{"data":{},"name":"SampleLivenessCheck","status":"UP"}'; then
+            break
+        fi
+
+        # Print debug data and exit.
+        echo "Timed out waiting for the liveness check to pass."
+        echo $healthEndpointResult
         echo $livenessResults
         ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
@@ -70,7 +78,13 @@ while ! echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleR
     echo "Waiting for readiness check to pass... " && sleep 3
     count=`expr $count + 1`
     if [ $count -eq 20 ]; then
-        echo "Timed out waiting for Readiness check to pass. Readiness results:"
+        # Last attempt to perform a readiness check using the health endpoint:
+        healthEndpointResult=$(curl http://${COMP_NAME}.$(minikube ip).nip.io/health)
+        if echo $healthEndpointResult | grep -qF '{"data":{},"name":"SampleReadinessCheck","status":"UP"}'; then
+            break
+        fi
+        echo "Timed out waiting for the readiness check to pass."
+        echo $healthEndpointResult
         echo $readinessResults
         ./../../test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
         exit 12
@@ -78,8 +92,8 @@ while ! echo $readinessResults | grep -qF '{"checks":[{"data":{},"name":"SampleR
 done
 
 echo -e "\n> Test REST endpoint"
-restResults=$(curl http://ep1.$(minikube ip).nip.io/health/live)
-if ! echo $restResults | grep -qF 'Hello! Welcome to Open Liberty'; then
+restResults=$(curl http://ep1.$(minikube ip).nip.io/api/resource)
+if echo $restResults | grep -qF 'Hello! Welcome to Open Liberty'; then
     echo "REST endpoint check passed!"
 else
     echo "REST endpoint check failed. REST endpoint returned:"

@@ -12,11 +12,14 @@ echo -e "\n> Clone application-stack-intro project"
 git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
 
-echo -e "\n> Copy the m2 sample devfile and update the stack image with the one built"
-cp ../application-stack-samples/devfiles/m2-repo-volume/devfile.yaml devfile.yaml
-sed -i '/container:/a\ \ \ \ \ \ \ \ image: localhost:5000/test-image-maven' devfile.yaml
+echo -e "\n> Copy devfile"
+if [ $1 -eq "gradle" ]; then
+  cp ../application-stack-samples/devfiles/gradle-image/devfile.yaml devfile.yaml
+else
+  cp ../application-stack-samples/devfiles/maven-image/devfile.yaml devfile.yaml
+fi
 
-# this is a workaround to avoid surefire fork failures when running
+# This is a workaround to avoid surefire fork failures when running
 # the GHA test suite.
 # Issue #138 has been opened to track and address this
 # add the -DforkCount arg to the odo test cmd only for this run

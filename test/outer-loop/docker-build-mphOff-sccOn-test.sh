@@ -16,7 +16,11 @@ git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
 
 echo -e "\n> Copy Dockerfile"
-cp ../../generated/Dockerfile Dockerfile
+if [ $1 -eq "gradle" ]; then
+  cp ../../generated/outer-loop/gradle/Dockerfile Dockerfile
+else
+  cp ../../generated/outer-loop/maven/Dockerfile Dockerfile
+fi
 
 echo -e "\n> Copy app-deploy.yaml"
 cp ../../templates/outer-loop/app-deploy.yaml app-deploy.yaml

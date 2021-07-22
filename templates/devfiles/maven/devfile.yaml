@@ -17,20 +17,24 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-openliberty
-  version: 0.5.0
+  version: 0.6.0
+  displayName: "Open Liberty Maven"
   description: Java application stack using Open Liberty runtime
-  alpha.build-dockerfile: "{{.DEVFILE_DOCKERFILE_LOC}}"
-  alpha.deployment-manifest: "{{.DEVFILE_DEPLOY_YAML_LOC}}"
+  tags: ["Java", "Maven"]
+  language: "java"
+  projectType: "openliberty"
+  alpha.build-dockerfile: "{{.OUTERLOOP_DOCKERFILE_MAVEN_LOC}}"
+  alpha.deployment-manifest: "{{.DEVFILE_DEPLOY_YAML_MAVEN_LOC}}"
 starterProjects:
   - name: user-app
     git:
       remotes:
-        origin: 'https://github.com/OpenLiberty/application-stack-starters.git'
+        origin: "https://github.com/OpenLiberty/application-stack-starters.git"
 components:
-  - name: devruntime
+  - name: dev
     container:
-        # In the original upstream of this devfile, the image used is openliberty/application-stack:<x.y.z>, which is built from the repository: https://github.com/OpenLiberty/application-stack
-      image: {{.STACK_IMAGE}}
+      # In the original upstream of this devfile, the image used is openliberty/application-stack:<x.y.z>, which is built from the repository: https://github.com/OpenLiberty/application-stack
+      image: {{.STACK_IMAGE_MAVEN}}
       memoryLimit: 1512Mi
       mountSources: true
       endpoints:
@@ -41,9 +45,9 @@ components:
           protocol: http
 commands:
   - id: build
-    exec:  
-      component: devruntime 
-      commandLine: /stack/ol/scripts/devbuild-cmd.sh {{.OL_RUNTIME_VERSION}}
+    exec:
+      component: dev
+      commandLine: /stack/ol/scripts/maven/devbuild-cmd.sh {{.OL_RUNTIME_VERSION}}
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -51,7 +55,7 @@ commands:
         isDefault: true
   - id: run
     exec:
-      component: devruntime 
+      component: dev
       commandLine: mvn -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} -Ddebug=false -DhotTests=true -DcompileWait=3 liberty:dev
       workingDir: /projects
       hotReloadCapable: true
@@ -60,7 +64,7 @@ commands:
         isDefault: true
   - id: run-test-off
     exec:
-      component: devruntime
+      component: dev
       commandLine: mvn -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} -Ddebug=false liberty:dev
       workingDir: /projects
       hotReloadCapable: true
@@ -69,7 +73,7 @@ commands:
         isDefault: false
   - id: debug
     exec:
-      component: devruntime 
+      component: dev
       commandLine: mvn -Dliberty.runtime.version={{.OL_RUNTIME_VERSION}} -DdebugPort=${DEBUG_PORT} liberty:dev -Dliberty.env.WLP_DEBUG_REMOTE=y
       workingDir: /projects
       hotReloadCapable: true
@@ -79,7 +83,7 @@ commands:
   - id: test
     # The 'test' command requires an active container, so we don't need to specify the liberty runtime version
     exec:
-      component: devruntime 
+      component: dev
       commandLine: mvn failsafe:integration-test failsafe:verify
       workingDir: /projects
       hotReloadCapable: true
