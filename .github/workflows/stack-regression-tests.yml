@@ -54,11 +54,11 @@ jobs:
       - name: 'Test: InnerLoop: Gradle: Basic'
         run: ./test/inner-loop/basic-test.sh gradle
 
-      # TODO: Needs pre-existing stack with gradle. Update/Re-enable once code is merged.
-      #- name: 'Test: InnerLoop: Maven: Devfile regression'
-      #  run: ./test/inner-loop/devfile-regression-test.sh
-      #- name: 'Test: InnerLoop: Gradle: Devfile regression'
-      #  run: ./test/inner-loop/devfile-regression-test.sh gradle
+      - name: 'Test: InnerLoop: Maven: Devfile regression'
+        run: ./test/inner-loop/devfile-regression-test.sh
+
+      - name: 'Test: InnerLoop: Gradle: Devfile regression'
+        run: ./test/inner-loop/devfile-regression-test.sh gradle
 
       - name: 'Test: InnerLoop: Maven: microprofile v3 regression'
         run: ./test/inner-loop/mp3-regression-test.sh

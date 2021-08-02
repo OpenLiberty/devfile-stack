@@ -23,8 +23,8 @@ OL_UBI_IMAGE="${OL_UBI_IMAGE:-openliberty/open-liberty:21.0.0.6-full-java11-open
 #
 # The name and tag of the stack image you will build.  This will used to create your inner loop development containers, and also as the base image for the first stage of your outer loop image build.
 #
-STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-openliberty/application-stack:0.6.0}"
-STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-openliberty/application-stack:gradle-0.1.0}"
+STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-openliberty/application-stack:0.6}"
+STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-openliberty/application-stack:gradle-0.1}"
 
 #
 # URL at which your outer loop Dockerfile is hosted
