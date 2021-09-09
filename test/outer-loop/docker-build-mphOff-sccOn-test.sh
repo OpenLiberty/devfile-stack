@@ -5,6 +5,9 @@
 #ADD_MP_HEALTH=false and ENABLE_OPENJ9_SCC=true.
 echo -e "\n> Docker build with MPH false SCC true args outer loop test"
 
+# Base work directory.
+BASE_DIR=$(pwd)
+
 # Component name. 
 MPHOFF_SCCON_COMP_NAME="dbuild-mphoff-sccon"
 
@@ -16,14 +19,14 @@ git clone https://github.com/OpenLiberty/application-stack-intro.git
 cd application-stack-intro
 
 echo -e "\n> Copy Dockerfile"
-if [ $1 -eq "gradle" ]; then
-  cp ../../generated/outer-loop/gradle/Dockerfile Dockerfile
+if [ "$1" = "gradle" ]; then
+  cp $BASE_DIR/generated/outer-loop/gradle/Dockerfile Dockerfile
 else
-  cp ../../generated/outer-loop/maven/Dockerfile Dockerfile
+  cp $BASE_DIR/generated/outer-loop/maven/Dockerfile Dockerfile
 fi
 
 echo -e "\n> Copy app-deploy.yaml"
-cp ../../templates/outer-loop/app-deploy.yaml app-deploy.yaml
+cp $BASE_DIR/templates/outer-loop/app-deploy.yaml app-deploy.yaml
 
 echo -e "\n> Build Docker image"
 sed -i '/COPY --from=compile/a RUN true' Dockerfile
@@ -35,11 +38,11 @@ sed -i "s/{{\.COMPONENT_NAME}}/${MPHOFF_SCCON_COMP_NAME}/g" app-deploy.yaml
 sed -i 's/{{\.CONTAINER_IMAGE}}/outerloop\/application-stack-intro:1\.0/g' app-deploy.yaml
 
 echo -e "\n> Base outer loop test run"
-COMP_NAME=${MPHOFF_SCCON_COMP_NAME}  ./../../test/outer-loop/base-outer-loop.sh
+BASE_WORK_DIR=$BASE_DIR COMP_NAME=${MPHOFF_SCCON_COMP_NAME} $BASE_DIR/test/outer-loop/base-outer-loop.sh
 rc=$?
 if [ $rc -ne 0 ]; then
     exit 12
 fi
 
 echo -e "\n> Cleanup: Delete created directories"
-cd ../../; rm -rf outer-loop-mphOff-sccOn-test-dir
+cd $BASE_DIR; rm -rf outer-loop-mphOff-sccOn-test-dir

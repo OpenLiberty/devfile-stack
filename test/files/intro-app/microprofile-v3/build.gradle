@@ -46,13 +46,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.1.2'
+        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.2'
     }
 }
 
 // Open Liberty definitions.
 liberty {
-    runtime = ['group':'io.openliberty','name':'openliberty-kernel','version':System.getProperty("liberty.runtime.version")]
     server {
         mergeServerEnv = true
         stripVersion = true
