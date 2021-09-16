@@ -19,15 +19,11 @@ cd guide-maven-multimodules/finish
 echo -e "\n> Copy devfile"
 cp $BASE_DIR/generated/devfiles/maven/devfile.yaml devfile.yaml
 
-# Update the test command execution in the devfile:
-# 1. Add -DforkCount=0 as a workaround to avoid surefire fork failures when running
-#    the GHA test suite.Issue #138 has been opened to track and address this
-# 2. Add the test-compile phase to run the testCompile goal (ear/pom.xml), which allows the tests to 
-#    be compiled and used when run. This is done to avoid errors such as: 
-#    Could not find metadata io.openliberty.guides:guide-maven-multimodules-jar:1.0-SNAPSHOT/maven-metadata.xml
-#    in local (/mvn/repository) 
+# Update the test command execution in the devfile. Add -DforkCount=0 as a workaround to avoid 
+# surefire fork failures when running the GHA test suite.Issue #138 has been opened to track 
+# and address this.
 echo -e "\n> Modifying the odo test command"
-sed -i 's/failsafe:integration-test/-DforkCount=0 test-compile failsafe:integration-test/' devfile.yaml
+sed -i 's/failsafe:integration-test/-DforkCount=0 failsafe:integration-test/' devfile.yaml
 
 echo -e "\n Updated devfile contents:"
 cat devfile.yaml
