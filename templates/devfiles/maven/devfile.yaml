@@ -14,12 +14,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-schemaVersion: 2.0.0
+schemaVersion: 2.1.0
 metadata:
   name: java-openliberty
-  version: 0.6.0
+  version: 0.7.0
   displayName: "Open Liberty Maven"
-  description: Java application stack using Open Liberty runtime
+  description: Java application Maven-built stack using the Open Liberty runtime
   tags: ["Java", "Maven"]
   language: "java"
   projectType: "openliberty"
@@ -81,10 +81,10 @@ commands:
         kind: debug
         isDefault: true
   - id: test
-    # The 'test' command requires an active container, so we don't need to specify the liberty runtime version
+    # The 'test' command requires an already active container. Multi-module apps require compilation is needed prior to processing the tests.
     exec:
       component: dev
-      commandLine: mvn failsafe:integration-test failsafe:verify
+      commandLine: mvn compiler:compile failsafe:integration-test failsafe:verify
       workingDir: /projects
       hotReloadCapable: true
       group:

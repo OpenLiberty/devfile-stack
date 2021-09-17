@@ -14,12 +14,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-schemaVersion: 2.0.0
+schemaVersion: 2.1.0
 metadata:
   name: java-openliberty-gradle
-  version: 0.1.0
+  version: 0.2.0
   displayName: "Open Liberty Gradle"
-  description: Java application Gradle built stack using the Open Liberty runtime
+  description: Java application Gradle-built stack using the Open Liberty runtime
   tags: ["Java", "Gradle"]
   language: "java"
   projectType: "openliberty"

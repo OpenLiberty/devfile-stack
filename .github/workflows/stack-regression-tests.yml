@@ -78,6 +78,9 @@ jobs:
       - name: 'Test: InnerLoop: Maven: Parent plugin'
         run: ./test/inner-loop/parent-plugin-test.sh
 
+      - name: 'Test: InnerLoop: Maven: multi-module'
+        run: ./test/inner-loop/multi-module.sh
+
       - name: 'Test: OuterLoop: Maven: Basic'
         run: ./test/outer-loop/basic-test.sh
 
@@ -98,6 +101,6 @@ jobs:
 
       - name: 'Test: OuterLoop: Maven: Docker build with MPH-off SCC-on args'
         run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh
- 
+
       - name: 'Test: OuterLoop: Gradle: Docker build with MPH-off SCC-on args'
-        run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh gradle
+        run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh gradle 

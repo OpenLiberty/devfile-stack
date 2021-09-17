@@ -13,18 +13,18 @@ BASE_OS_IMAGE="${BASE_OS_IMAGE:-adoptopenjdk/openjdk11-openj9:ubi}"
 #
 # Version of Open Liberty runtime to use within both inner and outer loops
 #
-OL_RUNTIME_VERSION="${OL_RUNTIME_VERSION:-21.0.0.6}"
+OL_RUNTIME_VERSION="${OL_RUNTIME_VERSION:-21.0.0.9}"
 
 #
 # The Open Liberty base image used in the final stage of the outer loop Dockerfile used to build your application image from
 #
-OL_UBI_IMAGE="${OL_UBI_IMAGE:-openliberty/open-liberty:21.0.0.6-full-java11-openj9-ubi}"
+OL_UBI_IMAGE="${OL_UBI_IMAGE:-openliberty/open-liberty:21.0.0.9-full-java11-openj9-ubi}"
 
 #
 # The name and tag of the stack image you will build.  This will used to create your inner loop development containers, and also as the base image for the first stage of your outer loop image build.
 #
-STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-openliberty/application-stack:0.6}"
-STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-openliberty/application-stack:gradle-0.1}"
+STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-openliberty/application-stack:0.7}"
+STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-openliberty/application-stack:gradle-0.2}"
 
 #
 # URL at which your outer loop Dockerfile is hosted
