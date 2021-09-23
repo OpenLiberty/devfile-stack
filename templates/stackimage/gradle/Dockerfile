@@ -8,7 +8,7 @@ RUN yum upgrade --disableplugin=subscription-manager -y \
 RUN  useradd --uid 1001 --gid 0 --shell /bin/bash --create-home java_user
 
 # Command dependency installation.
-RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
    && yum install --disableplugin=subscription-manager -y unzip curl ca-certificates wget xmlstarlet procps
 
 # Gradle installation.
