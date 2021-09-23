@@ -8,7 +8,7 @@
 #
 # Base image used to build stack image
 #
-BASE_OS_IMAGE="${BASE_OS_IMAGE:-adoptopenjdk/openjdk11-openj9:ubi}"
+BASE_OS_IMAGE="${BASE_OS_IMAGE:-adoptopenjdk/openjdk11-openj9:jdk-11.0.12_7_openj9-0.27.0-ubi}"
 
 #
 # Version of Open Liberty runtime to use within both inner and outer loops
