@@ -8,6 +8,7 @@
 #
 # Base image used to build stack image
 #
+# USE OF adoptopenjdk/openjdk11-openj9:jdk-11.0.12_7_openj9-0.27.0-ubi IS A TEMPORARY WORKAROUND - waiting for adoptopenjdk/openjdk11-openj9:ubi to be finalized at which point we should revert back to it.
 BASE_OS_IMAGE="${BASE_OS_IMAGE:-adoptopenjdk/openjdk11-openj9:jdk-11.0.12_7_openj9-0.27.0-ubi}"
 
 #
