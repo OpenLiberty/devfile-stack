@@ -30,14 +30,14 @@ STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-openliberty/application-stack:gradle-0
 #
 # URL at which your outer loop Dockerfile is hosted
 #
-OUTERLOOP_DOCKERFILE_MAVEN_LOC="${OUTERLOOP_DOCKERFILE_MAVEN_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/maven-0.6.0/Dockerfile}"
-OUTERLOOP_DOCKERFILE_GRADLE_LOC="${OUTERLOOP_DOCKERFILE_GRADLE_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/gradle-0.1.0/Dockerfile}"
+OUTERLOOP_DOCKERFILE_MAVEN_LOC="${OUTERLOOP_DOCKERFILE_MAVEN_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/maven-0.7.0/Dockerfile}"
+OUTERLOOP_DOCKERFILE_GRADLE_LOC="${OUTERLOOP_DOCKERFILE_GRADLE_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/gradle-0.2.0/Dockerfile}"
 
 #
 # URL at which your outer loop deploy YAML template is hosted
 #
-DEVFILE_DEPLOY_YAML_MAVEN_LOC="${DEVFILE_DEPLOY_YAML_MAVEN_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/maven-0.6.0/app-deploy.yaml}"
-DEVFILE_DEPLOY_YAML_GRADLE_LOC="${DEVFILE_DEPLOY_YAML_GRADLE_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/gradle-0.1.0/app-deploy.yaml}"
+DEVFILE_DEPLOY_YAML_MAVEN_LOC="${DEVFILE_DEPLOY_YAML_MAVEN_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/maven-0.7.0/app-deploy.yaml}"
+DEVFILE_DEPLOY_YAML_GRADLE_LOC="${DEVFILE_DEPLOY_YAML_GRADLE_LOC:-https://github.com/OpenLiberty/application-stack/releases/download/gradle-0.2.0/app-deploy.yaml}"
 
 #
 # The previous major microprofile spec API version supported by the stack.
