@@ -70,9 +70,9 @@ ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.
 RUN mkdir -p /output \
   && chown -R java_user /output \
   && chmod 775 /output \
-  && mkdir -p /opt/ol \
+  && mkdir -p /opt/ol/wlp \
   && chown -R java_user /opt/ol \
-  && chmod 775 /opt/ol /opt/ol \
+  && chmod -R 775 /opt/ol \
   && mkdir -p /work/outer-loop-app \
   && chown -R java_user /work \
   && chmod -R 775 /work \
@@ -91,7 +91,7 @@ COPY --chown=1001:0 --from=builder /stacks/java-openliberty/config/configDropins
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/scripts /stack/ol/scripts
 RUN chmod -R 755 /stack/ol/scripts
 
-COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/build/wlp /opt/ol
+COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/build/wlp /opt/ol/wlp
 COPY --chown=1001:0 ./LICENSE /licenses/
 
 USER java_user
