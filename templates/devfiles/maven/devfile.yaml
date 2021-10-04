@@ -52,7 +52,7 @@ commands:
       workingDir: /projects
       hotReloadCapable: true
       group:
-        kind: build 
+        kind: build
         isDefault: true
   - id: run
     exec:
@@ -82,7 +82,7 @@ commands:
         kind: debug
         isDefault: true
   - id: test
-    # The 'test' command requires an already active container. Multi-module apps require compilation is needed prior to processing the tests.
+    # The 'test' command requires an already active container. Multi-module apps require compilation prior to test processing.
     exec:
       component: dev
       commandLine: mvn compiler:compile failsafe:integration-test failsafe:verify
