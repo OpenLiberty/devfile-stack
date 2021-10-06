@@ -6,8 +6,8 @@ echo -e "\n> Parent plugin inner loop test."
 # Base work directory.
 BASE_DIR=$(pwd)
 
-# Build type sub-path to the wlp installation.
-BUILD_WLP_SUB_PATH=target/liberty
+# WLP_INSTALL_PATH
+WLP_INSTALL_PATH=/opt/ol/wlp
 
 mkdir inner-loop-parent-plugin-test-dir
 cd inner-loop-parent-plugin-test-dir
@@ -39,7 +39,7 @@ echo -e "\n> Inner loop parent plugin test run."
 BASE_WORK_DIR=$BASE_DIR \
 COMP_NAME=parent-plugin-comp \
 PROJ_NAME=parent-plugin-proj \
-LIBERTY_SERVER_LOGS_DIR_PATH=/projects/$BUILD_WLP_SUB_PATH/wlp/usr/servers/defaultServer/logs \
+LIBERTY_SERVER_LOGS_DIR_PATH=$WLP_INSTALL_PATH/usr/servers/defaultServer/logs \
 $BASE_DIR/test/inner-loop/base-inner-loop.sh
 
 rc=$?

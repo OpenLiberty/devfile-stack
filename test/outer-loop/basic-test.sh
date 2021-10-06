@@ -21,6 +21,7 @@ cd application-stack-intro
 echo -e "\n> Copy Dockerfile"
 if [ "$1" = "gradle" ]; then
   cp $BASE_DIR/generated/outer-loop/gradle/Dockerfile Dockerfile
+  WLP_INSTALL_PATH=/projects/build/wlp
 else
   cp $BASE_DIR/generated/outer-loop/maven/Dockerfile Dockerfile
 fi

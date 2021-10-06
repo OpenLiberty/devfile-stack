@@ -1,8 +1,5 @@
 name: stack-regression-tests
-on:
-  pull_request:
-    branches:
-      - main
+on: push
 jobs:
    stack-tests:
      runs-on: ubuntu-latest

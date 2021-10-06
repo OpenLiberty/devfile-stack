@@ -41,15 +41,16 @@ COPY ./LICENSE /licenses/
 USER java_user
 
 ADD ./config /stacks/java-openliberty/config
-ADD ./scripts /stacks/java-openliberty/scripts
 ADD ./priming-app/src /stacks/java-openliberty/priming-app/src
 COPY --chown=1001:0 ./priming-app/pom.xml /stacks/java-openliberty/priming-app/
 
 WORKDIR /stacks/java-openliberty/priming-app
 
-ARG LIBERTY_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+ENV LIBERTY_RUNTIME_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+ENV LIBERTY_RUNTIME_ARTIFACTID={{.LIBERTY_RUNTIME_ARTIFACTID}}
+ENV LIBERTY_RUNTIME_GROUPID={{.LIBERTY_RUNTIME_GROUPID}}
 
-RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_VERSION} -DskipITs=true install
+RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Dliberty.runtime.artifactid=${LIBERTY_RUNTIME_ARTIFACTID} -Dliberty.runtime.groupid=${LIBERTY_RUNTIME_GROUPID} -DskipITs=true install
 
 # A hack maybe but there's quite a few dependencies that only are detected when dev mode is executed, due to use of mojo executor, etc.
 #
@@ -70,12 +71,10 @@ RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mv
 # [INFO] Integration tests finished.
 #
 # Done sleeping
-RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_VERSION} liberty:dev -DhotTests=true &" \
+
+RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Dliberty.runtime.artifactid=${LIBERTY_RUNTIME_ARTIFACTID} -Dliberty.runtime.groupid=${LIBERTY_RUNTIME_GROUPID} liberty:dev -DhotTests=true &" \
  && sleep 600 \
  && echo  && echo "Done sleeping" && echo
-
-# Grab the runtime artifact as well, it's big and it might be useful
-RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dartifact=io.openliberty:openliberty-runtime:${LIBERTY_VERSION}:zip -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get
 
 # Cache dependencies associated with the previous major version of the microprofile APIs and OL microprofile features.
 RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=io.openliberty.features:microProfile-{{.OL_MP_FEATURE_PREV_VERSION}}:${LIBERTY_VERSION}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
@@ -88,19 +87,19 @@ RUN rm -rf /mvn/repository/dev/odo/java-openliberty/samples/priming-app
 
 FROM maven
 
+ENV WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
+
 ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.classCache/"
 
 RUN mkdir -p /output \
   && chown -R java_user /output \
   && chmod 775 /output \
-  && mkdir -p /opt/ol \
-  && chown -R java_user /opt/ol \
-  && chmod 775 /opt/ol \
+  && mkdir -p $WLP_INSTALL_PATH \
+  && chown -R java_user $WLP_INSTALL_PATH \
+  && chmod 775 $WLP_INSTALL_PATH \
   && mkdir -p /work/outer-loop-app \
   && chown -R java_user /work \
   && chmod -R 775 /work \
-  && mkdir -p /stack/ol/scripts \
-  && chmod -R 775 /stack/ol/scripts \
   && mkdir -p /stack/ol/config/configDropins/defaults \
   && chmod -R 775 /stack/ol/config/configDropins/defaults
 
@@ -110,10 +109,7 @@ COPY --chown=1001:0 --from=builder /mvn /mvn
 
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/config/configDropins/defaults/ /stack/ol/config/configDropins/defaults/
 
-COPY --chown=1001:0 --from=builder /stacks/java-openliberty/scripts /stack/ol/scripts
-RUN chmod -R 755 /stack/ol/scripts
-
-COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/target/liberty /opt/ol
+COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/target/liberty/wlp $WLP_INSTALL_PATH
 COPY --chown=1001:0 ./LICENSE /licenses/
 
 USER java_user

@@ -6,8 +6,8 @@ echo -e "\n> multi-module inner loop test"
 # Base work directory.
 BASE_DIR=$(pwd)
 
-# Build type sub-path to the wlp installation.
-BUILD_WLP_SUB_PATH=target/liberty
+# WLP install path
+WLP_INSTALL_PATH=/opt/ol/wlp
 
 mkdir multi-module-inner-loop-test-dir
 cd multi-module-inner-loop-test-dir
@@ -36,7 +36,7 @@ APP_RESOURCE_PATH=converter/ \
 APP_VALIDATION_STRING="Enter the height in centimeters" \
 DO_HEALTH_CHECK=false \
 BASE_WORK_DIR=$BASE_DIR \
-LIBERTY_SERVER_LOGS_DIR_PATH=/projects/ear/$BUILD_WLP_SUB_PATH/wlp/usr/servers/defaultServer/logs \
+LIBERTY_SERVER_LOGS_DIR_PATH=$WLP_INSTALL_PATH/usr/servers/defaultServer/logs \
 $BASE_DIR/test/inner-loop/base-inner-loop.sh
 
 rc=$?

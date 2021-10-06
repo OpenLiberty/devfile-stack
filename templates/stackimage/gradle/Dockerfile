@@ -32,7 +32,6 @@ ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.
 
 RUN mkdir -p /stacks/java-openliberty/priming-app \
   && mkdir -p /stacks/java-openliberty/config \
-  && mkdir -p /stacks/java-openliberty/scripts \
   && chown -R java_user /stacks \
   && mkdir -p /output \
   && chown -R java_user /output \
@@ -43,41 +42,48 @@ COPY ./LICENSE /licenses/
 USER java_user
 
 COPY ./config /stacks/java-openliberty/config
-COPY ./scripts /stacks/java-openliberty/scripts
 COPY ./priming-app/src /stacks/java-openliberty/priming-app/src
 COPY ./priming-app/build.gradle ./priming-app/settings.gradle /stacks/java-openliberty/priming-app/
 
 WORKDIR /stacks/java-openliberty/priming-app
 
-ARG LIBERTY_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+ENV LIBERTY_RUNTIME_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+ENV LIBERTY_RUNTIME_ARTIFACTID={{.LIBERTY_RUNTIME_ARTIFACTID}}
+ENV LIBERTY_RUNTIME_GROUPID={{.LIBERTY_RUNTIME_GROUPID}}
 
 # Build the priming application to populate the cache (java_user home dir: /home/java_user/.gradle).
-RUN umask -S u=rwx,g=rwx,o=rx; gradle build -Pliberty.runtime.version=${LIBERTY_VERSION} --no-daemon
+RUN umask -S u=rwx,g=rwx,o=rx; gradle build -Pliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Pliberty.runtime.name=${LIBERTY_RUNTIME_ARTIFACTID} -Pliberty.runtime.group=${LIBERTY_RUNTIME_GROUPID} --no-daemon
 
 # Start the Open Liberty server in dev mode. There are dependencies that are detected during dev mode execution due to the use of mojo executor, etc.
-RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; gradle libertyDev -Pliberty.runtime.version=${LIBERTY_VERSION} --hotTests &" \
+RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; gradle libertyDev -Pliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Pliberty.runtime.name=${LIBERTY_RUNTIME_ARTIFACTID} -Pliberty.runtime.group=${LIBERTY_RUNTIME_GROUPID} --hotTests &" \
  && sleep 600 \
  && echo  && echo "Done sleeping" && echo
 
 # Delete the defaultServer directory created during libertyDev task execution. Users will customize their own. 
 RUN rm -rf /stacks/java-openliberty/priming-app/build/wlp/usr/servers/defaultServer
 
-# 3. Gather all installed software, Open Liberty basic installation, and cached Open Liberty data into the final image. 
+# 3. Gather all installed software, Liberty basic installation, and cached Liberty data into the final image. 
 FROM prereq
+
+ENV WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
 
 ENV OPENJ9_JAVA_OPTIONS="-Xshareclasses:name=liberty,nonfatal,cacheDir=/output/.classCache/"
 
 RUN mkdir -p /output \
   && chown -R java_user /output \
   && chmod 775 /output \
+<<<<<<< HEAD
   && mkdir -p /opt/ol/wlp \
   && chown -R java_user /opt/ol \
   && chmod -R 775 /opt/ol \
+=======
+  && mkdir -p $WLP_INSTALL_PATH \
+  && chown -R java_user $WLP_INSTALL_PATH/.. \
+  && chmod 775 $WLP_INSTALL_PATH/.. \
+>>>>>>> a697ca9... Create WebSphere Liberty stack
   && mkdir -p /work/outer-loop-app \
   && chown -R java_user /work \
   && chmod -R 775 /work \
-  && mkdir -p /stack/ol/scripts \
-  && chmod -R 775 /stack/ol/scripts \
   && mkdir -p /stack/ol/config/configDropins/defaults \
   && chmod -R 775 /stack/ol/config/configDropins/defaults
 
@@ -88,10 +94,14 @@ RUN  rm -rf /.gradle/daemon; chmod -R 775 /.gradle
 
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/config/configDropins/defaults/ /stack/ol/config/configDropins/defaults/
 
+<<<<<<< HEAD
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/scripts /stack/ol/scripts
 RUN chmod -R 755 /stack/ol/scripts
 
 COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/build/wlp /opt/ol/wlp
+=======
+COPY --chown=1001:0 --from=builder /stacks/java-openliberty/priming-app/build/wlp $WLP_INSTALL_PATH
+>>>>>>> a697ca9... Create WebSphere Liberty stack
 COPY --chown=1001:0 ./LICENSE /licenses/
 
 USER java_user

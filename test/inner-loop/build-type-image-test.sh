@@ -7,7 +7,7 @@ echo -e "\n> Build tooling specific container image inner loop test"
 BASE_DIR=$(pwd)
 
 # Build type sub-path to the wlp installation.
-BUILD_WLP_SUB_PATH=target/liberty
+WLP_INSTALL_PATH=/opt/ol/wlp
 
 mkdir inner-loop-test-dir
 cd inner-loop-test-dir
@@ -22,10 +22,9 @@ cd application-stack-intro
 echo -e "\n> Process build tool specific actions"
 if [ "$1" = "gradle" ]; then
   cp $BASE_DIR/inner-loop-test-dir/application-stack-samples/devfiles/gradle-image/devfile.yaml devfile.yaml
-  BUILD_WLP_SUB_PATH=build
+  WLP_INSTALL_PATH=/projects/build/wlp
 else
   cp $BASE_DIR/inner-loop-test-dir/application-stack-samples/devfiles/maven-image/devfile.yaml devfile.yaml
-  BUILD_WLP_SUB_PATH=target/liberty
 fi
 
 # This is a workaround to avoid surefire fork failures when running
@@ -42,7 +41,7 @@ echo -e "\n> Base Inner loop test run"
 BASE_WORK_DIR=$BASE_DIR \
 COMP_NAME=my-ol-component \
 PROJ_NAME=inner-loop-test \
-LIBERTY_SERVER_LOGS_DIR_PATH=/projects/$BUILD_WLP_SUB_PATH/wlp/usr/servers/defaultServer/logs \
+LIBERTY_SERVER_LOGS_DIR_PATH=$WLP_INSTALL_PATH/usr/servers/defaultServer/logs \
 $BASE_DIR/test/inner-loop/base-inner-loop.sh
 
 rc=$?

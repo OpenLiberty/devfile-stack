@@ -20,7 +20,7 @@ buildStack() {
     STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
     OUTERLOOP_STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
     OUTERLOOP_STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
-    ./build.sh
+    ./build-ol.sh
     ls -laR generated
 }
 

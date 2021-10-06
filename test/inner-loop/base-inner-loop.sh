@@ -19,7 +19,7 @@ APP_VALIDATION_STRING="${APP_VALIDATION_STRING:-Hello! Welcome to Open Liberty}"
 DO_HEALTH_CHECK="${DO_HEALTH_CHECK:-true}"
 
 # Liberty server config directory path.
-LIBERTY_SERVER_LOGS_DIR_PATH="${LIBERTY_SERVER_LOGS_DIR_PATH:-/projects/target/liberty/wlp/usr/servers/defaultServer/logs}"
+LIBERTY_SERVER_LOGS_DIR_PATH="${LIBERTY_SERVER_LOGS_DIR_PATH:-/opt/ol/wlp/usr/servers/defaultServer/logs}"
 
 # Base work directory.
 BASE_WORK_DIR="${BASE_WORK_DIR:-/home/runner/work/application-stack/application-stack}"
