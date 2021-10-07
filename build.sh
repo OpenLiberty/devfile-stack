@@ -14,18 +14,29 @@ BASE_OS_IMAGE="${BASE_OS_IMAGE:-adoptopenjdk/openjdk11-openj9:jdk-11.0.12_7_open
 #
 # Version of Open Liberty runtime to use within both inner and outer loops
 #
-OL_RUNTIME_VERSION="${OL_RUNTIME_VERSION:-21.0.0.9}"
+LIBERTY_RUNTIME_VERSION="${LIBERTY_RUNTIME_VERSION:-21.0.0.9}"
 
 #
-# The Open Liberty base image used in the final stage of the outer loop Dockerfile used to build your application image from
+# The name and tag of the stack image you will build. This image is used to create your inner loop development containers through
+# the devfile.yaml provided by the Open Liberty Stack. The {{liberty-version}} variable is set to the value of
+# LIBERTY_RUNTIME_VERSION.
 #
-OL_UBI_IMAGE="${OL_UBI_IMAGE:-openliberty/open-liberty:21.0.0.9-full-java11-openj9-ubi}"
+STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-openliberty/application-stack:\{\{liberty-version\}\}}"
+STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-openliberty/application-stack:\{\{liberty-version\}\}-gradle}"
 
 #
-# The name and tag of the stack image you will build.  This will used to create your inner loop development containers, and also as the base image for the first stage of your outer loop image build.
+# The name and tag of the stack image you will build.  This will used as the base image for the first stage of your outer loop image build.
+# This image is used in the outer loop Dockerfile provided by the Open Liberty Stack. The ${LIBERTY_VERSION} variable is set
+# to the value of LIBERTY_RUNTIME_VERSION.
 #
-STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-openliberty/application-stack:0.7}"
-STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-openliberty/application-stack:gradle-0.2}"
+OUTERLOOP_STACK_IMAGE_MAVEN="${OUTERLOOP_STACK_IMAGE_MAVEN:-openliberty/application-stack:\$\{LIBERTY_VERSION\}}"
+OUTERLOOP_STACK_IMAGE_GRADLE="${OUTERLOOP_STACK_IMAGE_GRADLE:-openliberty/application-stack:\$\{LIBERTY_VERSION\}-gradle}"
+
+#
+# The Open Liberty base image used in the final stage of the outer loop Dockerfile used to build your application image from.
+# The ${LIBERTY_VERSION} variable is set to the value of LIBERTY_RUNTIME_VERSION.
+#
+OUTERLOOP_OL_UBI_IMAGE="${OUTERLOOP_OL_UBI_IMAGE:-openliberty/open-liberty:\$\{LIBERTY_VERSION\}-full-java11-openj9-ubi}"
 
 #
 # URL at which your outer loop Dockerfile is hosted
@@ -57,16 +68,16 @@ generate() {
     mkdir -p generated/devfiles/maven; mkdir -p generated/devfiles/gradle
 
     # Devfile customization.
-    sed -e "s!{{.OL_RUNTIME_VERSION}}!$OL_RUNTIME_VERSION!; s!{{.STACK_IMAGE_MAVEN}}!$STACK_IMAGE_MAVEN!; s!{{.OUTERLOOP_DOCKERFILE_MAVEN_LOC}}!$OUTERLOOP_DOCKERFILE_MAVEN_LOC!; s!{{.DEVFILE_DEPLOY_YAML_MAVEN_LOC}}!$DEVFILE_DEPLOY_YAML_MAVEN_LOC!" templates/devfiles/maven/devfile.yaml > generated/devfiles/maven/devfile.yaml
-    sed -e "s!{{.OL_RUNTIME_VERSION}}!$OL_RUNTIME_VERSION!; s!{{.STACK_IMAGE_GRADLE}}!$STACK_IMAGE_GRADLE!; s!{{.OUTERLOOP_DOCKERFILE_GRADLE_LOC}}!$OUTERLOOP_DOCKERFILE_GRADLE_LOC!; s!{{.DEVFILE_DEPLOY_YAML_GRADLE_LOC}}!$DEVFILE_DEPLOY_YAML_GRADLE_LOC!" templates/devfiles/gradle/devfile.yaml > generated/devfiles/gradle/devfile.yaml
+    sed -e "s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.STACK_IMAGE_MAVEN}}!$STACK_IMAGE_MAVEN!; s!{{.OUTERLOOP_DOCKERFILE_MAVEN_LOC}}!$OUTERLOOP_DOCKERFILE_MAVEN_LOC!; s!{{.DEVFILE_DEPLOY_YAML_MAVEN_LOC}}!$DEVFILE_DEPLOY_YAML_MAVEN_LOC!" templates/devfiles/maven/devfile.yaml > generated/devfiles/maven/devfile.yaml
+    sed -e "s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.STACK_IMAGE_GRADLE}}!$STACK_IMAGE_GRADLE!; s!{{.OUTERLOOP_DOCKERFILE_GRADLE_LOC}}!$OUTERLOOP_DOCKERFILE_GRADLE_LOC!; s!{{.DEVFILE_DEPLOY_YAML_GRADLE_LOC}}!$DEVFILE_DEPLOY_YAML_GRADLE_LOC!" templates/devfiles/gradle/devfile.yaml > generated/devfiles/gradle/devfile.yaml
  
     # Stack image docker file customization.
-    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.OL_RUNTIME_VERSION}}!$OL_RUNTIME_VERSION!; s!{{.ECLIPSE_MP_API_PREV_VERSION}}!$ECLIPSE_MP_API_PREV_VERSION!; s!{{.OL_MP_FEATURE_PREV_VERSION}}!$OL_MP_FEATURE_PREV_VERSION!" templates/stackimage/maven/Dockerfile > generated/stackimage/maven/Dockerfile
-    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.OL_RUNTIME_VERSION}}!$OL_RUNTIME_VERSION!; s!{{.ECLIPSE_MP_API_PREV_VERSION}}!$ECLIPSE_MP_API_PREV_VERSION!; s!{{.OL_MP_FEATURE_PREV_VERSION}}!$OL_MP_FEATURE_PREV_VERSION!" templates/stackimage/gradle/Dockerfile > generated/stackimage/gradle/Dockerfile
+    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.ECLIPSE_MP_API_PREV_VERSION}}!$ECLIPSE_MP_API_PREV_VERSION!; s!{{.OL_MP_FEATURE_PREV_VERSION}}!$OL_MP_FEATURE_PREV_VERSION!" templates/stackimage/maven/Dockerfile > generated/stackimage/maven/Dockerfile
+    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.ECLIPSE_MP_API_PREV_VERSION}}!$ECLIPSE_MP_API_PREV_VERSION!; s!{{.OL_MP_FEATURE_PREV_VERSION}}!$OL_MP_FEATURE_PREV_VERSION!" templates/stackimage/gradle/Dockerfile > generated/stackimage/gradle/Dockerfile
 
     # Outer loop docker file customization.
-    sed -e "s!{{.STACK_IMAGE_MAVEN}}!$STACK_IMAGE_MAVEN!; s!{{.OL_UBI_IMAGE}}!$OL_UBI_IMAGE!; s!{{.OL_RUNTIME_VERSION}}!$OL_RUNTIME_VERSION!" templates/outer-loop/maven/Dockerfile > generated/outer-loop/maven/Dockerfile
-    sed -e "s!{{.STACK_IMAGE_GRADLE}}!$STACK_IMAGE_GRADLE!; s!{{.OL_UBI_IMAGE}}!$OL_UBI_IMAGE!; s!{{.OL_RUNTIME_VERSION}}!$OL_RUNTIME_VERSION!" templates/outer-loop/gradle/Dockerfile > generated/outer-loop/gradle/Dockerfile    
+    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_MAVEN}}!$OUTERLOOP_STACK_IMAGE_MAVEN!; s!{{.OUTERLOOP_OL_UBI_IMAGE}}!$OUTERLOOP_OL_UBI_IMAGE!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!" templates/outer-loop/maven/Dockerfile > generated/outer-loop/maven/Dockerfile
+    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_GRADLE}}!$OUTERLOOP_STACK_IMAGE_GRADLE!; s!{{.OUTERLOOP_OL_UBI_IMAGE}}!$OUTERLOOP_OL_UBI_IMAGE!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!" templates/outer-loop/gradle/Dockerfile > generated/outer-loop/gradle/Dockerfile    
 }
 
 # Execute the specified action. The generate action is the default if none is specified.

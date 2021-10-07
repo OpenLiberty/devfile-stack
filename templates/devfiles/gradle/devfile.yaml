@@ -22,6 +22,7 @@ metadata:
   description: Java application Gradle-built stack using the Open Liberty runtime
   icon: https://raw.githubusercontent.com/OpenLiberty/logos/7fbb132949b9b2589e18c8d5665c1b107028a21d/logomark/svg/OL_logomark.svg
   tags: ['Java', 'Gradle']
+  architectures: ['amd64', 'ppc64le', 's390x']
   language: 'java'
   projectType: 'openliberty'
   alpha.build-dockerfile: '{{.OUTERLOOP_DOCKERFILE_GRADLE_LOC}}'
@@ -31,6 +32,9 @@ starterProjects:
     git:
       remotes:
         origin: 'https://github.com/OpenLiberty/application-stack-starters.git'
+variables:
+  # Liberty runtime version. Minimum recommended: 21.0.0.9
+  liberty-version: {{.LIBERTY_RUNTIME_VERSION}}
 components:
   - name: dev
     container:
@@ -47,7 +51,7 @@ commands:
   - id: build
     exec:
       component: dev
-      commandLine: /stack/ol/scripts/gradle/devbuild-cmd.sh {{.OL_RUNTIME_VERSION}}
+      commandLine: /stack/ol/scripts/gradle/devbuild-cmd.sh {{liberty-version}}
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -56,7 +60,7 @@ commands:
   - id: run
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{.OL_RUNTIME_VERSION}} --libertyDebug=false --hotTests --compileWait=3
+      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} --libertyDebug=false --hotTests --compileWait=3
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -65,7 +69,7 @@ commands:
   - id: run-test-off
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{.OL_RUNTIME_VERSION}} --libertyDebug=false
+      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} --libertyDebug=false
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -74,7 +78,7 @@ commands:
   - id: debug
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{.OL_RUNTIME_VERSION}} --libertyDebugPort=${DEBUG_PORT} -Pliberty.server.env.WLP_DEBUG_REMOTE=y
+      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} --libertyDebugPort=${DEBUG_PORT} -Pliberty.server.env.WLP_DEBUG_REMOTE=y
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -83,7 +87,7 @@ commands:
   - id: test
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle test -Pliberty.runtime.version={{.OL_RUNTIME_VERSION}}
+      commandLine: gradle -Dgradle.user.home=/.gradle test -Pliberty.runtime.version={{liberty-version}}
       workingDir: /projects
       hotReloadCapable: true
       group:
