@@ -1,5 +1,9 @@
+ARG LIBERTY_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+
 # Step 1: Build the user's application.
-FROM {{.STACK_IMAGE_GRADLE}} as compile
+FROM {{.OUTERLOOP_STACK_IMAGE_GRADLE}} as compile
+
+ARG LIBERTY_VERSION
 
 # Make a well known place for shared library jars separate from the rest of the <server> contents (to help with caching).
 RUN mkdir /work/configlibdir \
@@ -17,7 +21,7 @@ RUN cp -r /work/outer-loop-app/tmp/src /work/outer-loop-app/.; \
 RUN cd /work/outer-loop-app && \
     echo "QUICK START SECURITY IS NOT SECURE FOR PRODUCTION ENVIRONMENTS. IT IS BEING REMOVED" && \
     rm -f src/main/liberty/config/configDropins/defaults/quick-start-security.xml && \
-    gradle -Dgradle.user.home=/.gradle assemble libertyCreate -Pliberty.runtime.version={{.OL_RUNTIME_VERSION}}
+    gradle -Dgradle.user.home=/.gradle assemble libertyCreate -Pliberty.runtime.version=${LIBERTY_VERSION}
 
 # Process any resources or shared libraries - if they are present in the dependencies block for this project (there may be none potentially)
 # test to see if each is present and move to a well known location for later processing in the next stage
@@ -30,7 +34,7 @@ RUN cd /work/outer-loop-app/build/wlp/usr/servers; \
     if [ -d ../shared ]; then mv ../shared/* /work/shared/; fi
 
 # Step 2: Package Open Liberty image
-FROM {{.OL_UBI_IMAGE}}
+FROM {{.OUTERLOOP_OL_UBI_IMAGE}}
 
 # 2a) Copy user defined shared resources.
 COPY --from=compile --chown=1001:0 /work/shared /opt/ol/wlp/usr/shared/

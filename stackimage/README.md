@@ -21,8 +21,7 @@ You can run build.sh with the target customization values as inputs or you can u
 
 ```
 BASE_OS_IMAGE=adoptopenjdk/openjdk14-openj9:ubi \
-OL_RUNTIME_VERSION=21.0.0.6 \
-OL_UBI_IMAGE=openliberty/open-liberty:21.0.0.6-kernel-slim-java14-openj9-ubi \
+LIBERTY_RUNTIME_VERSION=21.0.0.9 \
 STACK_IMAGE_MAVEN=<my-repo>/<image-maven>:<tag> \
 STACK_IMAGE_GRADLE=<my-repo>/<image-gradle>:<tag> \
 ./build.sh
@@ -36,8 +35,7 @@ vi build.sh
 ```
 ...
 BASE_OS_IMAGE="${BASE_OS_IMAGE:-adoptopenjdk/openjdk14-openj9:ubi}"
-OL_RUNTIME_VERSION="${OL_RUNTIME_VERSION:-21.0.0.6}"
-OL_UBI_IMAGE="${OL_UBI_IMAGE:-openliberty/open-liberty:21.0.0.6-kernel-slim-java14-openj9-ubi}"
+LIBERTY_RUNTIME_VERSION="${LIBERTY_RUNTIME_VERSION:-21.0.0.9}"
 STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-<my-repo>/<image-maven>:<tag>}"
 STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-<my-repo>/<image-gradle>:<tag>}"
 ...

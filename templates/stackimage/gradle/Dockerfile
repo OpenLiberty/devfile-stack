@@ -49,13 +49,13 @@ COPY ./priming-app/build.gradle ./priming-app/settings.gradle /stacks/java-openl
 
 WORKDIR /stacks/java-openliberty/priming-app
 
-ARG LIBERTY_RUNTIME_VERSION={{.OL_RUNTIME_VERSION}}
+ARG LIBERTY_VERSION={{.LIBERTY_RUNTIME_VERSION}}
 
 # Build the priming application to populate the cache (java_user home dir: /home/java_user/.gradle).
-RUN umask -S u=rwx,g=rwx,o=rx; gradle build -Pliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} --no-daemon
+RUN umask -S u=rwx,g=rwx,o=rx; gradle build -Pliberty.runtime.version=${LIBERTY_VERSION} --no-daemon
 
 # Start the Open Liberty server in dev mode. There are dependencies that are detected during dev mode execution due to the use of mojo executor, etc.
-RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; gradle libertyDev -Pliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} --hotTests &" \
+RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; gradle libertyDev -Pliberty.runtime.version=${LIBERTY_VERSION} --hotTests &" \
  && sleep 600 \
  && echo  && echo "Done sleeping" && echo
 

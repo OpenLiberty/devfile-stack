@@ -16,7 +16,11 @@ buildStackImage() {
 # buildStack builds the Open Liberty stack repository.
 buildStack() {
     echo "> Building Stack";
-    STACK_IMAGE_MAVEN=localhost:5000/test-image-maven STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle ./build.sh
+    STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
+    STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
+    OUTERLOOP_STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
+    OUTERLOOP_STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
+    ./build.sh
     ls -laR generated
 }
 
