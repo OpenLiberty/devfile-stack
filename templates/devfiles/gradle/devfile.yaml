@@ -51,7 +51,7 @@ commands:
   - id: run
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebug=false --hotTests --compileWait=3
+      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebug=false --hotTests --compileWait=3
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -60,7 +60,7 @@ commands:
   - id: run-test-off
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebug=false
+      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebug=false
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -69,7 +69,7 @@ commands:
   - id: debug
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebugPort=${DEBUG_PORT} -Pliberty.server.env.WLP_DEBUG_REMOTE=y
+      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebugPort=${DEBUG_PORT} -Pliberty.server.env.WLP_DEBUG_REMOTE=y
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -78,7 +78,7 @@ commands:
   - id: test
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle test -Pliberty.runtime.version={{.LIBERTY_RUNTIME_VERSION}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}}
+      commandLine: gradle -Dgradle.user.home=/.gradle test -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}}
       workingDir: /projects
       hotReloadCapable: true
       group:

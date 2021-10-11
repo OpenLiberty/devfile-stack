@@ -1,11 +1,14 @@
-ARG LIBERTY_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+ARG LIBERTY_RUNTIME_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+ARG LIBERTY_RUNTIME_ARTIFACTID={{.LIBERTY_RUNTIME_ARTIFACTID}}
+ARG LIBERTY_RUNTIME_GROUPID={{.LIBERTY_RUNTIME_GROUPID}}
+ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
 
 # Step 1: Build the user's application.
 FROM {{.OUTERLOOP_STACK_IMAGE_GRADLE}} as compile
 
-ARG LIBERTY_VERSION
-
-ENV WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
+ARG LIBERTY_RUNTIME_VERSION
+ARG LIBERTY_RUNTIME_ARTIFACTID
+ARG LIBERTY_RUNTIME_GROUPID
 
 # Make a well known place for shared library jars separate from the rest of the <server> contents (to help with caching).
 RUN mkdir /work/configlibdir \
@@ -23,11 +26,11 @@ RUN cp -r /work/outer-loop-app/tmp/src /work/outer-loop-app/.; \
 RUN cd /work/outer-loop-app && \
     echo "QUICK START SECURITY IS NOT SECURE FOR PRODUCTION ENVIRONMENTS. IT IS BEING REMOVED" && \
     rm -f src/main/liberty/config/configDropins/defaults/quick-start-security.xml && \
-    gradle -Dgradle.user.home=/.gradle -DinstallDirectory=$WLP_INSTALL_PATH assemble libertyCreate 
+    gradle -Dgradle.user.home=/.gradle -Pliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Pliberty.runtime.name=${LIBERTY_RUNTIME_ARTIFACTID} -Pliberty.runtime.group=${LIBERTY_RUNTIME_GROUPID} assemble libertyCreate 
 
 # Process any resources or shared libraries - if they are present in the dependencies block for this project (there may be none potentially)
 # test to see if each is present and move to a well known location for later processing in the next stage
-RUN cd $WLP_INSTALL_PATH/usr/servers; \
+RUN cd /work/outer-loop-app/build/wlp/usr/servers; \
     if [ -d ./*/lib ]; then mv ./*/lib /work/configlibdir; fi && \
     if [ ! -d /work/configlibdir/lib ]; then mkdir /work/configlibdir/lib; fi && \
     mv -f */* /work/config/ && \
@@ -38,7 +41,7 @@ RUN cd $WLP_INSTALL_PATH/usr/servers; \
 # Step 2: Package Liberty image
 FROM {{.LIBERTY_IMAGE}}
 
-ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
+ARG WLP_INSTALL_PATH
 
 # 2a) Copy user defined shared resources.
 COPY --from=compile --chown=1001:0 /work/shared $WLP_INSTALL_PATH/usr/shared/

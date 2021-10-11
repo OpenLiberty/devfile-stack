@@ -1,11 +1,10 @@
-ARG LIBERTY_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+
+ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
 
 # Step 1: Build the user's application
 FROM {{.OUTERLOOP_STACK_IMAGE_MAVEN}} as compile
 
-ARG LIBERTY_VERSION
-
-ENV WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
+ARG WLP_INSTALL_PATH
 
 # Make a well known place for shared library jars separate from the rest of the <server> contents (to help with caching)
 RUN mkdir /work/configlibdir \
@@ -37,7 +36,7 @@ RUN cd $WLP_INSTALL_PATH/usr/servers && \
 # Step 2: Package Liberty image
 FROM {{.LIBERTY_IMAGE}}
 
-ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
+ARG WLP_INSTALL_PATH
 
 # 2a) Copy user defined shared resources 
 COPY --from=compile --chown=1001:0 /work/shared $WLP_INSTALL_PATH/usr/shared/
