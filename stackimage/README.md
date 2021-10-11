@@ -20,7 +20,7 @@ You can run build.sh with the target customization values as inputs or you can u
 - Using customization arguments:
 
 ```
-BASE_OS_IMAGE=adoptopenjdk/openjdk14-openj9:ubi \
+BASE_OS_IMAGE=ibmsemeruruntime/open-11-jdk:ubi-jdk-latest \
 LIBERTY_RUNTIME_VERSION=21.0.0.9 \
 STACK_IMAGE_MAVEN=<my-repo>/<image-maven>:<tag> \
 STACK_IMAGE_GRADLE=<my-repo>/<image-gradle>:<tag> \
@@ -34,7 +34,7 @@ vi build.sh
 ```
 ```
 ...
-BASE_OS_IMAGE="${BASE_OS_IMAGE:-adoptopenjdk/openjdk14-openj9:ubi}"
+BASE_OS_IMAGE="${BASE_OS_IMAGE:-ibmsemeruruntime/open-11-jdk:ubi-jdk-latest}"
 LIBERTY_RUNTIME_VERSION="${LIBERTY_RUNTIME_VERSION:-21.0.0.9}"
 STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-<my-repo>/<image-maven>:<tag>}"
 STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-<my-repo>/<image-gradle>:<tag>}"
@@ -74,7 +74,7 @@ docker push <value of STACK_IMAGE_GRADLE in build.sh>
 ## Test
 
 ### Prereq
-- ODO CLI 2.2.3 or later.
+- ODO CLI 2.3.1 or later.
 - Kubernetes Cluster. For the procedure that follows an OpenShift cluster is used.
 
 ### Procedure
