@@ -7,7 +7,7 @@ echo -e "\n> multi-module inner loop test"
 BASE_DIR=$(pwd)
 
 # WLP install path
-WLP_INSTALL_PATH=/opt/ol/wlp
+WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 
 mkdir multi-module-inner-loop-test-dir
 cd multi-module-inner-loop-test-dir

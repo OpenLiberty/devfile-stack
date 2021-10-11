@@ -7,7 +7,7 @@ echo -e "\n> Make stacktest regression dir"
 BASE_DIR=$(pwd)
 
 # WLP install path
-WLP_INSTALL_PATH=/opt/ol/wlp
+WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 
 mkdir stacktest-reg
 cd stacktest-reg

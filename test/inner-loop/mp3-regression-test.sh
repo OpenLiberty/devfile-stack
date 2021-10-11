@@ -7,7 +7,7 @@ echo -e "\n> Microprofile 3.3 inner loop test."
 BASE_DIR=$(pwd)
 
 # WLP install path
-WLP_INSTALL_PATH=/opt/ol/wlp
+WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 
 mkdir inner-loop-mp3-plugin-test-dir
 cd inner-loop-mp3-plugin-test-dir
@@ -19,6 +19,7 @@ cd application-stack-intro
 echo -e "\n> Replace the needed files."
 if [ "$1" = "gradle" ]; then
   cp $BASE_DIR/generated/devfiles/gradle/devfile.yaml devfile.yaml
+  WLP_INSTALL_PATH=/projects/build/wlp
   cp $BASE_DIR/test/files/intro-app/microprofile-v3/build.gradle build.gradle
   cat build.gradle
 else

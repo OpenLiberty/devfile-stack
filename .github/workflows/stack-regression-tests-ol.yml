@@ -1,7 +1,10 @@
-name: stack-regression-tests
-on: push
+name: stack-regression-tests-ol
+on:
+  pull_request:
+    branches:
+      - main
 jobs:
-   stack-tests:
+   ol-stack-tests:
      runs-on: ubuntu-latest
      steps:
 
@@ -39,8 +42,8 @@ jobs:
       - name: 'Setup: Install the Open Liberty operator'
         run: ./test/utils.sh installOpenLibertyOperator
     
-      - name: 'Setup: Build stack'
-        run: ./test/utils.sh buildStack
+      - name: 'Setup: Build Open Liberty stack'
+        run: ./test/utils.sh buildStack-OL
         
       - name: 'Setup: Build stack image'
         run: ./test/utils.sh buildStackImage
@@ -48,57 +51,75 @@ jobs:
       - name: 'Test: InnerLoop: Maven: Basic'
         run: ./test/inner-loop/basic-test.sh
 
+      # All tests from this point on will run regardless of if the previous tests succeed or fail.
       - name: 'Test: InnerLoop: Gradle: Basic'
+        if: success() || failure()
         run: ./test/inner-loop/basic-test.sh gradle
 
-      # Last merge introduced an intentional breaking change between devfiles
-      #- name: 'Test: InnerLoop: Maven: Devfile regression'
-      #  run: ./test/inner-loop/devfile-regression-test.sh
+      - name: 'Test: InnerLoop: Maven: Devfile regression'
+        if: success() || failure()
+        run: ./test/inner-loop/devfile-regression-test.sh
 
-      #- name: 'Test: InnerLoop: Gradle: Devfile regression'
-      #  run: ./test/inner-loop/devfile-regression-test.sh gradle
+      - name: 'Test: InnerLoop: Gradle: Devfile regression'
+        if: success() || failure()
+        run: ./test/inner-loop/devfile-regression-test.sh gradle
 
       - name: 'Test: InnerLoop: Maven: microprofile v3 regression'
+        if: success() || failure()
         run: ./test/inner-loop/mp3-regression-test.sh
 
       - name: 'Test: InnerLoop: Gradle: microprofile v3 regression'
+        if: success() || failure()
         run: ./test/inner-loop/mp3-regression-test.sh gradle
 
       - name: 'Test: InnerLoop: Maven: Uses official build type image'
+        if: success() || failure()
         run: ./test/inner-loop/build-type-image-test.sh
 
       - name: 'Test: InnerLoop: Gradle: Uses official maven/gradle images'
+        if: success() || failure()
         run: ./test/inner-loop/build-type-image-test.sh gradle
 
       - name: 'Test: InnerLoop: Maven: m2 parent sample regression'
+        if: success() || failure()
         run: ./test/inner-loop/sample-m2-parent-test.sh
 
       - name: 'Test: InnerLoop: Maven: Parent plugin'
+        if: success() || failure()
         run: ./test/inner-loop/parent-plugin-test.sh
 
       - name: 'Test: InnerLoop: Maven: multi-module'
+        if: success() || failure()
         run: ./test/inner-loop/multi-module.sh
 
       - name: 'Test: OuterLoop: Maven: Basic'
+        if: success() || failure()
         run: ./test/outer-loop/basic-test.sh
 
       - name: 'Test: OuterLoop: Gradle: Basic'
+        if: success() || failure()
         run: ./test/outer-loop/basic-test.sh gradle
 
       - name: 'Test: OuterLoop: Maven: Docker build MPH-off SCC-off args'
+        if: success() || failure()
         run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh
 
       - name: 'Test: OuterLoop: Gradle: Docker build MPH-off SCC-off args'
+        if: success() || failure()
         run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh gradle
 
       - name: 'Test: OuterLoop: Maven: Docker build with MPH-on SCC-off args'
+        if: success() || failure()
         run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh
 
       - name: 'Test: OuterLoop: Gradle: Docker build with MPH-on SCC-off args'
+        if: success() || failure()
         run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh gradle
 
       - name: 'Test: OuterLoop: Maven: Docker build with MPH-off SCC-on args'
+        if: success() || failure()
         run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh
 
       - name: 'Test: OuterLoop: Gradle: Docker build with MPH-off SCC-on args'
+        if: always()
         run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh gradle 

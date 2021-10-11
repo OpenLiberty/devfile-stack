@@ -13,15 +13,27 @@ buildStackImage() {
     docker push localhost:5000/test-image-maven
 }
 
-# buildStack builds the Open Liberty stack repository.
-buildStack() {
-    echo "> Building Stack";
+# buildStack-OL builds the Open Liberty stack repository.
+buildStack-OL() {
+    echo "> Building Open Liberty Stack";
     source ./build-ol.env
     STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
     STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
     OUTERLOOP_STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
     OUTERLOOP_STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
-    ./build.sh
+    . ./build.sh
+    ls -laR generated
+}
+
+# buildStack-WL builds the WebSphere Liberty stack repository.
+buildStack-WL() {
+    echo "> Building WebSphere Liberty Stack";
+    source ./build-wl.env
+    STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
+    STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
+    OUTERLOOP_STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
+    OUTERLOOP_STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
+    . ./build.sh
     ls -laR generated
 }
 
@@ -135,10 +147,13 @@ case "${COMMAND}" in
     buildStackImage)
         buildStackImage
     ;;
-    buildStack)
-        buildStack
+    buildStack-OL)
+        buildStack-OL
     ;;
-     installOpenLibertyOperator)
+    buildStack-WL)
+        buildStack-WL
+    ;;
+    installOpenLibertyOperator)
         installOpenLibertyOperator
     ;;
     printPodConfig)
@@ -157,7 +172,7 @@ case "${COMMAND}" in
         checkLibertyServerLogForErrorAndWarnings $2 $3 $4
     ;;
     *)
-    echo "Invalid command. Allowed values: buildStackImage, buildStack, installOpenLibertyOperator, printPodConfig, printPodLog, printLibertyServerMsgLog, printLibertyDebugData, and checkLibertyServerLogForErrorAndWarnings"
+    echo "Invalid command. Allowed values: buildStackImage, buildStack-OL, buildStack-WL, installOpenLibertyOperator, printPodConfig, printPodLog, printLibertyServerMsgLog, printLibertyDebugData, and checkLibertyServerLogForErrorAndWarnings"
     exit 1
     ;;
 esac

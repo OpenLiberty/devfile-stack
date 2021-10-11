@@ -15,6 +15,22 @@ BASE_WORK_DIR="${BASE_WORK_DIR:-/home/runner/work/application-stack/application-
 # Current time.
 currentTime=(date +"%Y/%m/%d-%H:%M:%S:%3N")
 
+cleanup()
+{
+    echo -e "\n> $(${currentTime[@]}): Cleanup: Outer-loop deployment"
+    kubectl delete -f app-deploy.yaml -n ${NAMESPACE}
+    count=1
+    while [ ! -z $(kubectl get pod -n ${NAMESPACE} -l app.kubernetes.io/name=${COMP_NAME} -o jsonpath='{.items[*].metadata.name}') ]; do
+        echo "$(${currentTime[@]}): Waiting for outer-loop deployment pod to be terminated..." && sleep 3; 
+        count=`expr $count + 1`
+        if [ $count -eq 20 ]; then
+            echo "$(${currentTime[@]}): Timed out waiting for outer-loop deployment pod to be terminated"
+            $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
+            exit 12
+        fi
+    done
+}
+
 echo -e "\n> $(${currentTime[@]}): Create and switch namespaces using ODO"
 odo project create ${NAMESPACE}
 
@@ -38,6 +54,7 @@ while [[ $(kubectl get pods -n ${NAMESPACE} -l app.kubernetes.io/name=${COMP_NAM
         $BASE_WORK_DIR/test/utils.sh printPodLog "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE}
         echo "$(${currentTime[@]}): Open Liberty Operator pod log:"
         $BASE_WORK_DIR/test/utils.sh printPodLog "name=open-liberty-operator" ${NAMESPACE}
+    cleanup
     exit 12
 fi
 done
@@ -52,6 +69,7 @@ while ! ${olpodlog[@]} | grep -q "CWWKZ0001I: Application intro started"; do
         echo "$(${currentTime[@]}): Timed out waiting for the intro application to become available"
         echo ${olpodlog[@]}
         $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
+        cleanup
         exit 12
     fi
 done
@@ -83,6 +101,7 @@ while ! ${livenessResults[@]} | grep -qF '{"checks":[{"data":{},"name":"SampleLi
         $BASE_WORK_DIR/test/utils.sh printPodLog "app.kubernetes.io/name=ingress-nginx,app.kubernetes.io/component=controller" "kube-system"
         echo "$(${currentTime[@]}): Liberty debug data:"
         $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
+        cleanup
         exit 12
     fi
 done
@@ -105,6 +124,7 @@ while ! ${readinessResults[@]} | grep -qF '{"checks":[{"data":{},"name":"SampleR
         echo ${healthEndpointResult[@]}
         echo ${readinessResults[@]}
         $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
+        cleanup
         exit 12
     fi
 done
@@ -117,6 +137,7 @@ else
     echo "$(${currentTime[@]}): REST endpoint check failed. REST endpoint returned:"
     echo ${restResults[@]}
     $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
+    cleanup
     exit 12
 fi
 
@@ -125,18 +146,8 @@ echo -e "\n> $(${currentTime[@]}): Check the Liberty server for error and warnin
 rc=$?
 if [ $rc -ne 0 ]; then
      $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "component=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
+     cleanup
      exit 12
 fi
 
-echo -e "\n> $(${currentTime[@]}): Cleanup: Outer-loop deployment"
-kubectl delete -f app-deploy.yaml -n ${NAMESPACE}
-count=1
-while [ ! -z $(kubectl get pod -n ${NAMESPACE} -l app.kubernetes.io/name=${COMP_NAME} -o jsonpath='{.items[*].metadata.name}') ]; do
-    echo "$(${currentTime[@]}): Waiting for outer-loop deployment pod to be terminated..." && sleep 3; 
-    count=`expr $count + 1`
-    if [ $count -eq 20 ]; then
-        echo "$(${currentTime[@]}): Timed out waiting for outer-loop deployment pod to be terminated"
-        $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "app.kubernetes.io/name=${COMP_NAME}" ${NAMESPACE} $LIBERTY_SERVER_LOGS_DIR_PATH
-        exit 12
-    fi
-done
+cleanup

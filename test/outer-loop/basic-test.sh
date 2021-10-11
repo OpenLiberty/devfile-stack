@@ -8,6 +8,9 @@ echo -e "\n> Basic outer loop test"
 # Base work directory.
 BASE_DIR=$(pwd)
 
+# WLP install path
+WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
+
 # Component name. 
 BASIC_COMP_NAME="basic-outer-loop"
 

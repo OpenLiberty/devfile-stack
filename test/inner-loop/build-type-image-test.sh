@@ -6,8 +6,8 @@ echo -e "\n> Build tooling specific container image inner loop test"
 # Base work directory.
 BASE_DIR=$(pwd)
 
-# Build type sub-path to the wlp installation.
-WLP_INSTALL_PATH=/opt/ol/wlp
+# WLP install path
+WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/projects/target/liberty/wlp}"
 
 mkdir inner-loop-test-dir
 cd inner-loop-test-dir

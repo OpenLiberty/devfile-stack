@@ -6,8 +6,8 @@ echo -e "\n> Parent plugin inner loop test."
 # Base work directory.
 BASE_DIR=$(pwd)
 
-# WLP_INSTALL_PATH
-WLP_INSTALL_PATH=/opt/ol/wlp
+# WLP install path
+WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 
 mkdir inner-loop-parent-plugin-test-dir
 cd inner-loop-parent-plugin-test-dir

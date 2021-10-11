@@ -8,7 +8,7 @@ generate() {
     mkdir -p generated/devfiles/maven; mkdir -p generated/devfiles/gradle
 
     # Devfile customization.
-    sed -e "s!{{.STACK_NAME}}!$STACK_NAME!; s!{{.STACK_SHORT_NAME}}!$STACK_SHORT_NAME!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.STACK_IMAGE_MAVEN}}!$STACK_IMAGE_MAVEN!; s!{{.OUTERLOOP_DOCKERFILE_MAVEN_LOC}}!$OUTERLOOP_DOCKERFILE_MAVEN_LOC!; s!{{.DEVFILE_DEPLOY_YAML_MAVEN_LOC}}!$DEVFILE_DEPLOY_YAML_MAVEN_LOC!" templates/devfiles/maven/devfile.yaml > generated/devfiles/maven/devfile.yaml
+    sed -e "s!{{.STACK_NAME}}!$STACK_NAME!; s!{{.STACK_SHORT_NAME}}!$STACK_SHORT_NAME!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.STACK_IMAGE_MAVEN}}!$STACK_IMAGE_MAVEN!; s!{{.OUTERLOOP_DOCKERFILE_MAVEN_LOC}}!$OUTERLOOP_DOCKERFILE_MAVEN_LOC!; s!{{.DEVFILE_DEPLOY_YAML_MAVEN_LOC}}!$DEVFILE_DEPLOY_YAML_MAVEN_LOC!" templates/devfiles/maven/devfile.yaml > generated/devfiles/maven/devfile.yaml
     sed -e "s!{{.STACK_NAME}}!$STACK_NAME!; s!{{.STACK_SHORT_NAME}}!$STACK_SHORT_NAME!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!; s!{{.STACK_IMAGE_GRADLE}}!$STACK_IMAGE_GRADLE!; s!{{.OUTERLOOP_DOCKERFILE_GRADLE_LOC}}!$OUTERLOOP_DOCKERFILE_GRADLE_LOC!; s!{{.DEVFILE_DEPLOY_YAML_GRADLE_LOC}}!$DEVFILE_DEPLOY_YAML_GRADLE_LOC!" templates/devfiles/gradle/devfile.yaml > generated/devfiles/gradle/devfile.yaml
  
     # Stack image docker file customization.
@@ -16,20 +16,17 @@ generate() {
     sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!; s!{{.ECLIPSE_MP_API_PREV_VERSION}}!$ECLIPSE_MP_API_PREV_VERSION!; s!{{.OL_MP_FEATURE_PREV_VERSION}}!$OL_MP_FEATURE_PREV_VERSION!" templates/stackimage/gradle/Dockerfile > generated/stackimage/gradle/Dockerfile
 
     # Outer loop docker file customization.
-    sed -e "s!{{.STACK_IMAGE_MAVEN}}!$STACK_IMAGE_MAVEN!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_IMAGE}}!$LIBERTY_IMAGE!;" templates/outer-loop/maven/Dockerfile > generated/outer-loop/maven/Dockerfile
-    sed -e "s!{{.STACK_IMAGE_GRADLE}}!$STACK_IMAGE_GRADLE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_IMAGE}}!$LIBERTY_IMAGE!;" templates/outer-loop/gradle/Dockerfile > generated/outer-loop/gradle/Dockerfile    
+    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_MAVEN}}!$OUTERLOOP_STACK_IMAGE_MAVEN!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_IMAGE}}!$LIBERTY_IMAGE!;" templates/outer-loop/maven/Dockerfile > generated/outer-loop/maven/Dockerfile
+    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_GRADLE}}!$OUTERLOOP_STACK_IMAGE_GRADLE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_IMAGE}}!$LIBERTY_IMAGE!;" templates/outer-loop/gradle/Dockerfile > generated/outer-loop/gradle/Dockerfile    
 }
 
 # Build the stack image 
 buildStackImage() {
-    cd stackimage
-    cp ../generated/stackimage/maven/Dockerfile Dockerfile
-    docker build -t $STACK_IMAGE_MAVEN .
-    rm -f Dockerfile
+    # Build Maven image
+    docker build -t stack-image-maven -f generated/stackimage/maven/Dockerfile stackimage
     
-    cp ../generated/stackimage/gradle/Dockerfile Dockerfile
-    docker build -t $STACK_IMAGE_GRADLE .
-    rm -f Dockerfile
+    # Build Gradle image
+    docker build -t stack-image-gradle -f generated/stackimage/gradle/Dockerfile stackimage
 }
 
 # Execute the specified action. The generate action is the default if none is specified.
