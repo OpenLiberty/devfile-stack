@@ -20,7 +20,12 @@ git clone https://github.com/OpenLiberty/application-stack.git
 
 echo -e "\n> Run buildStack from the main branch in stack repo that was just cloned"
 cd application-stack
-./test/utils.sh buildStack
+
+if [ "$WLP_INSTALL_PATH" = "/opt/ol/wlp" ]; then
+  ./test/utils.sh buildStack-OL
+else
+  ./test/utils.sh buildStack-WL
+fi
 
 echo -e "\n> Make a test app dir for test project"
 mkdir devfile-regression-inner-loop-test-dir
