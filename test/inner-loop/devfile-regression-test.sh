@@ -6,8 +6,8 @@ echo -e "\n> Make stacktest regression dir"
 # Base work directory.
 BASE_DIR=$(pwd)
 
-# Build type sub-path to the wlp installation.
-BUILD_WLP_SUB_PATH=target/liberty
+# WLP install path
+WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 
 mkdir stacktest-reg
 cd stacktest-reg
@@ -35,10 +35,9 @@ cd application-stack-intro
 echo -e "\n> Copy devfile and scripts"
 if [ "$1" = "gradle" ]; then
   cp $BASE_DIR/stacktest-reg/application-stack/generated/devfiles/gradle/devfile.yaml devfile.yaml
-  BUILD_WLP_SUB_PATH=build
+  WLP_INSTALL_PATH=/projects/build/wlp
 else
   cp $BASE_DIR/stacktest-reg/application-stack/generated/devfiles/maven/devfile.yaml devfile.yaml
-  BUILD_WLP_SUB_PATH=target/liberty
 fi
 
 # This is a workaround to avoid surefire fork failures when running
@@ -58,7 +57,7 @@ echo -e "\n> Base Inner loop test run"
 BASE_WORK_DIR=$BASE_DIR \
 COMP_NAME=my-ol-component \
 PROJ_NAME=devfile-regression-inner-loop-test \
-LIBERTY_SERVER_LOGS_DIR_PATH=/projects/$BUILD_WLP_SUB_PATH/wlp/usr/servers/defaultServer/logs \
+LIBERTY_SERVER_LOGS_DIR_PATH=$WLP_INSTALL_PATH/usr/servers/defaultServer/logs \
 $BASE_DIR/test/inner-loop/base-inner-loop.sh
 
 rc=$?

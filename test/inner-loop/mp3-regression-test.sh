@@ -6,8 +6,8 @@ echo -e "\n> Microprofile 3.3 inner loop test."
 # Base work directory.
 BASE_DIR=$(pwd)
 
-# Build type sub-path to the wlp installation.
-BUILD_WLP_SUB_PATH=target/liberty
+# WLP install path
+WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 
 mkdir inner-loop-mp3-plugin-test-dir
 cd inner-loop-mp3-plugin-test-dir
@@ -18,12 +18,11 @@ cd application-stack-intro
 
 echo -e "\n> Replace the needed files."
 if [ "$1" = "gradle" ]; then
-  BUILD_WLP_SUB_PATH=build
   cp $BASE_DIR/generated/devfiles/gradle/devfile.yaml devfile.yaml
+  WLP_INSTALL_PATH=/projects/build/wlp
   cp $BASE_DIR/test/files/intro-app/microprofile-v3/build.gradle build.gradle
   cat build.gradle
 else
-  BUILD_WLP_SUB_PATH=target/liberty
   cp $BASE_DIR/generated/devfiles/maven/devfile.yaml devfile.yaml
   cp $BASE_DIR/test/files/intro-app/microprofile-v3/pom.xml pom.xml
   cat pom.xml
@@ -48,7 +47,7 @@ echo -e "\n> Inner loop parent plugin test run."
 BASE_WORK_DIR=$BASE_DIR \
 COMP_NAME=mp3-comp \
 PROJ_NAME=mp3-proj \
-LIBERTY_SERVER_LOGS_DIR_PATH=/projects/$BUILD_WLP_SUB_PATH/wlp/usr/servers/defaultServer/logs \
+LIBERTY_SERVER_LOGS_DIR_PATH=$WLP_INSTALL_PATH/usr/servers/defaultServer/logs \
 $BASE_DIR/test/inner-loop/base-inner-loop.sh
 
 rc=$?

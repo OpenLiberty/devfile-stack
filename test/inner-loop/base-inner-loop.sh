@@ -19,13 +19,40 @@ APP_VALIDATION_STRING="${APP_VALIDATION_STRING:-Hello! Welcome to Open Liberty}"
 DO_HEALTH_CHECK="${DO_HEALTH_CHECK:-true}"
 
 # Liberty server config directory path.
-LIBERTY_SERVER_LOGS_DIR_PATH="${LIBERTY_SERVER_LOGS_DIR_PATH:-/projects/target/liberty/wlp/usr/servers/defaultServer/logs}"
+LIBERTY_SERVER_LOGS_DIR_PATH="${LIBERTY_SERVER_LOGS_DIR_PATH:-/opt/ol/wlp/usr/servers/defaultServer/logs}"
 
 # Base work directory.
 BASE_WORK_DIR="${BASE_WORK_DIR:-/home/runner/work/application-stack/application-stack}"
 
 # Current time.
 currentTime=(date +"%Y/%m/%d-%H:%M:%S:%3N")
+
+cleanup()
+{
+    echo -e "\n> $(${currentTime[@]}): Cleanup: Delete component"
+    odo delete -a -f
+    count=1  
+    while [ ! -z $(kubectl get pod -l component=$COMP_NAME -o jsonpath='{.items[*].metadata.name}') ]; do
+        if [ $count -eq 24 ]; then
+            echo "$(${currentTime[@]}): Timed out waiting for component pod to be terminated"
+            $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        fi
+        count=`expr $count + 1`
+        echo "$(${currentTime[@]}): Waiting for component pod to be terminated..." && sleep 5
+    done
+
+    echo -e "\n> $(${currentTime[@]}): Cleanup: Delete project"
+    odo project delete $PROJ_NAME -f
+    count=1
+    while odo project list | grep -q $PROJ_NAME; do 
+        if [ $count -eq 24 ]; then
+            echo "$(${currentTime[@]}): Timed out waiting for project $PROJECT_NAME to be deleted. Namespace information:"
+            kubectl get namespace $PROJECT_NAME -o yaml
+        fi
+        count=`expr $count + 1`
+        echo "$(${currentTime[@]}): Waiting for project to be deleted..." && sleep 5
+    done
+}
 
 # Base inner loop test using ODO.
 echo -e "\n> $(${currentTime[@]}): Create new odo project"
@@ -51,6 +78,7 @@ if [ $rc -ne 0 ]; then
     odo push -v 4 --show-log
     rc=$?
     if [ $rc -ne 0 ]; then 
+      cleanup
       exit 12
     fi
 fi
@@ -62,6 +90,7 @@ while ! ${printMsgLog[@]} | grep -q "CWWKZ0001I: Application $APP_NAME started";
     if [ $count -eq 24 ]; then
         echo "$(${currentTime[@]}): Timed out waiting for the $APP_NAME application to become available."
         $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        cleanup
         exit 12
     fi
     count=`expr $count + 1`
@@ -85,6 +114,7 @@ if [ $DO_HEALTH_CHECK = "true" ]; then
             ${callLivenessEndpoint[@]}
             ${callHealthEndpoint[@]}
             $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+            cleanup
             exit 12
         fi
         count=`expr $count + 1`
@@ -105,6 +135,7 @@ if [ $DO_HEALTH_CHECK = "true" ]; then
             ${callReadinessEndpoint[@]}
             ${callHealthEndpoint[@]}
             $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+            cleanup
             exit 12
         fi
         count=`expr $count + 1`
@@ -120,6 +151,7 @@ while ! ${callAppEndpoint[@]} | grep -qF "$APP_VALIDATION_STRING"; do
         echo "$(${currentTime[@]}): Timed out waiting for the $APP_NAME application REST endpoint to return the expected response."
         ${callAppEndpoint[@]}
         $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        cleanup
         exit 12
     fi
     count=`expr $count + 1`
@@ -136,32 +168,9 @@ if [ $rc -ne 0 ]; then
     if [ $rc -ne 0 ]; then
         echo "$(${currentTime[@]}): Odo test run failed:"
         $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
+        cleanup
         exit 12
     fi
 fi
 
-echo -e "\n> $(${currentTime[@]}): Cleanup: Delete component"
-odo delete -a -f
-count=1
-while [ ! -z $(kubectl get pod -l component=$COMP_NAME -o jsonpath='{.items[*].metadata.name}') ]; do
-    if [ $count -eq 24 ]; then
-        echo "$(${currentTime[@]}): Timed out waiting for component pod to be terminated"
-        $BASE_WORK_DIR/test/utils.sh printLibertyDebugData "component=$COMP_NAME" $PROJ_NAME $LIBERTY_SERVER_LOGS_DIR_PATH
-        exit 12
-    fi
-    count=`expr $count + 1`
-    echo "$(${currentTime[@]}): Waiting for component pod to be terminated..." && sleep 5
-done
-
-echo -e "\n> $(${currentTime[@]}): Cleanup: Delete project"
-odo project delete $PROJ_NAME -f
-count=1
-while odo project list | grep -q $PROJ_NAME; do 
-    if [ $count -eq 24 ]; then
-        echo "$(${currentTime[@]}): Timed out waiting for project $PROJECT_NAME to be deleted. Namespace information:"
-        kubectl get namespace $PROJECT_NAME -o yaml
-        exit 12
-    fi
-    count=`expr $count + 1`
-    echo "$(${currentTime[@]}): Waiting for project to be deleted..." && sleep 5
-done
+cleanup

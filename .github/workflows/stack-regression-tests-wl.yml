@@ -1,4 +1,4 @@
-name: stack-regression-tests
+name: stack-regression-tests-wl
 on:
   pull_request:
     branches:
@@ -42,65 +42,84 @@ jobs:
       - name: 'Setup: Install the Open Liberty operator'
         run: ./test/utils.sh installOpenLibertyOperator
     
-      - name: 'Setup: Build stack'
-        run: ./test/utils.sh buildStack
+      - name: 'Setup: Build WebSphere Liberty stack'
+        run: ./test/utils.sh buildStack-WL
         
       - name: 'Setup: Build stack image'
         run: ./test/utils.sh buildStackImage
 
       - name: 'Test: InnerLoop: Maven: Basic'
-        run: ./test/inner-loop/basic-test.sh
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/basic-test.sh
 
+      # All tests from this point on will run regardless of if the previous tests succeed or fail.
       - name: 'Test: InnerLoop: Gradle: Basic'
-        run: ./test/inner-loop/basic-test.sh gradle
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/basic-test.sh gradle
 
       - name: 'Test: InnerLoop: Maven: Devfile regression'
-        run: ./test/inner-loop/devfile-regression-test.sh
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/devfile-regression-test.sh
 
       - name: 'Test: InnerLoop: Gradle: Devfile regression'
-        run: ./test/inner-loop/devfile-regression-test.sh gradle
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/devfile-regression-test.sh gradle
 
       - name: 'Test: InnerLoop: Maven: microprofile v3 regression'
-        run: ./test/inner-loop/mp3-regression-test.sh
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/mp3-regression-test.sh
 
       - name: 'Test: InnerLoop: Gradle: microprofile v3 regression'
-        run: ./test/inner-loop/mp3-regression-test.sh gradle
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/mp3-regression-test.sh gradle
 
       - name: 'Test: InnerLoop: Maven: Uses official build type image'
+        if: success() || failure()
         run: ./test/inner-loop/build-type-image-test.sh
 
       - name: 'Test: InnerLoop: Gradle: Uses official maven/gradle images'
+        if: success() || failure()
         run: ./test/inner-loop/build-type-image-test.sh gradle
 
       - name: 'Test: InnerLoop: Maven: m2 parent sample regression'
+        if: success() || failure()
         run: ./test/inner-loop/sample-m2-parent-test.sh
 
       - name: 'Test: InnerLoop: Maven: Parent plugin'
-        run: ./test/inner-loop/parent-plugin-test.sh
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/parent-plugin-test.sh
 
       - name: 'Test: InnerLoop: Maven: multi-module'
-        run: ./test/inner-loop/multi-module.sh
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/multi-module.sh
 
       - name: 'Test: OuterLoop: Maven: Basic'
-        run: ./test/outer-loop/basic-test.sh
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/outer-loop/basic-test.sh
 
       - name: 'Test: OuterLoop: Gradle: Basic'
-        run: ./test/outer-loop/basic-test.sh gradle
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/outer-loop/basic-test.sh gradle
 
       - name: 'Test: OuterLoop: Maven: Docker build MPH-off SCC-off args'
-        run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/outer-loop/docker-build-mphOff-sccOff-test.sh
 
       - name: 'Test: OuterLoop: Gradle: Docker build MPH-off SCC-off args'
-        run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh gradle
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/outer-loop/docker-build-mphOff-sccOff-test.sh gradle
 
       - name: 'Test: OuterLoop: Maven: Docker build with MPH-on SCC-off args'
-        run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/outer-loop/docker-build-mphOn-sccOff-test.sh
 
       - name: 'Test: OuterLoop: Gradle: Docker build with MPH-on SCC-off args'
-        run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh gradle
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/outer-loop/docker-build-mphOn-sccOff-test.sh gradle
 
       - name: 'Test: OuterLoop: Maven: Docker build with MPH-off SCC-on args'
-        run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/outer-loop/docker-build-mphOff-sccOn-test.sh
 
       - name: 'Test: OuterLoop: Gradle: Docker build with MPH-off SCC-on args'
-        run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh gradle 
+        if: success() || failure()
+        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/outer-loop/docker-build-mphOff-sccOn-test.sh gradle 

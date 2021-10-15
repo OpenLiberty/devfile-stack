@@ -1,9 +1,14 @@
-ARG LIBERTY_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+ARG LIBERTY_RUNTIME_VERSION={{.LIBERTY_RUNTIME_VERSION}}
+ARG LIBERTY_RUNTIME_ARTIFACTID={{.LIBERTY_RUNTIME_ARTIFACTID}}
+ARG LIBERTY_RUNTIME_GROUPID={{.LIBERTY_RUNTIME_GROUPID}}
+ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
 
 # Step 1: Build the user's application.
 FROM {{.OUTERLOOP_STACK_IMAGE_GRADLE}} as compile
 
-ARG LIBERTY_VERSION
+ARG LIBERTY_RUNTIME_VERSION
+ARG LIBERTY_RUNTIME_ARTIFACTID
+ARG LIBERTY_RUNTIME_GROUPID
 
 # Make a well known place for shared library jars separate from the rest of the <server> contents (to help with caching).
 RUN mkdir /work/configlibdir \
@@ -21,7 +26,7 @@ RUN cp -r /work/outer-loop-app/tmp/src /work/outer-loop-app/.; \
 RUN cd /work/outer-loop-app && \
     echo "QUICK START SECURITY IS NOT SECURE FOR PRODUCTION ENVIRONMENTS. IT IS BEING REMOVED" && \
     rm -f src/main/liberty/config/configDropins/defaults/quick-start-security.xml && \
-    gradle -Dgradle.user.home=/.gradle assemble libertyCreate -Pliberty.runtime.version=${LIBERTY_VERSION}
+    gradle -Dgradle.user.home=/.gradle -Pliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Pliberty.runtime.name=${LIBERTY_RUNTIME_ARTIFACTID} -Pliberty.runtime.group=${LIBERTY_RUNTIME_GROUPID} assemble libertyCreate 
 
 # Process any resources or shared libraries - if they are present in the dependencies block for this project (there may be none potentially)
 # test to see if each is present and move to a well known location for later processing in the next stage
@@ -33,11 +38,13 @@ RUN cd /work/outer-loop-app/build/wlp/usr/servers; \
     chmod -R 770 /work/config/apps && \
     if [ -d ../shared ]; then mv ../shared/* /work/shared/; fi
 
-# Step 2: Package Open Liberty image
-FROM {{.OUTERLOOP_OL_UBI_IMAGE}}
+# Step 2: Package Liberty image
+FROM {{.LIBERTY_IMAGE}}
+
+ARG WLP_INSTALL_PATH
 
 # 2a) Copy user defined shared resources.
-COPY --from=compile --chown=1001:0 /work/shared /opt/ol/wlp/usr/shared/
+COPY --from=compile --chown=1001:0 /work/shared $WLP_INSTALL_PATH/usr/shared/
 
 # 2b) Copy user defined shared libraries.
 COPY --from=compile --chown=1001:0 /work/configlibdir/ /config
@@ -55,8 +62,8 @@ COPY --from=compile --chown=1001:0 /stack/ol/config/configDropins/defaults/ /tmp
 
 ARG ADD_MP_HEALTH=true
 RUN if [ "$ADD_MP_HEALTH" = "true" ]; then \
-        /opt/ol/wlp/bin/server start && \
-        /opt/ol/wlp/bin/server stop && \
+        $WLP_INSTALL_PATH/bin/server start && \
+        $WLP_INSTALL_PATH/bin/server stop && \
         if ! grep "CWWKF0012I" /logs/messages.log | grep -q 'mpHealth-[0-9]*.[0-9]*\|microProfile-[0-9]*.[0-9]*'; then \
             echo "Missing mpHealth feature - adding config snippet" && \
             cp /tmp/stack/config/configDropins/defaults/liberty-stack-mpHealth.xml /config/configDropins/overrides; \
@@ -89,4 +96,4 @@ ENV OPENJ9_SCC=$ENABLE_OPENJ9_SCC
 
 # 2g) Run configure.sh
 RUN configure.sh && \
-    chmod 664 /opt/ol/wlp/usr/servers/*/configDropins/defaults/keystore.xml
+    chmod 664 $WLP_INSTALL_PATH/usr/servers/*/configDropins/defaults/keystore.xml
