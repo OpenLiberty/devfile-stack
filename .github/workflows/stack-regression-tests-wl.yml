@@ -88,9 +88,10 @@ jobs:
         if: success() || failure()
         run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/parent-plugin-test.sh
 
-      - name: 'Test: InnerLoop: Maven: multi-module'
-        if: success() || failure()
-        run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/multi-module.sh
+      # NOTE: Temporarily disabled. Associated issue: #172.
+      #- name: 'Test: InnerLoop: Maven: multi-module'
+      #  if: success() || failure()
+      #  run: export WLP_INSTALL_PATH=/opt/ibm/wlp && ./test/inner-loop/multi-module.sh
 
       - name: 'Test: OuterLoop: Maven: Basic'
         if: success() || failure()
