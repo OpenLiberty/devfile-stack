@@ -1,10 +1,12 @@
 
 ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
+ARG LIBERTY_PLUGIN_VERSION={{.LIBERTY_PLUGIN_VERSION}}
 
 # Step 1: Build the user's application
 FROM {{.OUTERLOOP_STACK_IMAGE_MAVEN}} as compile
 
 ARG WLP_INSTALL_PATH
+ARG LIBERTY_PLUGIN_VERSION
 
 # Make a well known place for shared library jars separate from the rest of the <server> contents (to help with caching)
 RUN mkdir /work/configlibdir \
@@ -21,7 +23,7 @@ COPY --chown=1001:0 ./pom.xml /work/outer-loop-app/pom.xml
 RUN cd /work/outer-loop-app && \
     echo "QUICK START SECURITY IS NOT SECURE FOR PRODUCTION ENVIRONMENTS. IT IS BEING REMOVED" && \
     rm -f src/main/liberty/config/configDropins/defaults/quick-start-security.xml && \
-    mvn -e -DinstallDirectory=$WLP_INSTALL_PATH liberty:create package 
+    mvn -e -DinstallDirectory=$WLP_INSTALL_PATH io.openliberty.tools:liberty-maven-plugin:${LIBERTY_PLUGIN_VERSION}:create package 
 
 # Process any resources or shared libraries - if they are present in the dependencies block for this project (there may be none potentially)
 # test to see if each is present and move to a well known location for later processing in the next stage.
