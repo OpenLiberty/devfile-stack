@@ -1,10 +1,11 @@
-
+ARG LIBERTY_VERSION={{.LIBERTY_RUNTIME_VERSION}}
 ARG WLP_INSTALL_PATH={{.WLP_INSTALL_PATH}}
 ARG LIBERTY_PLUGIN_VERSION={{.LIBERTY_PLUGIN_VERSION}}
 
 # Step 1: Build the user's application
 FROM {{.OUTERLOOP_STACK_IMAGE_MAVEN}} as compile
 
+ARG LIBERTY_VERSION
 ARG WLP_INSTALL_PATH
 ARG LIBERTY_PLUGIN_VERSION
 
@@ -36,7 +37,7 @@ RUN cd $WLP_INSTALL_PATH/usr/servers && \
     if [ -d ../shared ]; then mv ../shared/* /work/shared/; fi
     
 # Step 2: Package Liberty image
-FROM {{.LIBERTY_IMAGE}}
+FROM {{.OUTERLOOP_LIBERTY_IMAGE}}
 
 ARG WLP_INSTALL_PATH
 

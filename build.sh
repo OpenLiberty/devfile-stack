@@ -16,8 +16,8 @@ generate() {
     sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!; s!{{.ECLIPSE_MP_API_PREV_VERSION}}!$ECLIPSE_MP_API_PREV_VERSION!; s!{{.OL_MP_FEATURE_PREV_VERSION}}!$OL_MP_FEATURE_PREV_VERSION!" templates/stackimage/gradle/Dockerfile > generated/stackimage/gradle/Dockerfile
 
     # Outer loop docker file customization.
-    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_MAVEN}}!$OUTERLOOP_STACK_IMAGE_MAVEN!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_PLUGIN_VERSION}}!$LIBERTY_PLUGIN_VERSION!; s!{{.LIBERTY_IMAGE}}!$LIBERTY_IMAGE!;" templates/outer-loop/maven/Dockerfile > generated/outer-loop/maven/Dockerfile
-    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_GRADLE}}!$OUTERLOOP_STACK_IMAGE_GRADLE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_IMAGE}}!$LIBERTY_IMAGE!;" templates/outer-loop/gradle/Dockerfile > generated/outer-loop/gradle/Dockerfile    
+    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_MAVEN}}!$OUTERLOOP_STACK_IMAGE_MAVEN!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_PLUGIN_VERSION}}!$LIBERTY_PLUGIN_VERSION!; s!{{.OUTERLOOP_LIBERTY_IMAGE}}!$OUTERLOOP_LIBERTY_IMAGE!;" templates/outer-loop/maven/Dockerfile > generated/outer-loop/maven/Dockerfile
+    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_GRADLE}}!$OUTERLOOP_STACK_IMAGE_GRADLE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.OUTERLOOP_LIBERTY_IMAGE}}!$OUTERLOOP_LIBERTY_IMAGE!;" templates/outer-loop/gradle/Dockerfile > generated/outer-loop/gradle/Dockerfile    
 }
 
 # Build the stack image 

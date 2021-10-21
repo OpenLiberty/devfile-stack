@@ -13,35 +13,38 @@
 
 1. Generate the needed artifacts with build.sh.
 
-You can run build.sh with the target customization values as inputs or you can update the build.sh script itself if you intend run the script with no inputs.
+The build-ol.env and build-wl.env files contain default values for various build inputs for the Open Liberty stack and WebSphere Liberty stack respectively. 
+You can run build.sh with the target customization values as inputs or you can update the `build-<ol|wl>.env` script itself if you intend to run the script with no inputs.
 
 **Examples:**
 
 - Using customization arguments:
 
 ```
+source build-ol.env
 BASE_OS_IMAGE=ibmsemeruruntime/open-11-jdk:ubi-jdk-latest \
 LIBERTY_RUNTIME_VERSION=21.0.0.9 \
 STACK_IMAGE_MAVEN=<my-repo>/<image-maven>:<tag> \
 STACK_IMAGE_GRADLE=<my-repo>/<image-gradle>:<tag> \
-./build.sh
+. ./build.sh
 ```
 
-- Updating default values in build.sh:
+- Updating default values in build-ol.env:
 
 ```
-vi build.sh
+vi build-ol.env
 ```
 ```
 ...
-BASE_OS_IMAGE="${BASE_OS_IMAGE:-ibmsemeruruntime/open-11-jdk:ubi-jdk-latest}"
-LIBERTY_RUNTIME_VERSION="${LIBERTY_RUNTIME_VERSION:-21.0.0.9}"
-STACK_IMAGE_MAVEN="${STACK_IMAGE_MAVEN:-<my-repo>/<image-maven>:<tag>}"
-STACK_IMAGE_GRADLE="${STACK_IMAGE_GRADLE:-<my-repo>/<image-gradle>:<tag>}"
+BASE_OS_IMAGE="ibmsemeruruntime/open-11-jdk:ubi-jdk-latest"
+LIBERTY_RUNTIME_VERSION="21.0.0.9"
+STACK_IMAGE_MAVEN="<my-repo>/<image-maven>:<tag>"
+STACK_IMAGE_GRADLE="<my-repo>/<image-gradle>:<tag>"
 ...
 ```
 ```
-./build.sh
+source build-ol.env
+. ./build.sh
 ```
 
 2. Build the stack image
