@@ -22,7 +22,7 @@ You can run build.sh with the target customization values as inputs or you can u
 
 ```
 source build-ol.env
-BASE_OS_IMAGE=ibmsemeruruntime/open-11-jdk:ubi-jdk-latest \
+BASE_OS_IMAGE=ibmsemeruruntime/open-11-jdk:ubi-jdk \
 LIBERTY_RUNTIME_VERSION=21.0.0.9 \
 STACK_IMAGE_MAVEN=<my-repo>/<image-maven>:<tag> \
 STACK_IMAGE_GRADLE=<my-repo>/<image-gradle>:<tag> \
@@ -36,7 +36,7 @@ vi build-ol.env
 ```
 ```
 ...
-BASE_OS_IMAGE="ibmsemeruruntime/open-11-jdk:ubi-jdk-latest"
+BASE_OS_IMAGE="ibmsemeruruntime/open-11-jdk:ubi-jdk"
 LIBERTY_RUNTIME_VERSION="21.0.0.9"
 STACK_IMAGE_MAVEN="<my-repo>/<image-maven>:<tag>"
 STACK_IMAGE_GRADLE="<my-repo>/<image-gradle>:<tag>"
