@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Inner loop test using the application-stack-intro application that requires/uses microprofile 3.3 APIs and OL features.
+# Inner loop test using the devfile-stack-intro application that requires/uses microprofile 3.3 APIs and OL features.
 echo -e "\n> Microprofile 3.3 inner loop test."
 
 # Base work directory.
@@ -12,9 +12,9 @@ WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 mkdir inner-loop-mp3-plugin-test-dir
 cd inner-loop-mp3-plugin-test-dir
 
-echo -e "\n> Clone application-stack-intro project and customize it."
-git clone https://github.com/OpenLiberty/application-stack-intro.git
-cd application-stack-intro
+echo -e "\n> Clone devfile-stack-intro project and customize it."
+git clone https://github.com/OpenLiberty/devfile-stack-intro.git
+cd devfile-stack-intro
 
 echo -e "\n> Replace the needed files."
 if [ "$1" = "gradle" ]; then

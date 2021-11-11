@@ -1,6 +1,6 @@
 ## Test Overview
 
-The application-stack repo is tested using Github Actions. The main workflow is defined in `stack-regression-tests.yml` and performs the following steps:
+The devfile-stack repo is tested using Github Actions. The main workflow is defined in `stack-regression-tests.yml` and performs the following steps:
 
 ### Install Minikube 
 
@@ -22,7 +22,7 @@ The stack image is built into the local docker registry using the name:version s
 
 Basic setup:
 
-Clone application-stack-intro, create, push.
+Clone devfile-stack-intro, create, push.
 
 Tests against following endpoints:
 
@@ -34,7 +34,7 @@ Tests against following endpoints:
 
 Basic setup:
 
-Clone application-stack-intro, build docker image, install OL operator, deploy.
+Clone devfile-stack-intro, build docker image, install OL operator, deploy.
 
 Tests against following endpoints:
 

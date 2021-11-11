@@ -27,8 +27,8 @@
         <version.maven-compiler-plugin>3.8.1</version.maven-compiler-plugin>
         <version.maven-surefire-plugin>3.0.0-M1</version.maven-surefire-plugin>
         <version.maven-failsafe-plugin>3.0.0-M1</version.maven-failsafe-plugin>
-        <version.liberty-maven-plugin>3.4</version.liberty-maven-plugin>
-        <eclipse-microprofile-version>4.0.1</eclipse-microprofile-version>
+        <version.liberty-maven-plugin>3.5</version.liberty-maven-plugin>
+        <eclipse-microprofile-version>4.1</eclipse-microprofile-version>
         <jakarta-jakartaee-api-version>8.0.0</jakarta-jakartaee-api-version>
         <liberty.bootstrap.project.name>${project.artifactId}</liberty.bootstrap.project.name>
         <liberty.runtime.groupid>io.openliberty</liberty.runtime.groupid>

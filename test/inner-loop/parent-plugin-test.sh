@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Inner loop test using the application-stack-intro application that defines a pom.xml containing the liberty-maven-app-parent artifact.
+# Inner loop test using the devfile-stack-intro application that defines a pom.xml containing the liberty-maven-app-parent artifact.
 echo -e "\n> Parent plugin inner loop test."
 
 # Base work directory.
@@ -12,9 +12,9 @@ WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 mkdir inner-loop-parent-plugin-test-dir
 cd inner-loop-parent-plugin-test-dir
 
-echo -e "\n> Clone application-stack-intro project"
-git clone https://github.com/OpenLiberty/application-stack-intro.git
-cd application-stack-intro
+echo -e "\n> Clone devfile-stack-intro project"
+git clone https://github.com/OpenLiberty/devfile-stack-intro.git
+cd devfile-stack-intro
 
 echo -e "\n> Add the liberty maven parent entry to pom.xml"
 sed -i '/<\/modelVersion>/a\\n\ \ \ \ <parent>\n\ \ \ \ \ \ \ \ <groupId>io.openliberty.tools<\/groupId>\n\ \ \ \ \ \ \ \ <artifactId>liberty-maven-app-parent<\/artifactId>\n\ \ \ \ \ \ \ \ <version>3.3.4<\/version>\n\ \ \ \ <\/parent>\n' pom.xml

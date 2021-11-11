@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Devfile regression inner loop test using the application-stack-intro application.
+# Devfile regression inner loop test using the devfile-stack-intro application.
 echo -e "\n> Make stacktest regression dir"
 
 # Base work directory.
@@ -16,10 +16,10 @@ cd stacktest-reg
 # this will allow us to run the current devfile with the new stack image
 # introduced via this current PR being tested
 echo -e "\n> Clone the main branch stack repo"
-git clone https://github.com/OpenLiberty/application-stack.git
+git clone https://github.com/OpenLiberty/devfile-stack.git
 
 echo -e "\n> Run buildStack from the main branch in stack repo that was just cloned"
-cd application-stack
+cd devfile-stack
 
 if [ "$WLP_INSTALL_PATH" = "/opt/ol/wlp" ]; then
   ./test/utils.sh buildStack-OL
@@ -31,18 +31,18 @@ echo -e "\n> Make a test app dir for test project"
 mkdir devfile-regression-inner-loop-test-dir
 cd devfile-regression-inner-loop-test-dir
 
-echo -e "\n> Clone application-stack-intro project"
-git clone https://github.com/OpenLiberty/application-stack-intro.git
-cd application-stack-intro
+echo -e "\n> Clone devfile-stack-intro project"
+git clone https://github.com/OpenLiberty/devfile-stack-intro.git
+cd devfile-stack-intro
 
 # This is a copy of the 'main' version of the devfile - vs an updated devfile from this PR.
 # vis-a-vie the fact that we git cloned the main branch of the stack repo above
 echo -e "\n> Copy devfile and scripts"
 if [ "$1" = "gradle" ]; then
-  cp $BASE_DIR/stacktest-reg/application-stack/generated/devfiles/gradle/devfile.yaml devfile.yaml
+  cp $BASE_DIR/stacktest-reg/devfile-stack/generated/devfiles/gradle/devfile.yaml devfile.yaml
   WLP_INSTALL_PATH=/projects/build/wlp
 else
-  cp $BASE_DIR/stacktest-reg/application-stack/generated/devfiles/maven/devfile.yaml devfile.yaml
+  cp $BASE_DIR/stacktest-reg/devfile-stack/generated/devfiles/maven/devfile.yaml devfile.yaml
 fi
 
 # This is a workaround to avoid surefire fork failures when running
