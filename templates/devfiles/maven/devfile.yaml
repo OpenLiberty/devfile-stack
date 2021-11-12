@@ -28,10 +28,10 @@ metadata:
   alpha.build-dockerfile: '{{.OUTERLOOP_DOCKERFILE_MAVEN_LOC}}'
   alpha.deployment-manifest: '{{.DEVFILE_DEPLOY_YAML_MAVEN_LOC}}'
 starterProjects:
-  - name: user-app
+  - name: rest
     git:
       remotes:
-        origin: 'https://github.com/OpenLiberty/application-stack-starters.git'
+        origin: 'https://github.com/OpenLiberty/devfile-stack-starters.git'
 variables:
   # Liberty runtime version. Minimum recommended: 21.0.0.9
   liberty-version: "{{.LIBERTY_RUNTIME_VERSION}}"
@@ -39,7 +39,7 @@ variables:
 components:
   - name: dev
     container:
-      # In the original upstream of this devfile, the image used is openliberty/application-stack:<x.y.z>, which is built from the repository: https://github.com/OpenLiberty/application-stack
+      # In the original upstream of this devfile, the image used is openliberty/devfile-stack:<x.y.z>, which is built from the repository: https://github.com/OpenLiberty/devfile-stack
       image: {{.STACK_IMAGE_MAVEN}}
       memoryLimit: 1512Mi
       mountSources: true

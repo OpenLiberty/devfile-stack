@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Mvn repository volume and parent devfile config inner loop test using the application-stack-intro application.
+# Mvn repository volume and parent devfile config inner loop test using the devfile-stack-intro application.
 echo -e "\n> Mvn repository volume and parent devfile config inner loop test"
 
 # Base work directory.
@@ -12,15 +12,15 @@ WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/projects/target/liberty/wlp}"
 mkdir inner-loop-test-dir
 cd inner-loop-test-dir
 
-echo -e "\n> Clone application-stack-samples project"
-git clone https://github.com/OpenLiberty/application-stack-samples.git
+echo -e "\n> Clone devfile-stack-samples project"
+git clone https://github.com/OpenLiberty/devfile-stack-samples.git
 
-echo -e "\n> Clone application-stack-intro project"
-git clone https://github.com/OpenLiberty/application-stack-intro.git
-cd application-stack-intro
+echo -e "\n> Clone devfile-stack-intro project"
+git clone https://github.com/OpenLiberty/devfile-stack-intro.git
+cd devfile-stack-intro
 
 echo -e "\n> Copy the m2 sample devfile and update the stack image with the one built"
-cp ../application-stack-samples/devfiles/m2-repo-volume/devfile.yaml devfile.yaml
+cp ../devfile-stack-samples/devfiles/m2-repo-volume/devfile.yaml devfile.yaml
 sed -i '/container:/a\ \ \ \ \ \ \ \ image: localhost:5000/test-image-maven' devfile.yaml
 
 # this is a workaround to avoid surefire fork failures when running

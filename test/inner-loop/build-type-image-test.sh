@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Base inner loop test using the application-stack-intro application and a build tooling specific container image to run the application.
+# Base inner loop test using the devfile-stack-intro application and a build tooling specific container image to run the application.
 echo -e "\n> Build tooling specific container image inner loop test"
 
 # Base work directory.
@@ -12,19 +12,19 @@ WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/projects/target/liberty/wlp}"
 mkdir inner-loop-test-dir
 cd inner-loop-test-dir
 
-echo -e "\n> Clone application-stack-samples project"
-git clone https://github.com/OpenLiberty/application-stack-samples.git
+echo -e "\n> Clone devfile-stack-samples project"
+git clone https://github.com/OpenLiberty/devfile-stack-samples.git
 
-echo -e "\n> Clone application-stack-intro project"
-git clone https://github.com/OpenLiberty/application-stack-intro.git
-cd application-stack-intro
+echo -e "\n> Clone devfile-stack-intro project"
+git clone https://github.com/OpenLiberty/devfile-stack-intro.git
+cd devfile-stack-intro
 
 echo -e "\n> Process build tool specific actions"
 if [ "$1" = "gradle" ]; then
-  cp $BASE_DIR/inner-loop-test-dir/application-stack-samples/devfiles/gradle-image/devfile.yaml devfile.yaml
+  cp $BASE_DIR/inner-loop-test-dir/devfile-stack-samples/devfiles/gradle-image/devfile.yaml devfile.yaml
   WLP_INSTALL_PATH=/projects/build/wlp
 else
-  cp $BASE_DIR/inner-loop-test-dir/application-stack-samples/devfiles/maven-image/devfile.yaml devfile.yaml
+  cp $BASE_DIR/inner-loop-test-dir/devfile-stack-samples/devfiles/maven-image/devfile.yaml devfile.yaml
 fi
 
 # This is a workaround to avoid surefire fork failures when running

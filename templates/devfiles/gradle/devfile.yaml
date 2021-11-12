@@ -28,10 +28,10 @@ metadata:
   alpha.build-dockerfile: '{{.OUTERLOOP_DOCKERFILE_GRADLE_LOC}}'
   alpha.deployment-manifest: '{{.DEVFILE_DEPLOY_YAML_GRADLE_LOC}}'
 starterProjects:
-  - name: user-app
+  - name: rest
     git:
       remotes:
-        origin: 'https://github.com/OpenLiberty/application-stack-starters.git'
+        origin: 'https://github.com/OpenLiberty/devfile-stack-starters.git'
 variables:
   # Liberty runtime version. Minimum recommended: 21.0.0.9
   liberty-version: {{.LIBERTY_RUNTIME_VERSION}}

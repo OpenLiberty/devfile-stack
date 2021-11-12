@@ -22,7 +22,7 @@ DO_HEALTH_CHECK="${DO_HEALTH_CHECK:-true}"
 LIBERTY_SERVER_LOGS_DIR_PATH="${LIBERTY_SERVER_LOGS_DIR_PATH:-/opt/ol/wlp/usr/servers/defaultServer/logs}"
 
 # Base work directory.
-BASE_WORK_DIR="${BASE_WORK_DIR:-/home/runner/work/application-stack/application-stack}"
+BASE_WORK_DIR="${BASE_WORK_DIR:-/home/runner/work/devfile-stack/devfile-stack}"
 
 # Current time.
 currentTime=(date +"%Y/%m/%d-%H:%M:%S:%3N")

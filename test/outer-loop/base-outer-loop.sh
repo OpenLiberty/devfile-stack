@@ -10,7 +10,7 @@ NAMESPACE="outer-loop"
 LIBERTY_SERVER_LOGS_DIR_PATH='/logs'
 
 # Base work directory.
-BASE_WORK_DIR="${BASE_WORK_DIR:-/home/runner/work/application-stack/application-stack}"
+BASE_WORK_DIR="${BASE_WORK_DIR:-/home/runner/work/devfile-stack/devfile-stack}"
 
 # Current time.
 currentTime=(date +"%Y/%m/%d-%H:%M:%S:%3N")

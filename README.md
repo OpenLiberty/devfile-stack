@@ -34,11 +34,11 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 
 1. Perform an `oc login` to your cluster.
 
-1. Clone the application-stack-intro repository
+1. Clone the devfile-stack-intro repository
 
     ```shell
-    git clone git@github.com:OpenLiberty/application-stack-intro.git
-    cd application-stack-intro
+    git clone git@github.com:OpenLiberty/devfile-stack-intro.git
+    cd devfile-stack-intro
     ```
 
 1. Create your odo component
@@ -88,15 +88,15 @@ You can now begin developing your app (in another shell or editor)! Changes will
 
 ### Creating a new stack project
 
-To use the starter to create new projects, see: https://github.com/OpenLiberty/application-stack/wiki/Using-the-Default-Starter
+To use the starter to create new projects, see: https://github.com/OpenLiberty/devfile-stack/wiki/Using-the-Default-Starter
 
 ### Creating a java-openliberty devfile component from an existing project
 
-See:  https://github.com/OpenLiberty/application-stack/wiki/Migrating-Existing-Maven-Apps-To-Stack
+See:  https://github.com/OpenLiberty/devfile-stack/wiki/Migrating-Existing-Maven-Apps-To-Stack
 
 ### User Doc
 
-Checkout the application-stack [wiki](https://github.com/OpenLiberty/application-stack/wiki) for details on using the Open Liberty stack.
+Checkout the devfile-stack [wiki](https://github.com/OpenLiberty/devfile-stack/wiki) for details on using the Open Liberty stack.
 
 ### odo.dev
 
@@ -105,7 +105,7 @@ Checkout the application-stack [wiki](https://github.com/OpenLiberty/application
 
 ## Contributing
 
-Our [CONTRIBUTING](https://github.com/OpenLiberty/application-stack/blob/main/CONTRIBUTING.md) document contains details for submitting pull requests.
+Our [CONTRIBUTING](https://github.com/OpenLiberty/devfile-stack/blob/main/CONTRIBUTING.md) document contains details for submitting pull requests.
 
 ## License
 
