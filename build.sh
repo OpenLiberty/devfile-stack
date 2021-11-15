@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Generates application stack artifacts.
+# Generates devfile stack artifacts.
 generate() {
     # Output directories.
     mkdir -p generated/outer-loop/maven; mkdir -p generated/outer-loop/gradle
