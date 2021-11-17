@@ -18,11 +18,11 @@
 
 # Summary
 
-A devfile-based application stack for Open Liberty
+A devfile stack for Open Liberty
 
-# Open Liberty Application Stack
+# Open Liberty Devfile Stack
 
-The Open Liberty application stack provides a consistent way of developing microservices based upon the [Jakarta EE](https://jakarta.ee/) and [Eclipse MicroProfile](https://microprofile.io) specifications. This stack lets you use [Maven](https://maven.apache.org) or [Gradle](https://gradle.org/) to develop applications for [Open Liberty](https://openliberty.io) runtime, that is running on OpenJDK with container-optimizations in OpenJ9.
+The Open Liberty devfile stack provides a consistent way of developing microservices based upon the [Jakarta EE](https://jakarta.ee/) and [Eclipse MicroProfile](https://microprofile.io) specifications. This stack lets you use [Maven](https://maven.apache.org) or [Gradle](https://gradle.org/) to develop applications for [Open Liberty](https://openliberty.io) runtime, that is running on OpenJDK with container-optimizations in OpenJ9.
 
 This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open Liberty. It provides live reloading during development by utilizing the ["dev mode"](https://openliberty.io/blog/2021/02/18/dev-mode-container-liberty-maven-gradle-plugins.html) capability in the liberty-maven-plugin or liberty-gradle-plugin.  
 

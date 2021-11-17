@@ -1,4 +1,4 @@
-# Application Stack
+# Devfile Stack
 
 * [Build](#build)
 * [Test](#test)

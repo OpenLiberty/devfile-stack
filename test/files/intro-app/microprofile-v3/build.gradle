@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 group = 'dev.odo.java-openliberty.samples'
-description = 'OpenLiberty Application Stack intro built with Gradle'
+description = 'OpenLiberty Devfile Stack intro built with Gradle'
 
 // Repositories to use.
 repositories {
