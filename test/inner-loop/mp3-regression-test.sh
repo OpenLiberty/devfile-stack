@@ -35,6 +35,9 @@ cat src/main/java/dev/odo/sample/SampleLivenessCheck.java
 cp $BASE_DIR/test/files/intro-app/microprofile-v3/SampleReadinessCheck.java src/main/java/dev/odo/sample/SampleReadinessCheck.java
 cat src/main/java/dev/odo/sample/SampleReadinessCheck.java
 
+# Remove the startup check. It is only supported in MP health 3.1 part of MP 4.1.
+rm -f src/main/java/dev/odo/sample/SampleStartupCheck.java
+
 # Customize the devfile with a workaround to avoid surefire fork failures when running the GHA test suite.
 # Issue #138 has been opened to track and address this add the -DforkCount arg to the odo test cmd only for this run
 echo -e "\n> Copy stack devfile and customize it."
