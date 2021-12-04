@@ -17,15 +17,22 @@ git clone https://github.com/OpenLiberty/devfile-stack-intro.git
 cd devfile-stack-intro
 
 echo -e "\n> Replace the needed files."
-if [ "$1" = "gradle" ]; then
-  cp $BASE_DIR/generated/devfiles/gradle/devfile.yaml devfile.yaml
-  WLP_INSTALL_PATH=/projects/build/wlp
-  cp $BASE_DIR/test/files/intro-app/microprofile-v3/build.gradle build.gradle
-  cat build.gradle
+runtime="$1"
+buldType="$2"
+runtimeDir="open-liberty"
+if [ "$runtime" = "wl" ]; then
+    runtimeDir="websphere-liberty"
+fi
+
+if [ "$buldType" = "gradle" ]; then
+    cp $BASE_DIR/stack/"${runtimeDir}"/devfiles/gradle/devfile.yaml devfile.yaml
+    WLP_INSTALL_PATH=/projects/build/wlp
+    cp $BASE_DIR/test/files/intro-app/microprofile-v3/build.gradle build.gradle
+    cat build.gradle
 else
-  cp $BASE_DIR/generated/devfiles/maven/devfile.yaml devfile.yaml
-  cp $BASE_DIR/test/files/intro-app/microprofile-v3/pom.xml pom.xml
-  cat pom.xml
+    cp $BASE_DIR/stack/"${runtimeDir}"/devfiles/maven/devfile.yaml devfile.yaml
+    cp $BASE_DIR/test/files/intro-app/microprofile-v3/pom.xml pom.xml
+    cat pom.xml
 fi
 
 cp $BASE_DIR/test/files/intro-app/microprofile-v3/server.xml src/main/liberty/config/server.xml

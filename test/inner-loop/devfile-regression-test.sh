@@ -12,19 +12,19 @@ WLP_INSTALL_PATH="${WLP_INSTALL_PATH:-/opt/ol/wlp}"
 mkdir stacktest-reg
 cd stacktest-reg
 
-# Get the currently released version of the devfile template and generate
-# this will allow us to run the current devfile with the new stack image
-# introduced via this current PR being tested
+# Get the currently released version of the devfile.
+# This will allow us to run the released devfile with the new stack image introduced by the PR being tested.
 echo -e "\n> Clone the main branch stack repo"
 git clone https://github.com/OpenLiberty/devfile-stack.git
 
 echo -e "\n> Run buildStack from the main branch in stack repo that was just cloned"
 cd devfile-stack
 
-if [ "$WLP_INSTALL_PATH" = "/opt/ol/wlp" ]; then
-  ./test/utils.sh buildStack-OL
+runtime="$1"
+if [ "$runtime" = "ol" ]; then
+  ./test/utils.sh customizeStack ol
 else
-  ./test/utils.sh buildStack-WL
+  ./test/utils.sh customizeStack wl
 fi
 
 echo -e "\n> Make a test app dir for test project"
@@ -38,12 +38,19 @@ cd devfile-stack-intro
 # This is a copy of the 'main' version of the devfile - vs an updated devfile from this PR.
 # vis-a-vie the fact that we git cloned the main branch of the stack repo above
 echo -e "\n> Copy devfile and scripts"
-if [ "$1" = "gradle" ]; then
-  cp $BASE_DIR/stacktest-reg/devfile-stack/generated/devfiles/gradle/devfile.yaml devfile.yaml
-  WLP_INSTALL_PATH=/projects/build/wlp
-else
-  cp $BASE_DIR/stacktest-reg/devfile-stack/generated/devfiles/maven/devfile.yaml devfile.yaml
+buldType="$2"
+runtimeDir="open-liberty"
+if [ "$runtime" = "wl" ]; then
+  runtimeDir="websphere-liberty"
 fi
+
+if [ "$buldType" = "gradle" ]; then
+    cp $BASE_DIR/stacktest-reg/devfile-stack/stack/"${runtimeDir}"/devfiles/gradle/devfile.yaml devfile.yaml
+    WLP_INSTALL_PATH=/projects/build/wlp
+else
+    cp $BASE_DIR/stacktest-reg/devfile-stack/stack/"${runtimeDir}"/devfiles/maven/devfile.yaml devfile.yaml
+fi
+
 
 # This is a workaround to avoid surefire fork failures when running
 # the GHA test suite.

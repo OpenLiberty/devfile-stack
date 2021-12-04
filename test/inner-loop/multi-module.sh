@@ -17,7 +17,14 @@ git clone https://github.com/OpenLiberty/guide-maven-multimodules.git
 cd guide-maven-multimodules/finish
 
 echo -e "\n> Copy devfile"
-cp $BASE_DIR/generated/devfiles/maven/devfile.yaml devfile.yaml
+runtime="$1"
+buldType="$2"
+runtimeDir="open-liberty"
+if [ "$runtime" = "wl" ]; then
+  runtimeDir="websphere-liberty"
+fi
+
+cp $BASE_DIR/stack/"${runtimeDir}"/devfiles/maven/devfile.yaml devfile.yaml
 
 # Update the test command execution in the devfile. Add -DforkCount=0 as a workaround to avoid 
 # surefire fork failures when running the GHA test suite.Issue #138 has been opened to track 
