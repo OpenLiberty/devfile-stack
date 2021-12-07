@@ -20,11 +20,13 @@ git clone https://github.com/OpenLiberty/devfile-stack-intro.git
 cd devfile-stack-intro
 
 echo -e "\n> Process build tool specific actions"
-if [ "$1" = "gradle" ]; then
-  cp $BASE_DIR/inner-loop-test-dir/devfile-stack-samples/devfiles/gradle-image/devfile.yaml devfile.yaml
-  WLP_INSTALL_PATH=/projects/build/wlp
+runtime="$1"
+buldType="$2"
+if [ "$buldType" = "gradle" ]; then
+    cp $BASE_DIR/inner-loop-test-dir/devfile-stack-samples/devfiles/gradle-image/devfile.yaml devfile.yaml
+    WLP_INSTALL_PATH=/projects/build/wlp
 else
-  cp $BASE_DIR/inner-loop-test-dir/devfile-stack-samples/devfiles/maven-image/devfile.yaml devfile.yaml
+    cp $BASE_DIR/inner-loop-test-dir/devfile-stack-samples/devfiles/maven-image/devfile.yaml devfile.yaml
 fi
 
 # This is a workaround to avoid surefire fork failures when running

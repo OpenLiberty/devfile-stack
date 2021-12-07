@@ -1,66 +1,69 @@
-## Test Overview
+# Test Overview
 
-The devfile-stack repo is tested using Github Actions. The main workflow is defined in `stack-regression-tests.yml` and performs the following steps:
+The devfile-stack repo is tested using Github Actions. 
+The tests are run whenever a PR is created/updated/merged.
+The main workflow is defined in `stack-regression-tests.yml`.
 
-### Install Minikube 
+## Test Steps
 
-This is done via the `manusa/actions-setup-minikube` actions plugin
+### Software Installation
 
-### Install ODO
+1. Minikube. This is done via the `manusa/actions-setup-minikube` actions plugin.
 
-The latest version is installed
+2. ODO. The latest version is installed.
 
-### Build stack 
-
-This runs the `build.sh` script to generate all stack content in the `generated/` dir based on the PRs branch.
-
-### Build stack image
-
-The stack image is built into the local docker registry using the name:version specified in the devfile
-
-### Run inner loop tests
-
-Basic setup:
-
-Clone devfile-stack-intro, create, push.
-
-Tests against following endpoints:
-
-1. /health/live
-1. /health/ready
-1. /api/resource
-
-### Run outer loop tests
-
-Basic setup:
-
-Clone devfile-stack-intro, build docker image, install OL operator, deploy.
-
-Tests against following endpoints:
-
-1. /health/live
-1. /health/ready
-1. /api/resource
+3. Open Liberty Operator.
 
 
-## Additional features
+### Stack customization 
 
-1. Tests are triggered on each PR or update to a PR
-1. All local docker images are available for use by the Minikube cluster since Minikube is installed/started with `driver=none` (bare metal)
+The stack is build using the build.sh script to customize/populate stack artifacts based on the runtime type (Open Liberty or WebSphere Liberty) needed to run the test application. 
+
+The stack image is built into the local docker registry located at `localhost:5000`.
 
 
-## Known issues
+### Inner-loop test execution
 
-1. Intermittent Ingress connection refused errors:
+Setup:
 
-```
-Applying URL changes
- ✗  Failed To Update Config To Component Deployed.
-Error: unable to create ingress: error creating ingress: Internal error occurred: failed calling webhook "validate.nginx.ingress.kubernetes.io": Post https://ingress-nginx-controller-admission.kube-system.svc:443/extensions/v1beta1/ingresses?timeout=30s: dial tcp 10.96.251.20:443: connect: connection refused
-```
+1. Clones devfile-stack-intro.
+2. Runs `odo project create` to create a project/namespace for the application to run in the cluster.
+3. Runs `odo create` to create a test component.
+4. Runs `odo push` to create the needed resources and push the application to the cluster.
 
-If this occurs, the tests will need to be rerun. 
+Validation:
 
-## Future Tests
+1. Using endpoint: /health/live
+2. Using endpoint: /health/ready
+3. Using endpoint: /api/resource
 
-1. Validate version changes in build.sh to make sure proper incrementation (i.e. you changed the outerloop Dockerfile but didnt increment the outerloop version)
+Cleanup:
+
+1. Runs `odo delete` to delete the resources created to run the application.
+2. Runs `odo project delete` to delete the created project.
+3. Cleans up created directories.
+
+
+### Outer-loop test execution
+
+Setup:
+
+1. Clones devfile-stack-intro.
+2. Builds a docker image using the outer-loop Dockerfile provided by the stack.
+3. Pushes the built image to the local registry.
+3. Populates the OpenLibertyApplication template provided by the stack.
+4. Runs `odo project create` to create a project/namespace for the application to run in the cluster.
+5. Runs `kubectl apply -f` on the customized OpenLibertyApplication template provided by the stack.
+
+
+Validation:
+
+1. Using endpoint: /health/live
+2. Using endpoint: /health/ready
+3. Using endpoint: /api/resource
+
+Cleanup:
+
+1. Runs `kubectl delete -f` on the customized OpenLibertyApplication template provided by the stack.
+2. Runs `odo project delete` to delete the created project.
+3. Cleans up created directories.

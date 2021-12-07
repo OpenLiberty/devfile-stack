@@ -1,40 +1,35 @@
 #!/bin/bash
 
-# buildStackImage builds the base Open Liberty devfile stack image.
+# buildStackImage builds stack images for the specified runtime.
 buildStackImage() {
-    echo "> Start docker";
+    local runtime="$1"
+    local dockerfileRootPath="stack/open-liberty"
+
+    if [ "$runtime" = "wl" ]; then
+        dockerfileRootPath="stack/websphere-liberty"
+    fi
+
+    echo "> Start the docker registry";
     docker run --rm -it --network=host alpine ash -c "apk add socat && socat TCP-LISTEN:5000,reuseaddr,fork TCP:$(minikube ip):5000"
 
-    echo "> Build the stack image and push it to docker";
-    docker build -t localhost:5000/test-image-gradle --build-arg stacklabel=$SHA -f generated/stackimage/gradle/Dockerfile stackimage
+    echo "> Build/Push the Maven stack image";
+    docker build -t localhost:5000/test-image-gradle --build-arg stacklabel=$SHA -f "${dockerfileRootPath}"/image/gradle/Dockerfile tools/image
     docker push localhost:5000/test-image-gradle
 
-    docker build -t localhost:5000/test-image-maven --build-arg stacklabel=$SHA -f generated/stackimage/maven/Dockerfile stackimage
+    echo "> Build/Push the Gradle stack image";
+    docker build -t localhost:5000/test-image-maven --build-arg stacklabel=$SHA -f "${dockerfileRootPath}"/image/maven/Dockerfile tools/image
     docker push localhost:5000/test-image-maven
 }
 
-# buildStack-OL builds the Open Liberty stack repository.
-buildStack-OL() {
-    echo "> Building Open Liberty Stack";
-    source ./build-ol.env
-    STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
-    STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
-    OUTERLOOP_STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
-    OUTERLOOP_STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
-    . ./build.sh
-    ls -laR generated
-}
+# customizeStack customizes stack artifacts for the specified Liberty runtime.
+customizeStack() {
+    local runtime="$1"
 
-# buildStack-WL builds the WebSphere Liberty stack repository.
-buildStack-WL() {
-    echo "> Building WebSphere Liberty Stack";
-    source ./build-wl.env
-    STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
-    STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
-    OUTERLOOP_STACK_IMAGE_MAVEN=localhost:5000/test-image-maven \
-    OUTERLOOP_STACK_IMAGE_GRADLE=localhost:5000/test-image-gradle \
-    . ./build.sh
-    ls -laR generated
+    echo "> Customizing the stack for Open Liberty deployments";
+    sed -i 's!STACK_IMAGE_MAVEN=.*!STACK_IMAGE_MAVEN=\"localhost:5000\/test-image-maven\"!;
+            s!STACK_IMAGE_GRADLE=.*!STACK_IMAGE_GRADLE=\"localhost:5000\/test-image-gradle\"!' customize-"${runtime}".env
+    cat customize-"${runtime}".env
+    ./build.sh "$runtime"
 }
 
 # installOpenLibertyOperator installs the Open Liberty operator.
@@ -145,13 +140,10 @@ if [ $# -ge 1 ]; then
 fi
 case "${COMMAND}" in
     buildStackImage)
-        buildStackImage
+        buildStackImage $2
     ;;
-    buildStack-OL)
-        buildStack-OL
-    ;;
-    buildStack-WL)
-        buildStack-WL
+    customizeStack)
+        customizeStack $2
     ;;
     installOpenLibertyOperator)
         installOpenLibertyOperator
@@ -172,7 +164,7 @@ case "${COMMAND}" in
         checkLibertyServerLogForErrorAndWarnings $2 $3 $4
     ;;
     *)
-    echo "Invalid command. Allowed values: buildStackImage, buildStack-OL, buildStack-WL, installOpenLibertyOperator, printPodConfig, printPodLog, printLibertyServerMsgLog, printLibertyDebugData, and checkLibertyServerLogForErrorAndWarnings"
+    echo "Invalid command. Allowed values: buildStackImage, customizeStack, installOpenLibertyOperator, printPodConfig, printPodLog, printLibertyServerMsgLog, printLibertyDebugData, and checkLibertyServerLogForErrorAndWarnings"
     exit 1
     ;;
 esac

@@ -1,49 +1,61 @@
-#!/bin/bash
+USAGE="
+Usage:
+  ./build.sh [Liberty runtime type]
 
-# Generates devfile stack artifacts.
-generate() {
-    # Output directories.
-    mkdir -p generated/outer-loop/maven; mkdir -p generated/outer-loop/gradle
-    mkdir -p generated/stackimage/maven; mkdir -p generated/stackimage/gradle 
-    mkdir -p generated/devfiles/maven; mkdir -p generated/devfiles/gradle
+Runtime types:
+  ol: If used, it customizes the stack for deployments that use the Open Liberty runtime.
+  wl: If used, it customizes the stack for deployments that use the WebSphere Liberty runtime.
+  all: If used, it customizes the stack for deployments that use both Open Liberty and WebSphere Liberty runtimes. This is the default if no argument is specified.
 
-    # Devfile customization.
-    sed -e "s!{{.STACK_NAME}}!$STACK_NAME!; s!{{.STACK_SHORT_NAME}}!$STACK_SHORT_NAME!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_PLUGIN_VERSION}}!$LIBERTY_PLUGIN_VERSION!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.STACK_IMAGE_MAVEN}}!$STACK_IMAGE_MAVEN!; s!{{.OUTERLOOP_DOCKERFILE_MAVEN_LOC}}!$OUTERLOOP_DOCKERFILE_MAVEN_LOC!; s!{{.DEVFILE_DEPLOY_YAML_MAVEN_LOC}}!$DEVFILE_DEPLOY_YAML_MAVEN_LOC!" templates/devfiles/maven/devfile.yaml > generated/devfiles/maven/devfile.yaml
-    sed -e "s!{{.STACK_NAME}}!$STACK_NAME!; s!{{.STACK_SHORT_NAME}}!$STACK_SHORT_NAME!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!; s!{{.STACK_IMAGE_GRADLE}}!$STACK_IMAGE_GRADLE!; s!{{.OUTERLOOP_DOCKERFILE_GRADLE_LOC}}!$OUTERLOOP_DOCKERFILE_GRADLE_LOC!; s!{{.DEVFILE_DEPLOY_YAML_GRADLE_LOC}}!$DEVFILE_DEPLOY_YAML_GRADLE_LOC!" templates/devfiles/gradle/devfile.yaml > generated/devfiles/gradle/devfile.yaml
- 
-    # Stack image docker file customization.
-    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!" templates/stackimage/maven/Dockerfile > generated/stackimage/maven/Dockerfile
-    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!" templates/stackimage/gradle/Dockerfile > generated/stackimage/gradle/Dockerfile
+Example:
+  # Customize the stack for both Open Liberty and WebSphere Liberty deployments.
+  ./build.sh
+  ./buid.sh all
 
-    # Outer loop docker file customization.
-    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_MAVEN}}!$OUTERLOOP_STACK_IMAGE_MAVEN!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.LIBERTY_PLUGIN_VERSION}}!$LIBERTY_PLUGIN_VERSION!; s!{{.OUTERLOOP_LIBERTY_IMAGE}}!$OUTERLOOP_LIBERTY_IMAGE!;" templates/outer-loop/maven/Dockerfile > generated/outer-loop/maven/Dockerfile
-    sed -e "s!{{.OUTERLOOP_STACK_IMAGE_GRADLE}}!$OUTERLOOP_STACK_IMAGE_GRADLE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.OUTERLOOP_LIBERTY_IMAGE}}!$OUTERLOOP_LIBERTY_IMAGE!;" templates/outer-loop/gradle/Dockerfile > generated/outer-loop/gradle/Dockerfile    
+  # Customize the stack for Open Liberty deployments.
+  ./build.sh ol
+
+  # Customize the stack for WebSphere Liberty deployments. 
+  ./build.sh wl
+  "
+
+# main serves as the entry point for stack customization.
+main() {
+    local runtimeType="$1"
+    local argCount="$#"
+
+    # Validate the input.
+    if [ "$argCount" -eq 0 ]; then
+        echo "No Liberty runtime type was specified. The default parameter of \"all\" is used."
+        runtimeType="all"
+    elif [ "$argCount" -gt 1 ]; then
+        echo "ERROR: An invalid number of arguments were specified."
+        echo "$USAGE"
+        exit 1
+    fi
+
+    # Apply customizations and modify the stack artifacts based on the Liberty runtime type. 
+    case "$runtimeType" in
+        ol)
+            source "$PWD"/customize-ol.env
+            . "$PWD"/tools/build/scripts/customize.sh ol
+        ;;
+        wl)
+            source "$PWD"/customize-wl.env
+            . "$PWD"/tools/build/scripts/customize.sh wl
+        ;;
+        all)
+            source "$PWD"/customize-ol.env
+            . "$PWD"/tools/build/scripts/customize.sh ol
+            source "$PWD"/customize-wl.env
+            . "$PWD"/tools/build/scripts/customize.sh wl
+        ;;
+        *)
+            echo "ERROR: An invalid argument was specified: $runtimeType"
+            echo "$USAGE"
+            exit 1
+        ;;
+    esac
 }
 
-# Build the stack image 
-buildStackImage() {
-    # Build Maven image
-    docker build -t stack-image-maven -f generated/stackimage/maven/Dockerfile stackimage
-    
-    # Build Gradle image
-    docker build -t stack-image-gradle -f generated/stackimage/gradle/Dockerfile stackimage
-}
-
-# Execute the specified action. The generate action is the default if none is specified.
-ACTION="generate"
-if [ $# -ge 1 ]; then
-    ACTION=$1
-    shift
-fi
-case "${ACTION}" in
-    generate)
-        generate
-    ;;
-    buildStackImage)
-        buildStackImage
-    ;;
-    *)
-    echo "Invalid input action. Allowed action values: generate | buildStackImage. Default: generate."
-    exit 1
-    ;;
-esac
+main "$@"

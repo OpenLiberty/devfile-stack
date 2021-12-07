@@ -19,14 +19,21 @@ git clone https://github.com/OpenLiberty/devfile-stack-intro.git
 cd devfile-stack-intro
 
 echo -e "\n> Copy Dockerfile"
-if [ "$1" = "gradle" ]; then
-  cp $BASE_DIR/generated/outer-loop/gradle/Dockerfile Dockerfile
+runtime="$1"
+buldType="$2"
+runtimeDir="open-liberty"
+if [ "$runtime" = "wl" ]; then
+    runtimeDir="websphere-liberty"
+fi
+
+if [ "$buldType" = "gradle" ]; then
+    cp $BASE_DIR/stack/"${runtimeDir}"/outer-loop/gradle/Dockerfile Dockerfile
 else
-  cp $BASE_DIR/generated/outer-loop/maven/Dockerfile Dockerfile
+    cp $BASE_DIR/stack/"${runtimeDir}"/outer-loop/maven/Dockerfile Dockerfile
 fi
 
 echo -e "\n> Copy app-deploy.yaml"
-cp $BASE_DIR/templates/outer-loop/app-deploy.yaml app-deploy.yaml
+cp $BASE_DIR/stack/"${runtimeDir}"/outer-loop/app-deploy.yaml app-deploy.yaml
 
 echo -e "\n> Build Docker image"
 sed -i '/COPY --from=compile/a RUN true' Dockerfile

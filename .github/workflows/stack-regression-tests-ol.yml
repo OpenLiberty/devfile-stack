@@ -43,83 +43,82 @@ jobs:
         run: ./test/utils.sh installOpenLibertyOperator
     
       - name: 'Setup: Build Open Liberty stack'
-        run: ./test/utils.sh buildStack-OL
+        run: ./test/utils.sh customizeStack ol
         
       - name: 'Setup: Build stack image'
-        run: ./test/utils.sh buildStackImage
+        run: ./test/utils.sh buildStackImage ol
 
       - name: 'Test: InnerLoop: Maven: Basic'
-        run: ./test/inner-loop/basic-test.sh
+        run: ./test/inner-loop/basic-test.sh ol maven
 
-      # All tests from this point on will run regardless of if the previous tests succeed or fail.
       - name: 'Test: InnerLoop: Gradle: Basic'
-        if: success() || failure()
-        run: ./test/inner-loop/basic-test.sh gradle
+        run: ./test/inner-loop/basic-test.sh ol gradle
 
-      - name: 'Test: InnerLoop: Maven: Devfile regression'
-        if: success() || failure()
-        run: ./test/inner-loop/devfile-regression-test.sh
+      # TODO: re-enable after first delivery of the restructured stack.
+      #- name: 'Test: InnerLoop: Maven: Devfile regression'
+      #  if: success() || failure()
+      #  run: ./test/inner-loop/devfile-regression-test.sh ol maven
 
-      - name: 'Test: InnerLoop: Gradle: Devfile regression'
-        if: success() || failure()
-        run: ./test/inner-loop/devfile-regression-test.sh gradle
+      #- name: 'Test: InnerLoop: Gradle: Devfile regression'
+      #  if: success() || failure()
+      #  run: ./test/inner-loop/devfile-regression-test.sh ol gradle
 
       - name: 'Test: InnerLoop: Maven: microprofile v3 regression'
         if: success() || failure()
-        run: ./test/inner-loop/mp3-regression-test.sh
+        run: ./test/inner-loop/mp3-regression-test.sh ol maven
 
       - name: 'Test: InnerLoop: Gradle: microprofile v3 regression'
         if: success() || failure()
-        run: ./test/inner-loop/mp3-regression-test.sh gradle
+        run: ./test/inner-loop/mp3-regression-test.sh ol gradle
 
-      - name: 'Test: InnerLoop: Maven: Uses official build type image'
+      - name: 'Test: InnerLoop: Maven: Uses an official Maven image'
         if: success() || failure()
-        run: ./test/inner-loop/build-type-image-test.sh
+        run: ./test/inner-loop/build-type-image-test.sh ol maven
 
-      - name: 'Test: InnerLoop: Gradle: Uses official maven/gradle images'
+      - name: 'Test: InnerLoop: Gradle: Uses an official Gradle image'
         if: success() || failure()
-        run: ./test/inner-loop/build-type-image-test.sh gradle
+        run: ./test/inner-loop/build-type-image-test.sh ol gradle
 
       - name: 'Test: InnerLoop: Maven: m2 parent sample regression'
         if: success() || failure()
-        run: ./test/inner-loop/sample-m2-parent-test.sh
+        run: ./test/inner-loop/sample-m2-parent-test.sh ol maven
 
       - name: 'Test: InnerLoop: Maven: Parent plugin'
         if: success() || failure()
-        run: ./test/inner-loop/parent-plugin-test.sh
+        run: ./test/inner-loop/parent-plugin-test.sh ol maven
 
       - name: 'Test: InnerLoop: Maven: multi-module'
         if: success() || failure()
-        run: ./test/inner-loop/multi-module.sh
+        run: ./test/inner-loop/multi-module.sh ol maven
 
       - name: 'Test: OuterLoop: Maven: Basic'
         if: success() || failure()
-        run: ./test/outer-loop/basic-test.sh
+        run: ./test/outer-loop/basic-test.sh ol maven
 
       - name: 'Test: OuterLoop: Gradle: Basic'
         if: success() || failure()
-        run: ./test/outer-loop/basic-test.sh gradle
+        run: ./test/outer-loop/basic-test.sh ol gradle
 
       - name: 'Test: OuterLoop: Maven: Docker build MPH-off SCC-off args'
         if: success() || failure()
-        run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh
+        run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh ol maven
 
       - name: 'Test: OuterLoop: Gradle: Docker build MPH-off SCC-off args'
         if: success() || failure()
-        run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh gradle
+        run: ./test/outer-loop/docker-build-mphOff-sccOff-test.sh ol gradle
 
       - name: 'Test: OuterLoop: Maven: Docker build with MPH-on SCC-off args'
         if: success() || failure()
-        run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh
+        run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh ol maven
 
       - name: 'Test: OuterLoop: Gradle: Docker build with MPH-on SCC-off args'
         if: success() || failure()
-        run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh gradle
+        run: ./test/outer-loop/docker-build-mphOn-sccOff-test.sh ol gradle
 
       - name: 'Test: OuterLoop: Maven: Docker build with MPH-off SCC-on args'
         if: success() || failure()
-        run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh
+        run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh ol maven
 
       - name: 'Test: OuterLoop: Gradle: Docker build with MPH-off SCC-on args'
         if: always()
-        run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh gradle 
+        run: ./test/outer-loop/docker-build-mphOff-sccOn-test.sh ol gradle 

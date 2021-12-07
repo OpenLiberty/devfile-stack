@@ -23,10 +23,16 @@ echo -e "\n> Updated pom.xml"
 cat pom.xml
 
 echo -e "\n> Copy devfile"
-cp $BASE_DIR/generated/devfiles/maven/devfile.yaml devfile.yaml
+runtime="$1"
+buldType="$2"
+runtimeDir="open-liberty"
+if [ "$runtime" = "wl" ]; then
+    runtimeDir="websphere-liberty"
+fi
 
-# this is a workaround to avoid surefire fork failures when running
-# the GHA test suite.
+cp $BASE_DIR/stack/"${runtimeDir}"/devfiles/maven/devfile.yaml devfile.yaml
+
+# This is a workaround to avoid surefire fork failures when running the GHA test suite.
 # Issue #138 has been opened to track and address this
 # add the -DforkCount arg to the odo test cmd only for this run
 echo -e "\n> Modifying the odo test command"
