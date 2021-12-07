@@ -54,14 +54,13 @@ jobs:
       - name: 'Test: InnerLoop: Gradle: Basic'
         run: ./test/inner-loop/basic-test.sh ol gradle
 
-      # TODO: re-enable after first delivery of the restructured stack.
-      #- name: 'Test: InnerLoop: Maven: Devfile regression'
-      #  if: success() || failure()
-      #  run: ./test/inner-loop/devfile-regression-test.sh ol maven
+      - name: 'Test: InnerLoop: Maven: Devfile regression'
+        if: success() || failure()
+        run: ./test/inner-loop/devfile-regression-test.sh ol maven
 
-      #- name: 'Test: InnerLoop: Gradle: Devfile regression'
-      #  if: success() || failure()
-      #  run: ./test/inner-loop/devfile-regression-test.sh ol gradle
+      - name: 'Test: InnerLoop: Gradle: Devfile regression'
+        if: success() || failure()
+        run: ./test/inner-loop/devfile-regression-test.sh ol gradle
 
       - name: 'Test: InnerLoop: Maven: microprofile v3 regression'
         if: success() || failure()
