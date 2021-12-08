@@ -83,7 +83,7 @@ processOuterLoopFiles() {
     validate "${destFileRootPath}"/outer-loop/maven/Dockerfile
 
     # Gradle files.
-    sed -e "s!{{.STACK_IMAGE_GRADLE}}!$outerLoopStackImageMaven!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.OUTERLOOP_LIBERTY_IMAGE}}!$OUTERLOOP_LIBERTY_IMAGE!;s!{{.LIBERTY_MAVEN_PLUGIN_VERSION}}!$LIBERTY_MAVEN_PLUGIN_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!" src/outer-loop/gradle/Dockerfile > "${destFileRootPath}"/outer-loop/gradle/Dockerfile
+    sed -e "s!{{.STACK_IMAGE_GRADLE}}!$outerLoopStackImageGradle!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.OUTERLOOP_LIBERTY_IMAGE}}!$OUTERLOOP_LIBERTY_IMAGE!;s!{{.LIBERTY_MAVEN_PLUGIN_VERSION}}!$LIBERTY_MAVEN_PLUGIN_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!" src/outer-loop/gradle/Dockerfile > "${destFileRootPath}"/outer-loop/gradle/Dockerfile
     validate "${destFileRootPath}"/outer-loop/gradle/Dockerfile
 }
 

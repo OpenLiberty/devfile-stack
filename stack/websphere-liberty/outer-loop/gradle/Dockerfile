@@ -4,7 +4,7 @@ ARG LIBERTY_GROUPID=com.ibm.websphere.appserver.runtime
 ARG WLP_INSTALL_PATH=/opt/ibm/wlp
 
 # Step 1: Build the user's application.
-FROM icr.io/appcafe/websphere-liberty-devfile-stack:${LIBERTY_VERSION}-maven as compile
+FROM icr.io/appcafe/websphere-liberty-devfile-stack:${LIBERTY_VERSION}-gradle as compile
 
 ARG LIBERTY_VERSION
 ARG LIBERTY_ARTIFACTID

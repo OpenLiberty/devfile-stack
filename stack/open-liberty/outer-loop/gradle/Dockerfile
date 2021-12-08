@@ -4,7 +4,7 @@ ARG LIBERTY_GROUPID=io.openliberty
 ARG WLP_INSTALL_PATH=/opt/ol/wlp
 
 # Step 1: Build the user's application.
-FROM icr.io/appcafe/open-liberty-devfile-stack:${LIBERTY_VERSION}-maven as compile
+FROM icr.io/appcafe/open-liberty-devfile-stack:${LIBERTY_VERSION}-gradle as compile
 
 ARG LIBERTY_VERSION
 ARG LIBERTY_ARTIFACTID
