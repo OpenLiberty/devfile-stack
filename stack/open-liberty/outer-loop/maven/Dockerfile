@@ -3,7 +3,7 @@ ARG WLP_INSTALL_PATH=/opt/ol/wlp
 ARG LIBERTY_MAVEN_PLUGIN_VERSION=3.5.1
 
 # Step 1: Build the user's application
-FROM icr.io/appcafe/open-liberty-devfile-stack:${LIBERTY_VERSION}-maven as compile
+FROM icr.io/appcafe/open-liberty-devfile-stack:${LIBERTY_VERSION} as compile
 
 ARG LIBERTY_VERSION
 ARG WLP_INSTALL_PATH

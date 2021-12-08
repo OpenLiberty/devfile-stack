@@ -40,7 +40,7 @@ components:
   - name: dev
     container:
       # In the original upstream of this devfile, the image used is openliberty/devfile-stack:<x.y.z>, which is built from the repository: https://github.com/OpenLiberty/devfile-stack
-      image: icr.io/appcafe/websphere-liberty-devfile-stack:{{liberty-version}}-maven
+      image: icr.io/appcafe/websphere-liberty-devfile-stack:{{liberty-version}}
       memoryLimit: 1512Mi
       mountSources: true
       endpoints:
