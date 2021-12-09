@@ -25,7 +25,7 @@ metadata:
   architectures: ['amd64', 'ppc64le', 's390x']
   language: 'java'
   projectType: 'websphereliberty'
-  alpha.build-dockerfile: 'https://github.com/OpenLiberty/devfile-stack/releases/download/websphere-liberty-maven-0.8.0/maven/Dockerfile'
+  alpha.build-dockerfile: 'https://github.com/OpenLiberty/devfile-stack/releases/download/websphere-liberty-maven-0.8.0/Dockerfile'
   alpha.deployment-manifest: 'https://github.com/OpenLiberty/devfile-stack/releases/download/websphere-liberty-maven-0.8.0/app-deploy.yaml'
 starterProjects:
   - name: rest
