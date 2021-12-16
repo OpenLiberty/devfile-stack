@@ -2,12 +2,12 @@
 
 <p align="center">
   <a href="https://openliberty.io/">
-    <img src="https://openliberty.io/img/spaceship.svg" alt="Logo">
+    <img src="https://openliberty.io/img/spaceship.svg" alt="Spaceship">
   </a>
 </p>
 <p align="center">
   <a href="https://openliberty.io/">
-    <img src="https://github.com/OpenLiberty/open-liberty/blob/master/logos/logo_horizontal_light_navy.png" alt="title" width="400">
+    <img src="https://raw.githubusercontent.com/OpenLiberty/open-liberty/release/logos/logo_horizontal_light_navy.png" alt="Open Liberty Logo" width="400">
   </a>
 </p>
 <br />
