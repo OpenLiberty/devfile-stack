@@ -61,7 +61,7 @@ processStackImageFiles() {
     local destFileRootPath="$1"
 
     # Maven files.
-    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.MAVEN_VERSION}}!$MAVEN_VERSION!; s!{{.LIBERTY_MAVEN_PLUGIN_VERSION}}!$LIBERTY_MAVEN_PLUGIN_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!" src/image/maven/Dockerfile > "${destFileRootPath}"/image/maven/Dockerfile
+    sed -e "s!{{.BASE_OS_IMAGE}}!$BASE_OS_IMAGE!; s!{{.WLP_INSTALL_PATH}}!$WLP_INSTALL_PATH!; s!{{.LIBERTY_RUNTIME_VERSION}}!$LIBERTY_RUNTIME_VERSION!; s!{{.MAVEN_VERSION}}!$MAVEN_VERSION!; s!{{.MAVEN_SHA}}!$MAVEN_SHA!; s!{{.LIBERTY_MAVEN_PLUGIN_VERSION}}!$LIBERTY_MAVEN_PLUGIN_VERSION!; s!{{.LIBERTY_RUNTIME_ARTIFACTID}}!$LIBERTY_RUNTIME_ARTIFACTID!; s!{{.LIBERTY_RUNTIME_GROUPID}}!$LIBERTY_RUNTIME_GROUPID!" src/image/maven/Dockerfile > "${destFileRootPath}"/image/maven/Dockerfile
     validate "${destFileRootPath}"/image/maven/Dockerfile
 
     # Gradle files.
