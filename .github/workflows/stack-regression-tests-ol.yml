@@ -4,13 +4,21 @@ on:
     branches:
       - main
 jobs:
-   stack-tests:
-     runs-on: ubuntu-latest
-     steps:
-
+  stack-validation:
+    runs-on: ubuntu-latest
+    steps:
       - name: 'Setup: Checkout'
         uses: actions/checkout@v2
-        
+
+      - name: 'Validate: stack customization and output files content agreement'
+        run: ./test/stack/build-test.sh ol
+  stack-tests:
+    runs-on: ubuntu-latest
+    needs: stack-validation
+    steps:
+      - name: 'Setup: Checkout'
+        uses: actions/checkout@v2
+
       - name: 'Setup: Install Minikube'
         uses: manusa/actions-setup-minikube@v2.3.1
         with:
@@ -24,28 +32,28 @@ jobs:
           while [[ $(kubectl get nodes -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do 
           echo "waiting for nodes" && sleep 1; 
           done
-    
+
       - name: 'Setup: Install odo'
         run: | 
-         sudo curl -L https://mirror.openshift.com/pub/openshift-v4/clients/odo/latest/odo-linux-amd64 -o /usr/local/bin/odo
-         sudo chmod +x /usr/local/bin/odo
+          sudo curl -L https://mirror.openshift.com/pub/openshift-v4/clients/odo/latest/odo-linux-amd64 -o /usr/local/bin/odo
+          sudo chmod +x /usr/local/bin/odo
 
       - name: 'Setup: Print version info'
         run: |
-         set -x
-         docker version
-         kubectl version
-         odo version
-         minikube version
-         set +x
+          set -x
+          docker version
+          kubectl version
+          odo version
+          minikube version
+          set +x
 
       - name: 'Setup: Install the Open Liberty operator'
         run: ./test/utils.sh installOpenLibertyOperator
-    
-      - name: 'Setup: Build Open Liberty stack'
+
+      - name: 'Setup: Re-build the Liberty devfile stack'
         run: ./test/utils.sh customizeStack ol
-        
-      - name: 'Setup: Build stack image'
+
+      - name: 'Setup: Build the devfile stack image'
         run: ./test/utils.sh buildStackImage ol
 
       - name: 'Test: InnerLoop: Maven: Basic'

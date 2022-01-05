@@ -2,7 +2,7 @@
 
 The devfile-stack repo is tested using Github Actions. 
 The tests are run whenever a PR is created/updated/merged.
-The main workflow is defined in `stack-regression-tests.yml`.
+The GitHub Actions workflows for Open and WebSphere Liberty are defined in `.github/workflows`.
 
 ## Test Steps
 
@@ -17,7 +17,7 @@ The main workflow is defined in `stack-regression-tests.yml`.
 
 ### Stack customization 
 
-The stack is build using the build.sh script to customize/populate stack artifacts based on the runtime type (Open Liberty or WebSphere Liberty) needed to run the test application. 
+The stack is built using the build.sh script to customize/populate stack artifacts based on the runtime type (Open Liberty or WebSphere Liberty).
 
 The stack image is built into the local docker registry located at `localhost:5000`.
 

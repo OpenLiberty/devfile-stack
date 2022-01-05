@@ -43,7 +43,7 @@ customize() {
     processOuterLoopFiles "$destRootPath"
 }
 
-# validate verifies that the source template place holders were replaced with actial values.
+# processDevfiles replaces devfile source template file entries with customization values.
 processDevfiles() {
     local destFileRootPath="$1"
 

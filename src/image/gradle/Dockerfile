@@ -54,7 +54,7 @@ ENV LIBERTY_RUNTIME_GROUPID={{.LIBERTY_RUNTIME_GROUPID}}
 # Build the priming application to populate the cache (java_user home dir: /home/java_user/.gradle).
 RUN umask -S u=rwx,g=rwx,o=rx; gradle build -Pliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Pliberty.runtime.name=${LIBERTY_RUNTIME_ARTIFACTID} -Pliberty.runtime.group=${LIBERTY_RUNTIME_GROUPID} --no-daemon
 
-# Start the Open Liberty server in dev mode. There are dependencies that are detected during dev mode execution due to the use of mojo executor, etc.
+# Start the Liberty server in dev mode. There are dependencies that are detected during dev mode execution due to the use of mojo executor, etc.
 RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; gradle libertyDev -Pliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Pliberty.runtime.name=${LIBERTY_RUNTIME_ARTIFACTID} -Pliberty.runtime.group=${LIBERTY_RUNTIME_GROUPID} --hotTests &" \
  && sleep 600 \
  && echo  && echo "Done sleeping" && echo

@@ -34,7 +34,7 @@ starterProjects:
         origin: 'https://github.com/OpenLiberty/devfile-stack-starters.git'
 variables:
   # Liberty runtime version. Minimum recommended: 21.0.0.9
-  liberty-version: {{.LIBERTY_RUNTIME_VERSION}}
+  liberty-version: '{{.LIBERTY_RUNTIME_VERSION}}'
 components:
   - name: dev
     container:
