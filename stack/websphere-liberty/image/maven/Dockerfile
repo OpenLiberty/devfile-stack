@@ -11,8 +11,8 @@ RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject
    && yum install --disableplugin=subscription-manager -y unzip curl ca-certificates wget xmlstarlet procps
 
 # Maven install
-ARG MAVEN_VERSION=3.6.3
-ARG SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
+ARG MAVEN_VERSION=3.8.4
+ARG SHA=a9b2d825eacf2e771ed5d6b0e01398589ac1bfa4171f36154d1b5787879605507802f699da6f7cfc80732a5282fd31b28e4cd6052338cbef0fa1358b48a5e3c8
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
