@@ -21,7 +21,7 @@ RUN cp -r /work/outer-loop-app/tmp/src /work/outer-loop-app/.; \
     cp -r /work/outer-loop-app/tmp/*.gradle /work/outer-loop-app/tmp/gradle.* /work/outer-loop-app/tmp/gradle* /work/outer-loop-app/. 2>/dev/null | true; \
     rm -rf /work/outer-loop-app/tmp
 
-# Build the application and create the Open Liberty installation.
+# Build the application and create the Liberty installation.
 # This step removes quick-start-security.xml since it's convenient for local dev mode but should not be in the production image.
 RUN cd /work/outer-loop-app && \
     echo "QUICK START SECURITY IS NOT SECURE FOR PRODUCTION ENVIRONMENTS. IT IS BEING REMOVED" && \

@@ -9,6 +9,12 @@
 
 ## Build
 
+The stack is built using the build.sh script. This script provides a few build options that allow you to build the supported Liberty runtimes. By default all supported runtimes are built. For more usage details, run the build.sh script with the help option:
+
+```
+build.sh help 
+```
+
 ### Customizing the stack for Open Liberty deployments
 
 1. Update the default values in `customize-ol.env` with the values of your choice.

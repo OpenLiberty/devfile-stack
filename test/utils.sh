@@ -25,7 +25,7 @@ buildStackImage() {
 customizeStack() {
     local runtime="$1"
 
-    echo "> Customizing the stack for Open Liberty deployments";
+    echo "> Customizing the stack for Liberty deployments";
     sed -i 's!STACK_IMAGE_MAVEN=.*!STACK_IMAGE_MAVEN=\"localhost:5000\/test-image-maven\"!;
             s!STACK_IMAGE_GRADLE=.*!STACK_IMAGE_GRADLE=\"localhost:5000\/test-image-gradle\"!' customize-"${runtime}".env
     cat customize-"${runtime}".env
@@ -87,11 +87,11 @@ printPodLog() {
     fi
 }
 
-# printLibertyServerMsgLog prints the Open Liberty server messages.log running 
+# printLibertyServerMsgLog prints the Liberty server messages.log running 
 # on the pod associated to the input label and namespace.
 # Parm 1: The label (key=value) that identifies the pod of interest.
 # Parm 2: The namespace where the target pod is deployed.
-# Parm 3: The path of the Open Liberty Liberty logs directory.
+# Parm 3: The path of the Liberty logs directory.
 printLibertyServerMsgLog() { 
     podname=$(kubectl get pod -l $1 -n $2 -o jsonpath='{.items[*].metadata.name}')
     if [[ ! -z $podname ]]; then
@@ -107,12 +107,12 @@ printLibertyServerMsgLog() {
     fi
 }
 
-# checkLibertyServerLogForErrorAndWarnings searches the Open Liberty server messages.log
+# checkLibertyServerLogForErrorAndWarnings searches the Liberty server messages.log
 # for warning or error messages. If they are found, the method exits with a non-zero return code. 
 # The pod running the server is located using the input label and namespace.
 # Parm 1: The label (key=value) that identifies the pod of interest.
 # Parm 2: The namespace where the target pod is deployed.
-# Parm 3: The path of the Open Liberty Liberty logs directory.
+# Parm 3: The path of the Liberty logs directory.
 checkLibertyServerLogForErrorAndWarnings() {
     warnErrFound=$(printLibertyServerMsgLog $1 $2 $3 | grep -E "^.*[EW] .*[0-9]{4}[EW]:.*$")
     if [[ ! -z $warnErrFound ]]; then
@@ -121,10 +121,10 @@ checkLibertyServerLogForErrorAndWarnings() {
     fi
 }
 
-# printLibertyDebugData prints debug data associated to the open liberty pod deployment.
+# printLibertyDebugData prints debug data associated to the liberty pod deployment.
 # Parm 1: The label (key=value) that identifies the pod of interest.
 # Parm 2: The namespace where the target pod is deployed.
-# Parm 3: The path of the Open Liberty Liberty logs directory.
+# Parm 3: The path of the Liberty logs directory.
 printLibertyDebugData() {
     echo "Pod (hosting liberty server) config:"
     printPodConfig $1 $2

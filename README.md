@@ -30,7 +30,7 @@ This stack is based on OpenJDK with container-optimizations in OpenJ9 and Open L
 
 ## Getting Started With the Intro Sample
 
-> It's recommended to use the latest version of OpenShift Do (odo). You can install odo using [these instructions](https://odo.dev/docs/installing-odo/)
+> It's recommended to use the latest version of OpenShift Do (odo). You can install odo using [these instructions](https://odo.dev/docs/getting-started/installation)
 
 1. Perform an `oc login` to your cluster.
 
