@@ -11,8 +11,10 @@ RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject
    && yum install --disableplugin=subscription-manager -y unzip curl ca-certificates wget xmlstarlet procps
 
 # Maven install
-ARG MAVEN_VERSION=3.6.3
-ARG SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
+ARG MAVEN_VERSION=3.8.4
+ARG SHA=a9b2d825eacf2e771ed5d6b0e01398589ac1bfa4171f36154d1b5787879605507802f699da6f7cfc80732a5282fd31b28e4cd6052338cbef0fa1358b48a5e3c8
+ARG MAVEN_REPO_LOCAL=/mvn/repository
+
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
@@ -50,7 +52,7 @@ ENV LIBERTY_RUNTIME_VERSION=21.0.0.12
 ENV LIBERTY_RUNTIME_ARTIFACTID=wlp-javaee8
 ENV LIBERTY_RUNTIME_GROUPID=com.ibm.websphere.appserver.runtime
 
-RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Dliberty.runtime.artifactid=${LIBERTY_RUNTIME_ARTIFACTID} -Dliberty.runtime.groupid=${LIBERTY_RUNTIME_GROUPID} -DskipITs=true install
+RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=${MAVEN_REPO_LOCAL} -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Dliberty.runtime.artifactid=${LIBERTY_RUNTIME_ARTIFACTID} -Dliberty.runtime.groupid=${LIBERTY_RUNTIME_GROUPID} -DskipITs=true install
 
 # A hack maybe but there's quite a few dependencies that only are detected when dev mode is executed, due to use of mojo executor, etc.
 #
@@ -72,15 +74,15 @@ RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mv
 #
 # Done sleeping
 
-RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Dliberty.runtime.artifactid=${LIBERTY_RUNTIME_ARTIFACTID} -Dliberty.runtime.groupid=${LIBERTY_RUNTIME_GROUPID} io.openliberty.tools:liberty-maven-plugin:3.5.1:dev -DhotTests=true &" \
+RUN nohup bash -c "umask -S u=rwx,g=rwx,o=rx; mvn -B -e -DserverName=tmp -Dmaven.repo.local=${MAVEN_REPO_LOCAL} -Dliberty.runtime.version=${LIBERTY_RUNTIME_VERSION} -Dliberty.runtime.artifactid=${LIBERTY_RUNTIME_ARTIFACTID} -Dliberty.runtime.groupid=${LIBERTY_RUNTIME_GROUPID} io.openliberty.tools:liberty-maven-plugin:3.5.1:dev -DhotTests=true &" \
  && sleep 600 \
  && echo  && echo "Done sleeping" && echo
 
 # Cache dependencies associated with the previous major version of the microprofile APIs and OL microprofile features.
-RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=io.openliberty.features:microProfile-3.3:${LIBERTY_RUNTIME_VERSION}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
-    && umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=org.eclipse.microprofile:microprofile:3.3:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
-    && umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=io.openliberty.features:microProfile-4.0:${LIBERTY_RUNTIME_VERSION}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
-    && umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=/mvn/repository -Dtransitive=true -Dartifact=org.eclipse.microprofile:microprofile:4.0:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get
+RUN umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=${MAVEN_REPO_LOCAL} -Dtransitive=true -Dartifact=io.openliberty.features:microProfile-3.3:${LIBERTY_RUNTIME_VERSION}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
+    && umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=${MAVEN_REPO_LOCAL} -Dtransitive=true -Dartifact=org.eclipse.microprofile:microprofile:3.3:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
+    && umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=${MAVEN_REPO_LOCAL} -Dtransitive=true -Dartifact=io.openliberty.features:microProfile-4.0:${LIBERTY_RUNTIME_VERSION}:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
+    && umask -S u=rwx,g=rwx,o=rx; mvn -B -e -Dmaven.repo.local=${MAVEN_REPO_LOCAL} -Dtransitive=true -Dartifact=org.eclipse.microprofile:microprofile:4.0:pom -DrepoUrl=https://repo1.maven.org/maven2/ org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get
 
 # Delete the server, users will create their own server
 RUN rm -rf /stacks/java-openliberty/primer/jaxrs/target/liberty/wlp/usr/servers/tmp
