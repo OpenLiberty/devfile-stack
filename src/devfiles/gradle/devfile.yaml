@@ -39,7 +39,7 @@ components:
   - name: dev
     container:
       image: {{.STACK_IMAGE_GRADLE}}
-      memoryLimit: 1512Mi
+      memoryLimit: 1280Mi
       mountSources: true
       endpoints:
         - exposure: public
