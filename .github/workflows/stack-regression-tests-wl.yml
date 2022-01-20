@@ -59,7 +59,7 @@ jobs:
       - name: 'Test: InnerLoop: Maven: Basic'
         run: ./test/inner-loop/basic-test.sh wl maven
 
-      - name: 'Test: InnerLoop: Maven: Basic'
+      - name: 'Test: InnerLoop: Maven: Basic with mvnw'
         run: ./test/inner-loop/basic-mvnw-test.sh wl maven
 
       - name: 'Test: InnerLoop: Gradle: Basic'
