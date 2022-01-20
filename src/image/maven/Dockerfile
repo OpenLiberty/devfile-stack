@@ -14,7 +14,6 @@ RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject
 ARG MAVEN_VERSION={{.MAVEN_VERSION}}
 ARG SHA={{.MAVEN_SHA}}
 ARG MAVEN_REPO_LOCAL={{.MAVEN_REPO_LOCAL}}
-
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
