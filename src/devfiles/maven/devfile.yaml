@@ -54,7 +54,7 @@ commands:
   - id: run
     exec:
       component: dev
-      commandLine: {{mvn-cmd}} -DinstallDirectory={{.WLP_INSTALL_PATH}} -Ddebug=false -DhotTests=true -DcompileWait=3 io.openliberty.tools:liberty-maven-plugin:{{liberty-plugin-version}}:dev
+      commandLine:  echo "run command "; {{mvn-cmd}} -DinstallDirectory={{.WLP_INSTALL_PATH}} -Ddebug=false -DhotTests=true -DcompileWait=3 io.openliberty.tools:liberty-maven-plugin:{{liberty-plugin-version}}:dev
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -63,7 +63,7 @@ commands:
   - id: run-test-off
     exec:
       component: dev
-      commandLine: {{mvn-cmd}} -DinstallDirectory={{.WLP_INSTALL_PATH}} -Ddebug=false io.openliberty.tools:liberty-maven-plugin:{{liberty-plugin-version}}:dev
+      commandLine: echo "run-test-off command "; {{mvn-cmd}} -DinstallDirectory={{.WLP_INSTALL_PATH}} -Ddebug=false io.openliberty.tools:liberty-maven-plugin:{{liberty-plugin-version}}:dev
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -72,7 +72,7 @@ commands:
   - id: debug
     exec:
       component: dev
-      commandLine: {{mvn-cmd}} -DinstallDirectory={{.WLP_INSTALL_PATH}} -DdebugPort=${DEBUG_PORT} io.openliberty.tools:liberty-maven-plugin:{{liberty-plugin-version}}:dev -Dliberty.env.WLP_DEBUG_REMOTE=y
+      commandLine: echo "debug command "; {{mvn-cmd}} -DinstallDirectory={{.WLP_INSTALL_PATH}} -DdebugPort=${DEBUG_PORT} io.openliberty.tools:liberty-maven-plugin:{{liberty-plugin-version}}:dev -Dliberty.env.WLP_DEBUG_REMOTE=y
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -82,7 +82,7 @@ commands:
     # The 'test' command requires an already active container. Multi-module apps require compilation prior to test processing.
     exec:
       component: dev
-      commandLine: {{mvn-cmd}} compiler:compile failsafe:integration-test failsafe:verify
+      commandLine: echo "test command "; {{mvn-cmd}} compiler:compile failsafe:integration-test failsafe:verify
       workingDir: /projects
       hotReloadCapable: true
       group:
