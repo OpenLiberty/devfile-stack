@@ -39,7 +39,7 @@ components:
   - name: dev
     container:
       image: icr.io/appcafe/open-liberty-devfile-stack:{{liberty-version}}-gradle
-      memoryLimit: 1512Mi
+      memoryLimit: 1280Mi
       mountSources: true
       endpoints:
         - exposure: public
