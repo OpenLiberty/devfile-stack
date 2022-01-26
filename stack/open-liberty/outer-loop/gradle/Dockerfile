@@ -1,4 +1,4 @@
-ARG LIBERTY_VERSION=21.0.0.12
+ARG LIBERTY_VERSION=22.0.0.1
 ARG LIBERTY_ARTIFACTID=openliberty-runtime
 ARG LIBERTY_GROUPID=io.openliberty
 ARG WLP_INSTALL_PATH=/opt/ol/wlp
@@ -39,7 +39,7 @@ RUN cd /work/outer-loop-app/build/wlp/usr/servers; \
     if [ -d ../shared ]; then mv ../shared/* /work/shared/; fi
 
 # Step 2: Package Liberty image
-FROM openliberty/open-liberty:${LIBERTY_VERSION}-full-java11-openj9-ubi
+FROM icr.io/appcafe/open-liberty:${LIBERTY_VERSION}-full-java11-openj9-ubi
 
 ARG WLP_INSTALL_PATH
 

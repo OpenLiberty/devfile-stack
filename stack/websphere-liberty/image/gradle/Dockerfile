@@ -47,7 +47,7 @@ COPY ./primer/jaxrs/build.gradle ./primer/jaxrs/settings.gradle /stacks/java-ope
 
 WORKDIR /stacks/java-openliberty/primer/jaxrs
 
-ENV LIBERTY_RUNTIME_VERSION=21.0.0.12
+ENV LIBERTY_RUNTIME_VERSION=22.0.0.1
 ENV LIBERTY_RUNTIME_ARTIFACTID=wlp-javaee8
 ENV LIBERTY_RUNTIME_GROUPID=com.ibm.websphere.appserver.runtime
 

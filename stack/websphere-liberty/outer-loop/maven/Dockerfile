@@ -1,4 +1,4 @@
-ARG LIBERTY_VERSION=21.0.0.12
+ARG LIBERTY_VERSION=22.0.0.1
 ARG WLP_INSTALL_PATH=/opt/ibm/wlp
 ARG LIBERTY_MAVEN_PLUGIN_VERSION=3.5.1
 
@@ -37,7 +37,7 @@ RUN cd $WLP_INSTALL_PATH/usr/servers && \
     if [ -d ../shared ]; then mv ../shared/* /work/shared/; fi
     
 # Step 2: Package Liberty image
-FROM ibmcom/websphere-liberty:${LIBERTY_VERSION}-full-java11-openj9-ubi
+FROM icr.io/appcafe/websphere-liberty:${LIBERTY_VERSION}-full-java11-openj9-ubi
 
 ARG WLP_INSTALL_PATH
 
