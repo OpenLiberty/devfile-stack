@@ -34,7 +34,7 @@ starterProjects:
         origin: 'https://github.com/OpenLiberty/devfile-stack-starters.git'
 variables:
   # Liberty runtime version. Minimum recommended: 21.0.0.9
-  liberty-version: '21.0.0.12'
+  liberty-version: '22.0.0.1'
   gradle-cmd: 'gradle'
 components:
   - name: dev

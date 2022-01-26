@@ -46,7 +46,7 @@ COPY --chown=1001:0 ./primer/jaxrs/pom.xml /stacks/java-openliberty/primer/jaxrs
 
 WORKDIR /stacks/java-openliberty/primer/jaxrs
 
-ENV LIBERTY_RUNTIME_VERSION=21.0.0.12
+ENV LIBERTY_RUNTIME_VERSION=22.0.0.1
 ENV LIBERTY_RUNTIME_ARTIFACTID=openliberty-runtime
 ENV LIBERTY_RUNTIME_GROUPID=io.openliberty
 
