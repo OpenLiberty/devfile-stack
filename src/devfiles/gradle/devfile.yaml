@@ -35,6 +35,7 @@ starterProjects:
 variables:
   # Liberty runtime version. Minimum recommended: 21.0.0.9
   liberty-version: '{{.LIBERTY_RUNTIME_VERSION}}'
+  gradle-cmd: 'gradle'
 components:
   - name: dev
     container:
@@ -51,7 +52,7 @@ commands:
   - id: run
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebug=false --hotTests --compileWait=3
+      commandLine: echo "gradle run command"; {{gradle-cmd}} -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebug=false --hotTests --compileWait=3
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -60,7 +61,7 @@ commands:
   - id: run-test-off
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebug=false
+      commandLine: echo "gradle run-tests-off command "; {{gradle-cmd}} -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebug=false
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -69,7 +70,7 @@ commands:
   - id: debug
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebugPort=${DEBUG_PORT} -Pliberty.server.env.WLP_DEBUG_REMOTE=y
+      commandLine: echo "gradle debug command "; {{gradle-cmd}} -Dgradle.user.home=/.gradle libertyDev -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}} --libertyDebugPort=${DEBUG_PORT} -Pliberty.server.env.WLP_DEBUG_REMOTE=y
       workingDir: /projects
       hotReloadCapable: true
       group:
@@ -78,7 +79,7 @@ commands:
   - id: test
     exec:
       component: dev
-      commandLine: gradle -Dgradle.user.home=/.gradle test -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}}
+      commandLine: echo "gradle test command "; {{gradle-cmd}} -Dgradle.user.home=/.gradle test -Pliberty.runtime.version={{liberty-version}} -Pliberty.runtime.name={{.LIBERTY_RUNTIME_ARTIFACTID}} -Pliberty.runtime.group={{.LIBERTY_RUNTIME_GROUPID}}
       workingDir: /projects
       hotReloadCapable: true
       group:
