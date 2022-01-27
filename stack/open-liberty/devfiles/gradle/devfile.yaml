@@ -25,8 +25,8 @@ metadata:
   architectures: ['amd64', 'ppc64le', 's390x']
   language: 'java'
   projectType: 'openliberty'
-  alpha.build-dockerfile: 'https://github.com/OpenLiberty/devfile-stack/releases/download/open-liberty-gradle-0.3.0/Dockerfile'
-  alpha.deployment-manifest: 'https://github.com/OpenLiberty/devfile-stack/releases/download/open-liberty-gradle-0.3.0/app-deploy.yaml'
+  alpha.build-dockerfile: 'https://github.com/OpenLiberty/devfile-stack/releases/download/open-liberty-gradle-0.3.1/Dockerfile'
+  alpha.deployment-manifest: 'https://github.com/OpenLiberty/devfile-stack/releases/download/open-liberty-gradle-0.3.1/app-deploy.yaml'
 starterProjects:
   - name: rest
     git:
