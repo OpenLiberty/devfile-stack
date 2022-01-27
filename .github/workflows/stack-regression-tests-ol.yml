@@ -22,8 +22,8 @@ jobs:
       - name: 'Setup: Install Minikube'
         uses: manusa/actions-setup-minikube@v2.3.1
         with:
-          minikube version: 'v1.11.0'
-          kubernetes version: 'v1.17.0'
+          minikube version: 'v1.25.1'
+          kubernetes version: 'v1.23.1'
           github token: ${{ secrets.GITHUB_TOKEN }}
           start args: '--addons=registry --addons=ingress --insecure-registry "10.0.0.0/24"' 
 
@@ -35,7 +35,7 @@ jobs:
 
       - name: 'Setup: Install odo'
         run: | 
-          sudo curl -L https://mirror.openshift.com/pub/openshift-v4/clients/odo/latest/odo-linux-amd64 -o /usr/local/bin/odo
+          sudo curl -L https://developers.redhat.com/content-gateway/rest/mirror/pub/openshift-v4/clients/odo/latest/odo-linux-amd64 -o /usr/local/bin/odo
           sudo chmod +x /usr/local/bin/odo
 
       - name: 'Setup: Print version info'
