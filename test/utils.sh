@@ -35,29 +35,29 @@ customizeStack() {
 # installOpenLibertyOperator installs the Open Liberty operator.
 installOpenLibertyOperator() {
     echo -e "\n> Installing Open Liberty operator CRDs"
-    kubectl apply -f https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/master/deploy/releases/0.7.0/openliberty-app-crd.yaml
+    kubectl apply -f https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/main/deploy/releases/0.8.0/kubectl/openliberty-app-crd.yaml
 
     echo -e "\n> Installing Open Liberty operator cluster level roles"
-    curl -L https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/master/deploy/releases/0.7.0/openliberty-app-cluster-rbac.yaml \
+    curl -L https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/main/deploy/releases/0.8.0/kubectl/openliberty-app-rbac-watch-all.yaml \
       | sed -e "s/OPEN_LIBERTY_OPERATOR_NAMESPACE/default/" \
       | kubectl apply -f -
 
-    echo -e "\n> Creating an Open Liberty application operator CR instance"
-    curl -L https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/master/deploy/releases/0.7.0/openliberty-app-operator.yaml \
+    echo -e "\n> Creating an Open Liberty operator controller instance"
+    curl -L https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/main/deploy/releases/0.8.0/kubectl/openliberty-app-operator.yaml \
       | sed -e "s/OPEN_LIBERTY_WATCH_NAMESPACE/\"\"/" \
       | kubectl apply -n default -f -
 
-    echo -e "\n> Wait for the Open Liberty operator application CR instance pod to start"
+    echo -e "\n> Wait for the Open Liberty operator controller instance pod to start"
     count=1
-    while [[ $(kubectl get pods -n default -l name=open-liberty-operator  -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do 
+    while [[ $(kubectl get pods -n default -l app.kubernetes.io/name=open-liberty-operator  -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do 
         kubectl get pods -n default
-        echo "waiting for the Open Liberty operator application CR instance pod" && sleep 3; 
+        echo "waiting for the Open Liberty operator controller instance pod" && sleep 3; 
         count=`expr $count + 1`
         if [ $count -eq 20 ]; then
-            echo "Timed out waiting for the Open Liberty operator application CR instance pod to start. Pod Config:"
-            printPodConfig "name=open-liberty-operator" "default"
-            echo "Open Liberty operator application CR instance pod log:"
-            printPodLog "name=open-liberty-operator" "default"
+            echo "Timed out waiting for the Open Liberty operator controller instance pod to start. Pod Config:"
+            printPodConfig "app.kubernetes.io/name=open-liberty-operator" "default"
+            echo "Open Liberty operator controller instance pod log:"
+            printPodLog "app.kubernetes.io/name=open-liberty-operator" "default"
             exit 12
         fi
     done
