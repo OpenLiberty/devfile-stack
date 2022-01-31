@@ -1,4 +1,4 @@
-# Copyright (c) 2021 IBM Corporation and others
+# Copyright (c) 2021,2022 IBM Corporation and others
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -17,7 +17,7 @@
 schemaVersion: 2.1.0
 metadata:
   name: java-{{.STACK_SHORT_NAME}}-gradle
-  version: 0.3.0
+  version: 0.3.1
   displayName: '{{.STACK_NAME}} Gradle'
   description: Java application Gradle-built stack using the {{.STACK_NAME}} runtime
   icon: https://raw.githubusercontent.com/OpenLiberty/logos/7fbb132949b9b2589e18c8d5665c1b107028a21d/logomark/svg/OL_logomark.svg
